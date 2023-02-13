@@ -1,40 +1,36 @@
 import 'package:equatable/equatable.dart';
-import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entity.dart';
+import 'package:pocket_psychologist/features/exercises/data/data_models/question_model.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 
 class CheckListModel extends CheckListEntity {
+  // final String result;
 
   CheckListModel({
     required id,
     required name,
     required description,
     required questions,
-    required result,
-    required recommendations})
-      : super(
+}) : super(
       id: id,
       name: name,
       description: description,
       questions: questions,
-      result: result,
-      recommendations: recommendations);
+);
 
   factory CheckListModel.fromJson(Map<String, dynamic> json) {
-    return CheckListModel(id: json['ID'],
-        name: json['Name'],
-        description: json['Description'],
-        questions: json['Questions'].toString().split('@'),
-        result: json['Result'],
-        recommendations: json['Recommendations'].toString().split('@'));
+    return CheckListModel(
+        id: json['name_id'],
+        name: json['checklist_name'],
+        description: json['description'],
+        questions: QuestionModel.fromJson(json),
+    );
   }
 
   Map<String, dynamic> toJson(CheckListModel model) {
     return {
-      'Id' : model.id,
-      'Name' : model.name,
-      'Description' : model.description,
-      'Questions' : model.questions.join("@"),
-      'Result' : model.result,
-      'Recommendations' : model.recommendations.join("@"),
+      'name_id' : model.id,
+      'checklist_name' : model.name,
+      'description' : model.description,
     };
   }
   //

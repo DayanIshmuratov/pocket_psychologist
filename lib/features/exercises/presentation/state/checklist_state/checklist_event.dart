@@ -7,5 +7,4 @@ abstract class CheckListEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class OnCheckListEvent extends CheckListEvent {
-}
+class OnCheckListEvent extends CheckListEvent {}

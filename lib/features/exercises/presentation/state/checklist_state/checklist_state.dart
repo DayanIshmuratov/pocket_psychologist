@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entity.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 
 abstract class CheckListState extends Equatable {
   const CheckListState();
@@ -11,11 +11,15 @@ class CheckListStateEmpty extends CheckListState {}
 
 class CheckListStateLoading extends CheckListState {}
 
-class CheckListStateLoaded extends CheckListState {
-  final List<CheckListEntity> checkLists;
+class CheckListStateLoaded<T> extends CheckListState {
+  final T checkLists;
 
   const CheckListStateLoaded(this.checkLists);
 
 }
 
-class CheckListStateError extends CheckListState {}
+class CheckListStateError extends CheckListState {
+  final String errorMessage;
+
+  CheckListStateError(this.errorMessage);
+}

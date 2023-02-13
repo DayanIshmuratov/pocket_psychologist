@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entity.dart';
-import 'package:pocket_psychologist/features/exercises/domain/usecases/get_check_list/get_check_list.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_event.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_bloc.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_state.dart';
 import 'package:pocket_psychologist/features/exercises/presentation/widgets/exercise_view.dart';
 
 import '../../../../service_locator/service_locator.dart';

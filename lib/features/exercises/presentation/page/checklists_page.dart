@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_event.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_bloc.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_event.dart';
 
-import '../state/checklist_state.dart';
+import '../state/checklist_state/checklist_state.dart';
 import '../widgets/checklist_card.dart';
 
 class CheckListsPage extends StatelessWidget {
@@ -12,13 +12,13 @@ class CheckListsPage extends StatelessWidget {
     _bloc.add(OnCheckListEvent());
     return Scaffold(
       appBar: AppBar(
-        title: Text("Чек листы"),
+        title: const Text("Чек листы"),
         centerTitle: true,
       ),
       body: BlocBuilder<CheckListBloc, CheckListState>(
         builder: (BuildContext context, state) {
           if (state is CheckListStateEmpty) {
-            return Text("Empty");
+            return const Text("Empty");
           } else if (state is CheckListStateLoading) {
             return CircularProgressIndicator();
           } else if (state is CheckListStateLoaded) {
@@ -32,8 +32,11 @@ class CheckListsPage extends StatelessWidget {
                 // );
               },
             );
+          } else if (state is CheckListStateError) {
+            return Center(child: Text("${state.errorMessage}"));
+          } else {
+            return const Text("Неожиданная ошибка");
           }
-          return Text("Error");
         },
       ),
     );
