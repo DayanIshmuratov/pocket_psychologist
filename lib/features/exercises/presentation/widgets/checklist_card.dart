@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_entity.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_bloc.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_event.dart';
 
 class CheckListCard extends StatefulWidget {
   final CheckListEntity entity;
@@ -65,6 +68,8 @@ class _CheckListCardState extends State<CheckListCard> {
               ElevatedButton(
                 onPressed: () async {
                   widget.entity.questions = await Navigator.pushNamed(context, 'checklist_doing_page', arguments: widget.entity.questions) as QuestionEntity;
+                  final _bloc = context.read<CheckListBloc>();
+                  _bloc.add(OnUpdateCheckListEvent(checkListEntity: widget.entity));
                   setState(() {
                   });
                 },

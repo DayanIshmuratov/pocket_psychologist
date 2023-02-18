@@ -3,12 +3,11 @@ import 'package:equatable/equatable.dart';
 class ImageEntity extends Equatable {
   final int id;
   final String path;
-  final int exerciseId;
 
-  ImageEntity(this.id, this.path, this.exerciseId);
+  ImageEntity({required this.id, required this.path});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [id, path];
 
 }

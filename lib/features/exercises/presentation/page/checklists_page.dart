@@ -9,7 +9,7 @@ import '../widgets/checklist_card.dart';
 class CheckListsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final _bloc = context.read<CheckListBloc>();
-    _bloc.add(OnCheckListEvent());
+    _bloc.add(OnGetCheckListEvent());
     return Scaffold(
       appBar: AppBar(
         title: const Text("Чек листы"),

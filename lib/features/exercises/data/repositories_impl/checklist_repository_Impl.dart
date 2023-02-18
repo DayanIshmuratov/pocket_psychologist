@@ -1,3 +1,4 @@
+import 'package:pocket_psychologist/features/exercises/data/data_models/checklist_model.dart';
 import 'package:pocket_psychologist/features/exercises/data/data_sources/checklist_local_data_source.dart';
 import 'package:pocket_psychologist/features/exercises/data/data_sources/question_local_data_source.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
@@ -32,6 +33,11 @@ class CheckListRepositoryImpl extends CheckListRepository{
   Future<List<ImageEntity>> getImages(int exercisesId) {
     // TODO: implement getImages
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateCheckLists(CheckListEntity checkListEntity) async {
+    await checkListLocalDataSource.updateData(checkListEntity as CheckListModel);
   }
 
   // @override
