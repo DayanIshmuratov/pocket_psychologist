@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_entity.dart';
 
 abstract class QuestionEvent extends Equatable {
   const QuestionEvent();
@@ -6,8 +7,11 @@ abstract class QuestionEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
-
-class OnQuestionEvent extends QuestionEvent {
+class GetQuestionEvent extends QuestionEvent {
   final int nameId;
-  OnQuestionEvent({required this.nameId});
+  GetQuestionEvent({required this.nameId});
+}
+class UpdateQuestionEvent extends QuestionEvent {
+  final QuestionEntity entity;
+  UpdateQuestionEvent({required this.entity});
 }

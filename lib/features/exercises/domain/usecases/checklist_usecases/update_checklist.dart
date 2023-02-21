@@ -2,11 +2,9 @@ import 'package:pocket_psychologist/features/exercises/domain/entities/checklist
 import 'package:pocket_psychologist/features/exercises/domain/repositories/checklist_repository.dart';
 
 class UpdateCheckList {
-  final CheckListRepository checkListRepository;
-  UpdateCheckList({required this.checkListRepository});
-
-  Future<void> call(CheckListEntity entity) async {
-    await checkListRepository.updateCheckLists(entity);
+  CheckListRepository repository;
+  UpdateCheckList({required this.repository});
+  Future<void> call(CheckListEntity checkListEntity) {
+    return repository.updateCheckList(checkListEntity);
   }
-
 }

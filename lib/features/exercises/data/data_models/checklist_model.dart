@@ -6,46 +6,31 @@ import 'package:pocket_psychologist/features/exercises/data/data_models/result_m
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 
 class CheckListModel extends CheckListEntity {
-  // final String result;
+  // final bool isDone;
 
-  CheckListModel({
-    required id,
-    required name,
-    required description,
-    required questions,
-    required instruction,
-    required exercises,
-    required lieResults,
-    required results,
-}) : super(
-      id: id,
-      name: name,
-      description: description,
-      questions: questions,
-      instruction: instruction,
-      exercises: exercises,
-      lieResults: lieResults,
-      results: results,
-);
+  CheckListModel({required super.id, required super.name, required super.description, required super.instruction, required super.sum, required super.done, required super.count});
 
   factory CheckListModel.fromJson(Map<String, dynamic> json) {
     return CheckListModel(
-        id: json['name_id'],
+        id: json['checklist_id'],
         name: json['checklist_name'],
         description: json['description'],
         instruction: json['instruction'],
-        questions: QuestionModel.fromJson(json),
-        exercises: ExercisesModel(id: id, name: name, images: images),
-        lieResults: LieResultModel(id: id, result: result, valueLessThan: valueLessThan),
-        results: ResultModel(id: id, result: result, valueLessThan: valueLessThan),
+        sum: json['sum'],
+        done: json['done'],
+        count: json['count'],
+        // questions: QuestionModel.fromJson(json),
+        // exercises: ExercisesModel(id: id, name: name, images: images),
+        // lieResults: LieResultModel(id: id, result: result, valueLessThan: valueLessThan),
+        // results: ResultModel(id: id, result: result, valueLessThan: valueLessThan),
     );
   }
 
-  Map<String, dynamic> toJson(CheckListModel model) {
+  Map<String, dynamic> toMap() {
     return {
-      'name_id' : model.id,
-      'checklist_name' : model.name,
-      'description' : model.description,
+      'checklist_id' : id,
+      'sum' : sum,
+      'count' : count,
     };
   }
   //

@@ -1,22 +1,40 @@
+import 'package:pocket_psychologist/features/exercises/data/data_models/answer_model.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_entity.dart';
 
 class QuestionModel extends QuestionEntity {
-  QuestionModel({required super.id, required super.question, required super.answer, required super.answers});
+  QuestionModel({required super.id, required super.question, required super.nameId, required super.answers});
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
+    List<int> id = json['answer_id'].toString().split("@").map((e) => int.parse(e)).toList();
+    List<String> answer = json['answer_name'].toString().split("@");
+    List<int> value = json['value'].toString().split("@").map((e) => int.parse(e)).toList();
+    List<int> lieValue = json['lie_value'].toString().split("@").map((e) => int.parse(e)).toList();
+    List<int> isChoosen = json['is_choosen'].toString().split("@").map((e) => int.parse(e)).toList();
+    List<AnswerModel> result = [];
+    for (int i = 0; i < id.length; i++) {
+      result.add(AnswerModel(
+        id: id[i],
+        answer: answer[i],
+        value: value[i],
+        lieValue: lieValue[i],
+        isChoosen: isChoosen[i]
+      )
+      );
+    }
      return QuestionModel(
-            id: json['question_id'].toString().split('@').map((e) => int.parse(e)).toList(),
-            question: json['name_question'].toString().split("@"),
-            answer: json['answers'].toString().split('@').map((e) => int.parse(e)).toList(),
-            answers:
+         id: json['question_id'],
+         question: json['question'],
+         nameId: json['name_id'],
+         answers: result,
      );
     }
 
   Map<String, dynamic> toJson(QuestionModel model) {
     return {
       'question_id' : model.id,
-      'name_question' : model.question,
-      'answers' : model.answer,
+      'question' : model.question,
+      // 'answer_id' : model.answerId,
+      // 'name_id' : model.answerId,
       // 'name_id' : model.nameId,
     };
   }

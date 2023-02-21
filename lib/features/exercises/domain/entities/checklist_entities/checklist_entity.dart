@@ -4,29 +4,33 @@ import 'package:pocket_psychologist/features/exercises/domain/entities/checklist
 
 import 'exercise_entity.dart';
 import 'lie_results_entity.dart';
+abstract class BaseEntity {}
 
-class CheckListEntity extends Equatable {
+class CheckListEntity extends BaseEntity with EquatableMixin {
   final int id;
   final String name;
   final String? description;
   final String? instruction;
-  QuestionEntity questions;
-  ResultEntity results;
-  LieResultEntity? lieResults;
-  ExercisesEntity exercises;
+  int sum;
+  int done;
+  final int count;
+  // final bool done;
 
   CheckListEntity({
     required this.id,
     required this.name,
     required this.description,
     required this.instruction,
-    required this.questions,
-    required this.results,
-    required this.lieResults,
-    required this.exercises,
+    required this.sum,
+    required this.done,
+    required this.count,
+    // required this.questions,
+    // required this.results,
+    // required this.lieResults,
+    // required this.exercises,
 });
 
   @override
   List<Object?> get props =>
-      [id, name, description, instruction, questions, results, lieResults, exercises];
+      [id, name, description, instruction, sum, done, count];
 }

@@ -1,14 +1,16 @@
 import 'package:equatable/equatable.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 
-class AnswerEntity extends Equatable {
-  final List<int> id;
-  final List<String> answer;
-  final List<int> value;
-  final List<int> lieValue;
+class AnswerEntity extends BaseEntity with EquatableMixin {
+  final int id;
+  final String answer;
+  final int value;
+  final int lieValue;
+  int isChoosen;
 
-  AnswerEntity({required this.id, required this.answer, required this.value, required this.lieValue});
+  AnswerEntity({required this.id, required this.answer, required this.value, required this.lieValue, required this.isChoosen});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [id, answer, value, lieValue];
+  List<Object?> get props => [id, answer, value, lieValue, isChoosen];
 }

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_entity.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_events.dart';
 import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_bloc.dart';
 import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_event.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/question_state/question_bloc.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/question_state/question_event.dart';
+import 'package:pocket_psychologist/features/exercises/presentation/state/question_state/question_state.dart';
 
 class CheckListCard extends StatefulWidget {
   final CheckListEntity entity;
@@ -47,29 +51,31 @@ class _CheckListCardState extends State<CheckListCard> {
       child: Column(
         children: [
           ListTile(
-            // trailing: widget.entity.result != null
-            //     ? IconButton(
-            //         icon: Icon(Icons.done, color: Colors.green),
-            //         onPressed: () {},
-            //         tooltip: "Вы уже прошли данный чек лист",
-            //       )
-            //     : IconButton(
-            //         icon: Icon(Icons.cancel, color: Colors.red),
-            //         onPressed: () {},
-            //         tooltip: "Вы еще не прошли данный чек лист",
-            //       ),
+            trailing: widget.entity.done == widget.entity.count
+                ? IconButton(
+                    icon: Icon(Icons.done, color: Colors.green),
+                    onPressed: () {},
+                    tooltip: "Вы уже прошли данный чек лист",
+                  )
+                : IconButton(
+                    icon: Icon(Icons.cancel, color: Colors.red),
+                    onPressed: () {},
+                    tooltip: "Вы еще не прошли данный чек лист",
+                  ),
             title: Text(widget.entity.name),
-            subtitle: Text(widget.entity.description),
+            subtitle: Text(widget.entity.description ?? "Нет описания"),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('${widget.entity.questions.answer.indexOf(0) == -1 ? widget.entity.questions.answer.length : widget.entity.questions.answer.indexOf(0)}/${widget.entity.questions.answer.length}'),
+              // Text('${widget.entity.questions.answer.indexOf(0) == -1 ? widget.entity.questions.answer.length : widget.entity.questions.answer.indexOf(0)}/${widget.entity.questions.answer.length}'),
+              Text('${widget.entity.done}/${widget.entity.count}'),
               ElevatedButton(
                 onPressed: () async {
-                  widget.entity.questions = await Navigator.pushNamed(context, 'checklist_doing_page', arguments: widget.entity.questions) as QuestionEntity;
-                  final _bloc = context.read<CheckListBloc>();
-                  _bloc.add(OnUpdateCheckListEvent(checkListEntity: widget.entity));
+                  await Navigator.pushNamed(context, 'checklist_doing_page', arguments: widget.entity);
+                  // widget.entity.questions = await Navigator.pushNamed(context, 'checklist_doing_page', arguments: widget.entity.questions) as QuestionEntity;
+                  // final _bloc = context.read<CheckListBloc>();
+                  // _bloc.add(OnUpdateCheckListEvent(checkListEntity: widget.entity));
                   setState(() {
                   });
                 },
@@ -96,7 +102,7 @@ class _CheckListCardState extends State<CheckListCard> {
       //         tooltip: "Вы еще не прошли данный чек лист",
       //       ),
       title: Text(widget.entity.name),
-      subtitle: Text(widget.entity.description,
+      subtitle: Text(widget.entity.description ?? 'Нет описания',
           style: TextStyle(overflow: TextOverflow.ellipsis)),
     );
   }
