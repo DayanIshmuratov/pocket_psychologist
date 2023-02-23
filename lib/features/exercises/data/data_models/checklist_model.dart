@@ -8,7 +8,7 @@ import 'package:pocket_psychologist/features/exercises/domain/entities/checklist
 class CheckListModel extends CheckListEntity {
   // final bool isDone;
 
-  CheckListModel({required super.id, required super.name, required super.description, required super.instruction, required super.sum, required super.done, required super.count});
+  CheckListModel({required super.id, required super.name, required super.description, required super.instruction, required super.sum, required super.done, required super.count, required super.lieSum});
 
   factory CheckListModel.fromJson(Map<String, dynamic> json) {
     return CheckListModel(
@@ -16,6 +16,7 @@ class CheckListModel extends CheckListEntity {
         name: json['checklist_name'],
         description: json['description'],
         instruction: json['instruction'],
+        lieSum: json['lie_sum'],
         sum: json['sum'],
         done: json['done'],
         count: json['count'],
@@ -26,13 +27,13 @@ class CheckListModel extends CheckListEntity {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'checklist_id' : id,
-      'sum' : sum,
-      'count' : count,
-    };
-  }
+  // Map<String, dynamic> toMap() {
+  //   return {
+  //     'checklist_id' : id,
+  //     'sum' : sum,
+  //     'count' : count,
+  //   };
+  // }
   //
   // List<String> toList(String string) {
   //   return string.split('@');

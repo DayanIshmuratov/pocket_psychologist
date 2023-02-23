@@ -28,7 +28,7 @@ class CheckListBloc extends Bloc<BaseEvent, BaseState> {
   }
   );
   on<UpdateEvent<CheckListEntity>>((UpdateEvent<CheckListEntity> event, Emitter<BaseState> emit)  async {
-       await updateCheckList(event.entity);
+       await updateCheckList(UpdateTableParameters<CheckListEntity>(entity: event.entity));
   });
   }
 

@@ -6,8 +6,10 @@ import 'package:pocket_psychologist/features/exercises/domain/entities/checklist
 
 abstract class CheckListRepository {
   Future<List<CheckListEntity>> getCheckLists();
-  Future<QuestionEntity> getQuestion(int id, int questionId);
+  Future<List<QuestionEntity>> getQuestions(int nameId);
+  Future<List<AnswerEntity>> getAnswers(int questionId);
   Future<void> updateAnswer(AnswerEntity entity);
+  Future<void> updateQuestion(QuestionEntity entity);
   Future<void> updateCheckList(CheckListEntity entity);
   // Future<T> getEntity(int id, String tableName);
   // Future<void> updateById(T entity, String tableName, int id);

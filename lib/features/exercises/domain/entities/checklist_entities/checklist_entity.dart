@@ -11,8 +11,9 @@ class CheckListEntity extends BaseEntity with EquatableMixin {
   final String name;
   final String? description;
   final String? instruction;
-  int sum;
-  int done;
+  final int sum;
+  final int lieSum;
+  final int done;
   final int count;
   // final bool done;
 
@@ -22,6 +23,7 @@ class CheckListEntity extends BaseEntity with EquatableMixin {
     required this.description,
     required this.instruction,
     required this.sum,
+    required this.lieSum,
     required this.done,
     required this.count,
     // required this.questions,

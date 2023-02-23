@@ -3,15 +3,23 @@ import 'package:pocket_psychologist/core/db/database.dart';
 import 'package:pocket_psychologist/features/exercises/data/data_models/answer_model.dart';
 import 'package:pocket_psychologist/features/exercises/data/data_models/checklist_model.dart';
 import 'package:pocket_psychologist/features/exercises/data/data_models/question_model.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_entity.dart';
 
 abstract class CheckListLocalDataSource<T> {
   Future<List<CheckListModel>> getCheckLists();
-  Future<QuestionModel> getQuestion(int nameId, int questionId);
+
+  Future<List<QuestionModel>> getQuestions(int nameId);
+
+  Future<List<AnswerModel>> getAnswers(int questionId);
+
   Future<void> updateAnswer(AnswerModel model);
+
   Future<void> updateCheckList(CheckListModel model);
-  // Future<T> getEntity(int id, String tableName);
-  // Future<List<T>> getEntityLists(String tableName, Function fromJson);
-  // Future<void> updateById(T entity, String tableName);
+
+  Future<void> updateQuestion(QuestionModel model);
+// Future<T> getEntity(int id, String tableName);
+// Future<List<T>> getEntityLists(String tableName, Function fromJson);
+// Future<void> updateById(T entity, String tableName);
 }
 
 class CheckListLocalDataSourceImpl<T> extends CheckListLocalDataSource {
@@ -43,14 +51,15 @@ class CheckListLocalDataSourceImpl<T> extends CheckListLocalDataSource {
   // }
 
 
-
-
   @override
   Future<List<CheckListModel>> getCheckLists() async {
     // var _database = await rootBundle('assets/databases/sqlite.db');
     // var _data = _database.
     var database = await db.database;
-    var data = await database.rawQuery("SELECT checklist_id, checklist_name, description, instruction, sum, done, count FROM check_lists");
+    var data = await database.rawQuery('''SELECT checklist_id, checklist_name, description, instruction, 
+      (SELECT (CASE WHEN SUM(value) IS NULL THEN 0 ELSE SUM(value) END) as sum FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.name_id = checklist_id AND questions.question_answer_id != 0) as sum,
+    (SELECT (CASE WHEN SUM(lie_value) IS NULL THEN 0 ELSE SUM(lie_value) END) FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.name_id = checklist_id AND questions.question_answer_id != 0) as lie_sum,
+    (SELECT COUNT(question_answer_id) FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.name_id = checklist_id AND questions.question_answer_id != 0) as done, (SELECT COUNT(question_id) FROM questions WHERE questions.name_id = checklist_id) as count FROM check_lists''');
     var result = data.map((e) => CheckListModel.fromJson(e)).toList();
     return result;
   }
@@ -70,10 +79,10 @@ class CheckListLocalDataSourceImpl<T> extends CheckListLocalDataSource {
   }
 
   @override
-  Future<QuestionModel> getQuestion(int nameId, int questionId) async {
+  Future<List<QuestionModel>> getQuestions(int nameId) async {
     var database = await db.database;
-    var data = await database.rawQuery("SELECT question_id, question, name_id, GROUP_CONCAT(answer_id, '@') as answer_id, GROUP_CONCAT(answer_name, '@') as answer_name, GROUP_CONCAT(value, '@') as value, GROUP_CONCAT(lie_value, '@') as lie_value, GROUP_CONCAT(is_choosen, '@') as is_choosen FROM questions INNER JOIN answers USING(question_id) INNER JOIN answers_name USING(answer_name_id) WHERE name_id = $nameId AND question_id = $questionId");
-    var result = QuestionModel.fromJson(data[0]);
+    var data = await database.rawQuery("SELECT question_id, question, name_id, question_answer_id FROM questions WHERE name_id = $nameId");
+    var result = data.map((e) => QuestionModel.fromJson(e)).toList();
     return result;
   }
 
@@ -82,6 +91,21 @@ class CheckListLocalDataSourceImpl<T> extends CheckListLocalDataSource {
   @override
   Future<void> updateCheckList(CheckListModel model) async {
     var database = await db.database;
-    await database.update("check_lists", model.toMap(), where: "checklist_id = ?", whereArgs: [model.id]);
+    // database.transaction((txn) => null),
+    // await database.update("check_lists", model.toMap(), where: "checklist_id = ?", whereArgs: [model.id]);
+  }
+
+  @override
+  Future<void> updateQuestion(QuestionModel model) async {
+    var database = await db.database;
+    await database.update("questions", model.toMap(), where: 'question_id = ?', whereArgs: [model.id]);
+  }
+
+  @override
+  Future<List<AnswerModel>> getAnswers(int questionId) async {
+    var database = await db.database;
+    var data = await database.rawQuery("SELECT answer_id, answer_name, question_id, value, lie_value FROM answers JOIN answers_name USING(answer_name_id) WHERE question_id = $questionId");
+    var result = data.map((e) => AnswerModel.fromJson(e)).toList();
+    return result;
   }
 }

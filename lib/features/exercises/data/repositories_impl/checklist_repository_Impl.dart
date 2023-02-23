@@ -22,8 +22,8 @@ class CheckListRepositoryImpl<T extends BaseEntity> extends CheckListRepository{
   }
 
   @override
-  Future<QuestionEntity> getQuestion(int id, int questionId) async {
-    return await checkListLocalDataSource.getQuestion(id, questionId);
+  Future<List<QuestionEntity>> getQuestions(int id) async {
+    return await checkListLocalDataSource.getQuestions(id);
   }
 
   @override
@@ -34,6 +34,16 @@ class CheckListRepositoryImpl<T extends BaseEntity> extends CheckListRepository{
   @override
   Future<void> updateCheckList(CheckListEntity entity) async {
     return await checkListLocalDataSource.updateCheckList(entity as CheckListModel);
+  }
+
+  @override
+  Future<void> updateQuestion(QuestionEntity entity) async {
+    return await checkListLocalDataSource.updateQuestion(entity as QuestionModel);
+  }
+
+  @override
+  Future<List<AnswerEntity>> getAnswers(int questionId) async {
+    return await checkListLocalDataSource.getAnswers(questionId);
   }
 
 }

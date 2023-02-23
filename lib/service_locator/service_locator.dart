@@ -5,6 +5,7 @@ import 'package:pocket_psychologist/features/exercises/data/data_sources/checkli
 import 'package:pocket_psychologist/features/exercises/data/data_sources/question_local_data_source.dart';
 import 'package:pocket_psychologist/features/exercises/data/repositories_impl/checklist_repository_Impl.dart';
 import 'package:pocket_psychologist/features/exercises/domain/repositories/checklist_repository.dart';
+import 'package:pocket_psychologist/features/exercises/domain/usecases/answer_usecases/get_answers.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/checklist_usecases/get_checklists.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/checklist_usecases/update_checklist.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/get_entity_lists.dart';
@@ -20,14 +21,14 @@ void init() {
  // Bloc / Cubit
  // sl.registerFactory(() => QuestionBloc(getQuestions: sl()));
  sl.registerFactory(() => CheckListBloc(getCheckLists: sl(), updateCheckList: sl()));
- sl.registerFactory(() => QuestionBloc(getQuestion: sl()));
- sl.registerFactory(() => AnswerBloc(updateAnswer: sl()));
+ sl.registerFactory(() => QuestionBloc(getQuestion: sl(), updateQuestion: sl()));
+ sl.registerFactory(() => AnswerBloc(getAnswers: sl()));
  // Usecases
  sl.registerLazySingleton(() => GetCheckLists(repository: sl()));
  sl.registerLazySingleton(() => UpdateCheckList(repository: sl()));
- sl.registerLazySingleton(() => GetQuestion(repository: sl()));
- sl.registerLazySingleton(() => UpdateAnswer(repository: sl()));
-
+ sl.registerLazySingleton(() => GetQuestions(repository: sl()));
+ sl.registerLazySingleton(() => UpdateQuestion(repository: sl()));
+ sl.registerLazySingleton(() => GetAnswers(repository: sl()));
  // sl.registerLazySingleton(() => GetQuestions(repository: sl()));
  // Repository
  sl.registerLazySingleton<CheckListRepository>(() => CheckListRepositoryImpl(checkListLocalDataSource: sl()));

@@ -6,16 +6,27 @@ class AnswerModel extends AnswerEntity {
     required super.answer,
     required super.value,
     required super.lieValue,
-    required super.isChoosen,
+    required super.questionId
+    // required super.isChoosen,
   });
 
+  factory AnswerModel.fromJson(Map<String, dynamic> json) {
+    return AnswerModel(
+        id: json['answer_id'],
+        answer: json['answer_name'],
+        value: json['value'],
+        lieValue: json['lie_value'],
+        questionId: json['question_id']
+    );
+
+  }
   Map<String, dynamic> toMap() {
     return {
       'answer_id' : id,
       // 'answer_name_id' : answer,
       // 'value' : value,
       // 'lie_value' : lieValue,
-      'is_choosen' : isChoosen,
+      // 'is_choosen' : isChoosen,
     };
   }
 

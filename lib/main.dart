@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider<CheckListBloc>(create: (context) => sl<CheckListBloc>()),
       BlocProvider<QuestionBloc>(create: (context) => sl<QuestionBloc>()),
-      BlocProvider<AnswerBloc>(create: (context) => sl<AnswerBloc>()),
+      BlocProvider<AnswerBloc>(create: (context) => sl<AnswerBloc>(),)
+      // BlocProvider<AnswerBloc>(create: (context) => sl<AnswerBloc>()),
     ], child: MaterialApp(
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {

@@ -6,12 +6,13 @@ class QuestionEntity extends BaseEntity with EquatableMixin {
   final int id;
   final String question;
   final int nameId;
-  final List<AnswerEntity> answers;
+  // final List<AnswerEntity> answers;
+  int answerId;
   // final int nameId;
 
-  QuestionEntity({required this.id, required this.question, required this.nameId, required this.answers});
+  QuestionEntity({required this.id, required this.question, required this.nameId, required this.answerId});
   @override
   // TODO: implement props
-  List<Object?> get props => [id, question, nameId, answers];
+  List<Object?> get props => [id, question, nameId, answerId];
 
 }
