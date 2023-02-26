@@ -12,7 +12,7 @@ class QuestionBloc extends Bloc<BaseEvent, BaseState> {
   final GetQuestions getQuestion;
   final UpdateQuestion updateQuestion;
   QuestionBloc({required this.getQuestion, required this.updateQuestion}) : super(EmptyState()) {
-    on<LoadEvent>((LoadEvent event, Emitter<BaseState> emit) async {
+    on<LoadListEvent>((LoadListEvent event, Emitter<BaseState> emit) async {
       emit(LoadingState());
       // try {
         final result = await getQuestion(GetByIdParameters(id: event.id ?? 0));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_events.dart';
 import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_states.dart';
@@ -10,35 +11,32 @@ import '../state/checklist_state/checklist_state.dart';
 import '../widgets/checklist_card.dart';
 
 class CheckListsPage extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
-    final _bloc = context.read<CheckListBloc>();
-    _bloc.add(LoadEvent());
+    final bloc = context.read<CheckListBloc>();
+    bloc.add(LoadListEvent());
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Чек листы"),
+        title: const AppSubtitle(value: 'Опросы'),
         centerTitle: true,
       ),
       body: BlocBuilder<CheckListBloc, BaseState>(
         builder: (BuildContext context, state) {
           if (state is EmptyState) {
-            return const Text("Empty");
+            return const Center(child: AppTitle(value: 'Нет данных. Обратитесь к создателям приложения'));
           } else if (state is LoadingState) {
-            return CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (state is LoadedListState<CheckListEntity>) {
             return ListView.builder(
               itemCount: state.entities.length,
               itemBuilder: (context, index) {
                 return CheckListCard(entity: state.entities[index]);
-                //   ListTile(
-                //   title: Text("${state.checkLists[index].name}"),
-                //   subtitle: Text("${state.checkLists[index].id}"),
-                // );
               },
             );
           } else if (state is ErrorState) {
-            return Center(child: Text("${state.text}"));
+            return Center(child: AppTitle(value: state.text,));
           } else {
-            return const Text("Неожиданная ошибка");
+            return const Center(child: Text("Неожиданная ошибка"));
           }
         },
       ),

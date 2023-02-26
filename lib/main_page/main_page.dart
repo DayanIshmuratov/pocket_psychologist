@@ -32,6 +32,9 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        selectedLabelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
         backgroundColor: Colors.blue,
         items: const [
           BottomNavigationBarItem(

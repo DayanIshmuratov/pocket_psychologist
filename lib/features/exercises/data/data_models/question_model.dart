@@ -5,27 +5,12 @@ class QuestionModel extends QuestionEntity {
   QuestionModel({required super.id, required super.question, required super.nameId, required super.answerId});
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
-    // List<int> id = json['answer_id'].toString().split("@").map((e) => int.parse(e)).toList();
-    // List<String> answer = json['answer_name'].toString().split("@");
-    // List<int> value = json['value'].toString().split("@").map((e) => int.parse(e)).toList();
-    // List<int> lieValue = json['lie_value'].toString().split("@").map((e) => int.parse(e)).toList();
-    // // List<int> isChoosen = json['is_choosen'].toString().split("@").map((e) => int.parse(e)).toList();
-    // List<AnswerModel> result = [];
-    // for (int i = 0; i < id.length; i++) {
-    //   result.add(AnswerModel(
-    //     id: id[i],
-    //     answer: answer[i],
-    //     value: value[i],
-    //     lieValue: lieValue[i],
-    //     // isChoosen: isChoosen[i]
-    //   )
-    //   );
-    // }
      return QuestionModel(
          id: json['question_id'],
          question: json['question'],
          nameId: json['name_id'],
          answerId: json['question_answer_id'],
+         // answerName: json['answer_name']
      );
     }
 

@@ -10,7 +10,7 @@ class AnswerBloc extends Bloc<BaseEvent, BaseState> {
   // final UpdateAnswer updateAnswer;
   final GetAnswers getAnswers;
   AnswerBloc({required this.getAnswers}) : super(EmptyState()) {
-    on<LoadEvent>((LoadEvent event, Emitter<BaseState> emit) async {
+    on<LoadListEvent>((LoadListEvent event, Emitter<BaseState> emit) async {
       emit(LoadingState());
       var result = await getAnswers(GetByIdParameters(id: event.id ?? 0));
       emit(LoadedListState<AnswerEntity>(entities: result));

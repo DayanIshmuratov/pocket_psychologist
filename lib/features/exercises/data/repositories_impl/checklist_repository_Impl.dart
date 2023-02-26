@@ -7,7 +7,10 @@ import 'package:pocket_psychologist/features/exercises/domain/entities/checklist
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/exercise_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/image_entity.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/lie_results_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_entity.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_with_answer_entity.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/result_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/repositories/checklist_repository.dart';
 
 class CheckListRepositoryImpl<T extends BaseEntity> extends CheckListRepository{
@@ -17,8 +20,8 @@ class CheckListRepositoryImpl<T extends BaseEntity> extends CheckListRepository{
   CheckListRepositoryImpl({required this.checkListLocalDataSource});
 
   @override
-  Future<List<CheckListEntity>> getCheckLists() async {
-    return await checkListLocalDataSource.getCheckLists();
+  Future<List<CheckListEntity>> getCheckLists(int id) async {
+    return await checkListLocalDataSource.getCheckLists(id);
   }
 
   @override
@@ -26,15 +29,6 @@ class CheckListRepositoryImpl<T extends BaseEntity> extends CheckListRepository{
     return await checkListLocalDataSource.getQuestions(id);
   }
 
-  @override
-  Future<void> updateAnswer(AnswerEntity entity) async {
-    return await checkListLocalDataSource.updateAnswer(entity as AnswerModel);
-  }
-
-  @override
-  Future<void> updateCheckList(CheckListEntity entity) async {
-    return await checkListLocalDataSource.updateCheckList(entity as CheckListModel);
-  }
 
   @override
   Future<void> updateQuestion(QuestionEntity entity) async {
@@ -46,4 +40,28 @@ class CheckListRepositoryImpl<T extends BaseEntity> extends CheckListRepository{
     return await checkListLocalDataSource.getAnswers(questionId);
   }
 
+  @override
+  Future<List<ExercisesEntity>> getExercises(int nameId) async {
+    return await checkListLocalDataSource.getExercises(nameId);
+  }
+
+  @override
+  Future<List<ImageEntity>> getImages(int exerciseId) async {
+    return await checkListLocalDataSource.getImages(exerciseId);
+  }
+
+  @override
+  Future<List<LieResultEntity>> getLieResults(int nameId) async {
+    return await checkListLocalDataSource.getLieResults(nameId);
+  }
+
+  @override
+  Future<List<ResultEntity>> getResults(int nameId) async {
+    return await checkListLocalDataSource.getResults(nameId);
+  }
+
+  @override
+  Future<List<QuestionWithAnswerEntity>> getQuestionsWithAnswers(int id) async {
+    return await checkListLocalDataSource.getQuestionWithAnswer(id);
+  }
 }

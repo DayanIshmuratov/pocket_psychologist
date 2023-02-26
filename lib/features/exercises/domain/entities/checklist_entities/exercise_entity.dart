@@ -1,14 +1,15 @@
 import 'package:equatable/equatable.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/image_entity.dart';
 
-class ExercisesEntity extends Equatable {
+class ExercisesEntity extends BaseEntity with EquatableMixin {
   final int id;
   final String name;
-  final String nameId;
+  final int checklistId;
 
-  const ExercisesEntity({required this.id, required this.name, required this.nameId});
+  ExercisesEntity({required this.id, required this.name, required this.checklistId});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [id, name, nameId];
+  List<Object?> get props => [id, name, checklistId];
 }

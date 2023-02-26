@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 
-class ImageEntity extends Equatable {
+class ImageEntity extends BaseEntity with EquatableMixin {
   final int id;
   final String path;
   final int exerciseId;

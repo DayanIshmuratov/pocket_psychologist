@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/answer_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/checklist_entity.dart';
 import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/question_entity.dart';
@@ -33,14 +34,14 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
     final questionBloc = context.read<QuestionBloc>();
     final answerBloc = context.read<AnswerBloc>();
     final checklistBloc = context.read<CheckListBloc>();
-    questionBloc.add(LoadEvent(id: widget.checkListEntity.id));
+    questionBloc.add(LoadListEvent(id: widget.checkListEntity.id));
     return Scaffold(
         appBar: AppBar(
           // automaticallyImplyLeading: false,
           // leading: IconButton(onPressed: () {
           //   Navigator.pop(context);
           // }, icon: Icon(Icons.arrow_back)),
-          title: Text("Упражнения"),
+          title: AppSubtitle(value: widget.checkListEntity.name),
           centerTitle: true,
         ),
         body: (_questionIndex < widget.checkListEntity.count) &&
@@ -50,7 +51,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
                   return Center(child: CircularProgressIndicator());
                 } else if (state is LoadedListState<QuestionEntity>) {
                   return doingWidget(
-                      state.entities, questionBloc, checklistBloc, answerBloc);
+                      state.entities, questionBloc, answerBloc);
                 } else if (state is ErrorState) {
                   return Center(
                     child: Text(state.text),
@@ -59,119 +60,107 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
                   return Center(child: Text("Неожиданная ошибка"));
                 }
               })
-            : doneWidget());
+            : doneWidget(checklistBloc));
   }
 
-  Widget doingWidget(List<QuestionEntity> questions, QuestionBloc questionBloc,
-      CheckListBloc checkListBloc, AnswerBloc answerBloc) {
-    answerBloc.add(LoadEvent(id: questions[_questionIndex].id));
-    return Column(
-      children: [
-        _questionIndex == 0
-            ? ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                ),
-                onPressed: () {},
-                child: Text("Назад"),
-              )
-            : ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _questionIndex--;
-                  });
-                },
-                child: Text("Назад"),
+  Widget doingWidget(List<QuestionEntity> questions, QuestionBloc questionBloc, AnswerBloc answerBloc) {
+    answerBloc.add(LoadListEvent(id: questions[_questionIndex].id));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+          _questionIndex == 0
+              ? ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey,
+            ),
+            onPressed: () {},
+            child: Text("Предыдущий вопрос"),
+          )
+              : ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _questionIndex--;
+              });
+            },
+            child: Text("Предыдущий вопрос"),
+          ),
+            AppSubtitle(value: "${_questionIndex + 1} / ${widget.checkListEntity.count}")
+        ],),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AppSubtitle(value:
+                questions[_questionIndex].question ?? '',
               ),
-        Card(
-          child: Text(
-            questions[_questionIndex].question ?? '',
-            style: TextStyle(
-              fontSize: 32,
             ),
           ),
-        ),
-        SizedBox(
-          height: 32,
-        ),
-        BlocBuilder<AnswerBloc, BaseState>(builder: (context, state) {
-          if (state is LoadedListState<AnswerEntity>) {
-            return Expanded(
-              child: ListView.builder(
-                  itemCount: state.entities.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () async {
-                        questions[_questionIndex].answerId =
-                            state.entities[index].id;
-                        questionBloc.add(
-                            UpdateEvent(entity: questions[_questionIndex]));
-                        _questionIndex++;
-                        setState(() {});
-                      },
-                      child: Card(
-                        child: Text(state.entities[index].answer),
-                        color: state.entities[index].id ==
-                                questions[_questionIndex].answerId
-                            ? Colors.lightGreen
-                            : Colors.white,
-                      ),
-                    );
-                  }),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        }),
-        // GestureDetector(
-        //     onTap: () {
-        //       setState(() {
-        //         widget.questions.answer[_questionIndex] = 1;
-        //         _questionIndex++;
-        //       });
-        //     },
-        //     child: Card(child: Text('Верно'), color: widget.questions.answer[_questionIndex] == 1 ? Colors.lightGreen : Colors.white,)),
-        // SizedBox(
-        //   height: 8,
-        // ),
-        // GestureDetector(
-        //     onTap: () {
-        //       setState(() {
-        //         widget.questions.answer[_questionIndex] = 2;
-        //         _questionIndex++;
-        //         //result[_questionIndex].add(1)
-        //       });
-        //     },
-        //     child: Card(child: Text('Неверно'), color: widget.questions.answer[_questionIndex] == 2 ? Colors.lightGreen : Colors.white  ,)),
-        // SizedBox(
-        //   height: 8,
-        // ),
-        // GestureDetector(
-        //     onTap: () {
-        //       setState(() {
-        //         widget.questions.answer[_questionIndex] = 3;
-        //         _questionIndex++;
-        //         //result[_questionIndex].add(1)
-        //       });
-        //     },
-        //     child: Card(child: Text('Не знаю'), color: widget.questions.answer[_questionIndex] == 3 ? Colors.lightGreen : Colors.white  ,)),
-      ],
+          SizedBox(
+            height: 16,
+          ),
+          BlocBuilder<AnswerBloc, BaseState>(builder: (context, state) {
+            if (state is LoadedListState<AnswerEntity>) {
+              return Expanded(
+                child: ListView.builder(
+                    itemCount: state.entities.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: ()  {
+                          questions[_questionIndex].answerId =
+                              state.entities[index].id;
+                          questionBloc.add(
+                              UpdateEvent(entity: questions[_questionIndex]));
+                          _questionIndex++;
+                          setState(() {});
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AppText(value: state.entities[index].answer),
+                          ),
+                          color: state.entities[index].id ==
+                                  questions[_questionIndex].answerId
+                              ? Colors.lightGreen
+                              : Colors.white,
+                        ),
+                      );
+                    }),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+        ],
+      ),
     );
   }
 
-  Widget doneWidget() {
-    return Column(
-      children: [
-        Text('Вы завершили чек лист'),
-        ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Идет сохранение результата в БД
-            },
-            child: Text('Посмотреть результаты')),
-      ],
+  Widget doneWidget(CheckListBloc checkListBloc) {
+    checkListBloc.add(LoadListEvent());
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AppSubtitle(value: 'Вы успешно завершили опрос "${widget.checkListEntity.name}"', textAlign: TextAlign.center),
+          BlocBuilder<CheckListBloc, BaseState>(
+            builder: (context, state) {
+              if (state is LoadedListState) {
+                return ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'result_page', arguments: state.entities[widget.checkListEntity.id - 1]);
+                    },
+                    child: AppSubtitle(value: 'Посмотреть результат',));
+              }
+              else return Center(child: CircularProgressIndicator());
+              },
+          ),
+        ],
+      ),
     );
   }
 }

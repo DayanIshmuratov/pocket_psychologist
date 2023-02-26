@@ -78,6 +78,13 @@ flutter:
   assets:
     - assets/databases/sqlite.db
     - assets/images/no_image.jpg
+    - assets/images/example_image.jpg
+    - assets/images/common/techniques_image.jpg
+    - assets/images/common/polls_image.jpg
+    - assets/images/exercises/first/first_exercise_first.jpg
+    - assets/images/exercises/first/first_exercise_second.jpg
+    - assets/images/exercises/first/first_exercise_third.jpg
+    - assets/images/exercises/first/first_exercise_fourth.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -90,12 +97,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
