@@ -1,16 +1,16 @@
 
 import 'package:get_it/get_it.dart';
 import 'package:pocket_psychologist/core/db/database.dart';
-import 'package:pocket_psychologist/features/exercises/data/data_sources/checklist_local_data_source.dart';
+import 'package:pocket_psychologist/features/exercises/data/data_sources/survey_local_data_source.dart';
 import 'package:pocket_psychologist/features/exercises/data/data_sources/question_local_data_source.dart';
 import 'package:pocket_psychologist/features/exercises/data/repositories_impl/checklist_repository_Impl.dart';
-import 'package:pocket_psychologist/features/exercises/domain/entities/checklist_entities/image_entity.dart';
-import 'package:pocket_psychologist/features/exercises/domain/repositories/checklist_repository.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/image_entity.dart';
+import 'package:pocket_psychologist/features/exercises/domain/repositories/survey_repository.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/answer_usecases/get_answers.dart';
-import 'package:pocket_psychologist/features/exercises/domain/usecases/checklist_usecases/get_checklists.dart';
-import 'package:pocket_psychologist/features/exercises/domain/usecases/checklist_usecases/update_checklist.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/domain/usecases/checklist_usecases/get_surveys.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/domain/usecases/checklist_usecases/update_checklist.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/exercises_usecases/get_exercises.dart';
-import 'package:pocket_psychologist/features/exercises/domain/usecases/get_entity_lists.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/domain/usecases/get_entity_lists.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/image_usecases/get_images.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/lie_result_usecases/get_lie_results.dart';
 import 'package:pocket_psychologist/features/exercises/domain/usecases/question_usecases/update_question.dart';
@@ -32,11 +32,12 @@ void init() {
  // Bloc / Cubit
  // sl.registerFactory(() => QuestionBloc(getQuestions: sl()));
  sl.registerFactory(() => CheckListBloc(getCheckLists: sl(),));
- sl.registerFactory(() => QuestionBloc(getQuestion: sl(), updateQuestion: sl()));
+ sl.registerFactory(() => ExercisesBloc(getExercises: sl()));
+
+ sl.registerFactory(() => QuestionCubit(getQuestion: sl(), updateQuestion: sl()));
  sl.registerFactory(() => AnswerBloc(getAnswers: sl()));
  sl.registerFactory(() => ResultBloc(getResults: sl()));
  sl.registerFactory(() => LieResultBloc(getResults: sl()));
- sl.registerFactory(() => ExercisesBloc(getExercises: sl()));
  sl.registerFactory(() => ImageBloc(getImages: sl()));
  sl.registerFactory(() => QuestionWithAnswerBloc(getQuestion: sl()));
  // Usecases
@@ -52,7 +53,7 @@ void init() {
  sl.registerLazySingleton(() => GetQuestionsWithAnswer(repository: sl()));
  // sl.registerLazySingleton(() => GetQuestions(repository: sl()));
  // Repository
- sl.registerLazySingleton<CheckListRepository>(() => CheckListRepositoryImpl(checkListLocalDataSource: sl()));
+ sl.registerLazySingleton<CheckListRepository>(() => CheckListRepositoryImpl(surveyLocalDataSource: sl()));
  sl.registerLazySingleton<CheckListLocalDataSource>(() => CheckListLocalDataSourceImpl(db: DBProvider.db));
  // sl.registerLazySingleton<QuestionLocalDataSource>(() => QuestionLocalDataSourceImpl(db: DBProvider.db));
  // Core

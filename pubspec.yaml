@@ -51,6 +51,9 @@ dependencies:
   #bloc
   flutter_bloc: ^8.1.2
 
+  #logger
+  logging: ^1.1.1
+
 
 dev_dependencies:
   flutter_test:
@@ -81,10 +84,10 @@ flutter:
     - assets/images/example_image.jpg
     - assets/images/common/techniques_image.jpg
     - assets/images/common/polls_image.jpg
-    - assets/images/exercises/first/first_exercise_first.jpg
-    - assets/images/exercises/first/first_exercise_second.jpg
-    - assets/images/exercises/first/first_exercise_third.jpg
-    - assets/images/exercises/first/first_exercise_fourth.jpg
+    - assets/images/surveys_and_exercises/first/first_exercise_first.jpg
+    - assets/images/surveys_and_exercises/first/first_exercise_second.jpg
+    - assets/images/surveys_and_exercises/first/first_exercise_third.jpg
+    - assets/images/surveys_and_exercises/first/first_exercise_fourth.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
