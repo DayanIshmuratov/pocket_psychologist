@@ -1,56 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/survey_entity.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_state.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/exercise_state/exercises_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/widgets/exercise_card.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/widgets/exercise_view.dart';
+import '../../domain/entities/exercise_entity.dart';
+import '../state/bloc_states.dart';
+import '../state/exercise_state/exercises_cubit.dart';
+import '../widgets/exercise_card.dart';
+import '../widgets/survey_card.dart';
 
-import '../../../../service_locator/service_locator.dart';
-
-class ExercisesPage extends StatefulWidget {
-  State<ExercisesPage> createState() {
-    return _ExercisesPageState();
-  }
-}
-
-class _ExercisesPageState extends State<ExercisesPage> {
+class ExercisesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<ExercisesCubit>();
+    bloc.loadListData(0);
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("Упражнения"),
-      //   centerTitle: true,
-      // ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: const [
-                ExerciseCard(
-                  title: 'Опросы',
-                  image: 'assets/images/common/polls_image.jpg',
-                  description: "Описание описание Описание описание Описание описание Описание описание Описание описание Описание описание Описание описание Описание описание ",
-                  page: 'checklists_page',
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                ExerciseCard(
-                  title: 'Упражнения',
-                  image: 'assets/images/common/techniques_image.jpg',
-                  description: "Описание описание Описание описание описание описание описание описание Описание описание Описание описание Описание описание Описание описание Описание описание Описание описание ",
-                  page: 'techniques_page',),
-                // ExerciseSecondCard(),
-              ],
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: const AppSubtitle(value: 'Опросы'),
+        centerTitle: true,
+      ),
+      body: BlocBuilder<ExercisesCubit, BaseState>(
+        builder: (BuildContext context, state) {
+          if (state is EmptyState) {
+            return const Center(child: AppTitle(value: 'Нет данных. Обратитесь к создателям приложения'));
+          } else if (state is LoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is LoadedListState<ExercisesEntity>) {
+            return ListView.builder(
+              itemCount: state.entities.length,
+              itemBuilder: (context, index) {
+                return ExerciseCard(entity: state.entities[index]);
+              },
+            );
+          } else if (state is ErrorState) {
+            return Center(child: AppTitle(value: state.text,));
+          } else {
+            return const Center(child: Text("Неожиданная ошибка"));
+          }
+        },
       ),
     );
-
   }
 }

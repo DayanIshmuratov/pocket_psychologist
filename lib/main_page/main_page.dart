@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pocket_psychologist/constants/app_colors/app_colors.dart';
 import 'package:pocket_psychologist/features/chat/page/chat_page.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/page/exercises_page.dart';
 import 'package:pocket_psychologist/features/home/page/home_page.dart';
 import 'package:pocket_psychologist/features/profile/page/profile_page.dart';
 import 'package:pocket_psychologist/features/vip/page/vip_page.dart';
+
+import '../features/surveys_and_exercises/presentation/page/surveys_and_exercises_page.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 1;
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    ExercisesPage(),
+    SurveysAndExercisesPage(),
     ChatPage(),
     VipPage(),
     ProfilePage(),
@@ -30,37 +31,38 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget build(BuildContext context) {
+    final _color = AppColors.mainColor;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         selectedLabelStyle: TextStyle(
           fontWeight: FontWeight.bold,
         ),
-        backgroundColor: Colors.blue,
-        items: const [
+        // backgroundColor: Colors.blue,
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Домашняя",
-            backgroundColor: AppColors.mainColor,
+            backgroundColor: _color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.done),
             label: "Упражнения",
-            backgroundColor: AppColors.mainColor,
+            backgroundColor: _color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble),
             label: "Чат",
-            backgroundColor: AppColors.mainColor,
+            backgroundColor: _color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.attach_money),
             label: "VIP",
-            backgroundColor: AppColors.mainColor,
+            backgroundColor: _color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: "Профиль",
-            backgroundColor: AppColors.mainColor,
+            backgroundColor: _color,
           ),
         ],
         currentIndex: _selectedIndex,

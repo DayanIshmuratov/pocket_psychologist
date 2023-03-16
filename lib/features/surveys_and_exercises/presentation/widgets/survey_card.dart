@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/survey_entity.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/question_entity.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_events.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_event.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/question_state/question_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/question_state/question_event.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/question_state/question_state.dart';
+
+import '../../domain/entities/survey_entity.dart';
+import '../state/survey_state/survey_cubit.dart';
 
 class CheckListCard extends StatefulWidget {
-  final CheckListEntity entity;
+  final SurveyEntity entity;
 
-  CheckListCard({super.key, required this.entity});
+  const CheckListCard({super.key, required this.entity});
 
+  @override
   State<CheckListCard> createState() {
     return _CheckListCardState();
   }
 }
 
-class _CheckListCardState extends State<CheckListCard> with TickerProviderStateMixin {
+class _CheckListCardState extends State<CheckListCard>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
   bool _isDone = false;
 
+  @override
   void initState() {
     super.initState();
     _controller = AnimationController(
@@ -51,6 +49,7 @@ class _CheckListCardState extends State<CheckListCard> with TickerProviderStateM
 
   // final entity = widget.entity;
 
+  @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
@@ -83,35 +82,35 @@ class _CheckListCardState extends State<CheckListCard> with TickerProviderStateM
             axis: Axis.vertical,
             child: Column(
               children: [
-              ListTile(
-                subtitle: Text(widget.entity.description ?? "Нет описания"),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Text('${widget.entity.questions.answer.indexOf(0) == -1 ? widget.entity.questions.answer.length : widget.entity.questions.answer.indexOf(0)}/${widget.entity.questions.answer.length}'),
-                    Text('${widget.entity.done}/${widget.entity.count}'),
-                    ElevatedButton(
-                      onPressed: ()  async {
-                        if (_isDone) {
-                          await Navigator.pushNamed(context, 'result_page', arguments: widget.entity);
-                        } else {
-                          await Navigator.pushNamed(
-                              context, 'checklist_doing_page',
-                              arguments: widget.entity);
-                          context.read<CheckListBloc>().add(LoadListEvent());
-                        }
-                        setState(()  {
-                        });
-                      },
-                      child: _isDone ? Text('Результат') : Text('Выполнить'),
-                    )
-                  ],
+                ListTile(
+                  subtitle: Text(widget.entity.description ?? "Нет описания"),
                 ),
-              )
-            ],
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Text('${widget.entity.questions.answer.indexOf(0) == -1 ? widget.entity.questions.answer.length : widget.entity.questions.answer.indexOf(0)}/${widget.entity.questions.answer.length}'),
+                      Text('${widget.entity.done}/${widget.entity.count}'),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_isDone) {
+                            await Navigator.pushNamed(context, 'result_page',
+                                arguments: widget.entity);
+                          } else {
+                            await Navigator.pushNamed(
+                                context, 'checklist_doing_page',
+                                arguments: widget.entity);
+                            context.read<SurveyCubit>().loadListData(0);
+                          }
+                          setState(() {});
+                        },
+                        child: _isDone ? Text('Результат') : Text('Выполнить'),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ],
@@ -119,12 +118,12 @@ class _CheckListCardState extends State<CheckListCard> with TickerProviderStateM
     );
   }
 }
+
 class ExpandedSection extends StatefulWidget {
   final Widget child;
   final bool expand;
 
-  ExpandedSection(
-      {this.expand = false, required this.child});
+  ExpandedSection({this.expand = false, required this.child});
 
   @override
   _ExpandedSectionState createState() => _ExpandedSectionState();

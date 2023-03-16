@@ -13,12 +13,19 @@ import '../data_models/survey_model.dart';
 
 abstract class SurveyLocalDataSource<T> {
   Future<List<ResultModel>> getResults(int surveyId);
+
   Future<List<LieResultModel>> getLieResults(int surveyId);
+
   Future<List<ExercisesModel>> getExercises(int surveyId);
+
   Future<List<ImageModel>> getImages(int exerciseId);
+
   Future<List<SurveyModel>> getSurveys(int surveyId);
+
   Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer(int surveyId);
+
   Future<List<QuestionModel>> getQuestions(int surveyId);
+
   Future<List<AnswerModel>> getAnswers(int questionId);
 
   Future<void> updateQuestion(QuestionModel model);
@@ -34,98 +41,158 @@ class SurveyLocalDataSourceImpl<T> extends SurveyLocalDataSource {
 
   @override
   Future<List<SurveyModel>> getSurveys(int surveyId) async {
-    // var _database = await rootBundle('assets/databases/sqlite.db');
-    // var _data = _database.
     var database = await db.database;
     if (surveyId == 0) {
-      var data = await database.rawQuery('''SELECT survey_id, survey_name, description, instruction, 
+      try {
+        var data = await database
+            .rawQuery('''SELECT survey_id, survey_name, description, instruction, 
       (SELECT (CASE WHEN SUM(value) IS NULL THEN 0 ELSE SUM(value) END) as sum FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.survey_id = surveys.survey_id AND questions.question_answer_id != 0) as sum,
     (SELECT (CASE WHEN SUM(lie_value) IS NULL THEN 0 ELSE SUM(lie_value) END) FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.survey_id = surveys.survey_id AND questions.question_answer_id != 0) as lie_sum,
     (SELECT COUNT(question_answer_id) FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.survey_id = surveys.survey_id AND questions.question_answer_id != 0) as done, (SELECT COUNT(question_id) FROM questions WHERE questions.survey_id = surveys.survey_id) as count FROM surveys''');
-      var result = data.map((e) => SurveyModel.fromJson(e)).toList();
-      return result;
+        var result = data.map((e) => SurveyModel.fromJson(e)).toList();
+        return result;
+      }
+      catch (e) {
+        throw CacheException();
+      }
     } else {
-      var data = await database.rawQuery('''SELECT survey_id, survey_name, description, instruction, 
+      try {
+        var data = await database
+            .rawQuery('''SELECT survey_id, survey_name, description, instruction, 
       (SELECT (CASE WHEN SUM(value) IS NULL THEN 0 ELSE SUM(value) END) as sum FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.survey_id = surveys.survey_id AND questions.question_answer_id != 0) as sum,
     (SELECT (CASE WHEN SUM(lie_value) IS NULL THEN 0 ELSE SUM(lie_value) END) FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.survey_id = surveys.survey_id AND questions.question_answer_id != 0) as lie_sum,
     (SELECT COUNT(question_answer_id) FROM questions inner join answers ON questions.question_answer_id = answers.answer_id WHERE questions.survey_id = surveys.survey_id AND questions.question_answer_id != 0) as done, (SELECT COUNT(question_id) FROM questions WHERE questions.survey_id = surveys.survey_id) as count FROM surveys WHERE survey_id = $surveyId''');
-      var result = data.map((e) => SurveyModel.fromJson(e)).toList();
-      return result;
+        var result = data.map((e) => SurveyModel.fromJson(e)).toList();
+        return result;
+      }
+      catch (e) {
+        throw CacheException();
+      }
     }
   }
 
   @override
   Future<List<QuestionModel>> getQuestions(int surveyId) async {
     var database = await db.database;
-    var data = await database.rawQuery("SELECT question_id, question, survey_id, question_answer_id FROM questions WHERE survey_id = $surveyId");
-    var result = data.map((e) => QuestionModel.fromJson(e)).toList();
-    return result;
+    try {
+      var data = await database.rawQuery(
+          "SELECT question_id, question, survey_id, question_answer_id FROM questions WHERE survey_id = $surveyId");
+      var result = data.map((e) => QuestionModel.fromJson(e)).toList();
+      return result;
+    }
+    catch (e) {
+      throw CacheException();
+    }
   }
 
   @override
   Future<void> updateQuestion(QuestionModel model) async {
     var database = await db.database;
-    await database.update("questions", model.toMap(), where: 'question_id = ?', whereArgs: [model.id]);
+    try {
+      await database.update("questions", model.toMap(),
+          where: 'question_id = ?', whereArgs: [model.id]);
+    }
+    catch (e) {
+      throw CacheException();
+    }
   }
 
   @override
   Future<List<AnswerModel>> getAnswers(int questionId) async {
     var database = await db.database;
     try {
-      var data = await database.rawQuery("SELECT answer_id, answer_name, question_id, value, lie_value FROM answers JOIN answers_name USING(answer_name_id) WHERE question_id = $questionId");
-    var result = data.map((e) => AnswerModel.fromJson(e)).toList();
-    return result;}
-    catch (e) {
-      throw CacheException('БД не робит');
+      var data = await database.rawQuery(
+          "SELECT answer_id, answer_name, question_id, value, lie_value FROM answers JOIN answers_name USING(answer_name_id) WHERE question_id = $questionId");
+      var result = data.map((e) => AnswerModel.fromJson(e)).toList();
+      return result;
+    } catch (e) {
+      throw CacheException();
     }
-
   }
 
   @override
   Future<List<LieResultModel>> getLieResults(int surveyId) async {
     var database = await db.database;
-    var data = await database.rawQuery("SELECT id, lie_result, min_value, max_value FROM lie_results WHERE survey_id = $surveyId");
-    var result = data.map((e) => LieResultModel.fromJson(e)).toList();
-    return result;
+    try {
+      var data = await database.rawQuery(
+          "SELECT id, lie_result, min_value, max_value FROM lie_results WHERE survey_id = $surveyId");
+      var result = data.map((e) => LieResultModel.fromJson(e)).toList();
+      return result;
+    }
+    catch (e) {
+      throw CacheException();
+    }
   }
 
   @override
   Future<List<ExercisesModel>> getExercises(int surveyId) async {
     var database = await db.database;
     if (surveyId == 0) {
-      var data = await database.rawQuery("SELECT exercise_id, exercise_name, survey_id FROM exercises");
-      var result = data.map((e) => ExercisesModel.fromJson(e)).toList();
-      return result;
+      try {
+        var data = await database.rawQuery(
+            "SELECT exercise_id, exercise_name, survey_id FROM exercises");
+        var result = data.map((e) => ExercisesModel.fromJson(e)).toList();
+        return result;
+      }
+      catch (e) {
+        throw CacheException();
+      }
     } else {
-      var data = await database.rawQuery("SELECT exercise_id, exercise_name, name_id FROM exercises WHERE survey_id = $surveyId");
-      var result = data.map((e) => ExercisesModel.fromJson(e)).toList();
-      return result;
+      try {
+        var data = await database.rawQuery(
+            "SELECT exercise_id, exercise_name, name_id FROM exercises WHERE survey_id = $surveyId");
+        var result = data.map((e) => ExercisesModel.fromJson(e)).toList();
+        return result;
+      }
+      catch (e) {
+        throw CacheException();
+      }
     }
   }
 
   @override
   Future<List<ImageModel>> getImages(int exerciseId) async {
     var database = await db.database;
-    var data = await database.rawQuery("SELECT images_id, images_path, exercise_id FROM images WHERE exercise_id = $exerciseId");
-    var result = data.map((e) => ImageModel.fromJson(e)).toList();
-    return result;
+    try {
+      var data = await database.rawQuery(
+          "SELECT images_id, images_path, exercise_id FROM images WHERE exercise_id = $exerciseId");
+      var result = data.map((e) => ImageModel.fromJson(e)).toList();
+      return result;
+    }
+    catch (e) {
+      throw CacheException();
+    }
   }
 
   @override
   Future<List<ResultModel>> getResults(int surveyId) async {
     var database = await db.database;
-    var data = await database.rawQuery("SELECT id, result, min_value, max_value FROM results WHERE survey_id = $surveyId");
-    var result = data.map((e) => ResultModel.fromJson(e)).toList();
-    return result;
+    try {
+      var data = await database.rawQuery(
+          "SELECT id, result, min_value, max_value FROM results WHERE survey_id = $surveyId");
+      var result = data.map((e) => ResultModel.fromJson(e)).toList();
+      return result;
+    }
+    catch (e) {
+      throw CacheException();
+    }
   }
 
   @override
-  Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer(int surveyId) async {
+  Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer(
+      int surveyId) async {
     var database = await db.database;
-    var data = await database.rawQuery("SELECT questions.question_id, question, survey_id, question_answer_id, answer_name "
-        "FROM questions inner join answers ON questions.question_answer_id = answers.answer_id inner join answers_name "
-        "USING (answer_name_id) WHERE survey_id = $surveyId");
-    var result = data.map((e) => QuestionWithAnswerModel.fromJson(e)).toList();
-    return result;
+    try {
+      var data = await database.rawQuery(
+          "SELECT questions.question_id, question, survey_id, question_answer_id, answer_name "
+              "FROM questions inner join answers ON questions.question_answer_id = answers.answer_id inner join answers_name "
+              "USING (answer_name_id) WHERE survey_id = $surveyId");
+      var result = data.map((e) => QuestionWithAnswerModel.fromJson(e)).toList();
+      return result;
+    }
+    catch (e) {
+      throw CacheException();
+    }
   }
 }
+

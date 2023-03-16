@@ -2,30 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
-import 'package:pocket_psychologist/features/exercises/domain/entities/answer_entity.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/survey_entity.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/question_entity.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/answer_state/answer_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_events.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_states.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/checklist_state/checklist_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/lie_result_state/lie_result_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/question_counter_bloc/question_counter_bloc.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/question_state/question_bloc.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/answer_entity.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/survey_entity.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/survey_state/survey_cubit.dart';
 
-class CheckListDoingPage extends StatefulWidget {
-  final CheckListEntity checkListEntity;
+import '../../domain/entities/question_entity.dart';
+import '../state/answer_state/answer_cubit.dart';
+import '../state/bloc_states.dart';
+import '../state/question_counter_bloc/question_counter_bloc.dart';
+import '../state/question_state/question_cubit.dart';
 
-  const CheckListDoingPage({super.key, required this.checkListEntity});
+class SurveyDoingPage extends StatefulWidget {
+  final SurveyEntity surveyEntity;
+
+  const SurveyDoingPage({super.key, required this.surveyEntity});
 
   @override
-  State<CheckListDoingPage> createState() => _CheckListDoingPageState();
+  State<SurveyDoingPage> createState() => _SurveyDoingPageState();
 }
 
-class _CheckListDoingPageState extends State<CheckListDoingPage> {
+class _SurveyDoingPageState extends State<SurveyDoingPage> {
   @override
   void initState() {
-    if (widget.checkListEntity.done == 0) {
+    if (widget.surveyEntity.done == 0) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _instructionDialog(context);
       });
@@ -34,17 +33,17 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
   }
   // int _questionIndex = 0;
   Widget build(BuildContext context) {
-    final questionBloc = context.read<QuestionCubit>();
-    questionBloc.loadData(widget.checkListEntity.id);
+    final questionCubit = context.read<QuestionCubit>();
+    questionCubit.loadListData(widget.surveyEntity.id);
     return BlocProvider(
       create: (context) =>
-          QuestionCounterBloc(initialValue: widget.checkListEntity.done),
+          QuestionCounterBloc(initialValue: widget.surveyEntity.done),
       child: Scaffold(
         appBar: AppBar(
           // flexibleSpace: AppSubtitle(value: checkListEntity.name),
           title: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-              child: AppSubtitle(value: widget.checkListEntity.name)),
+              child: AppSubtitle(value: widget.surveyEntity.name)),
           centerTitle: true,
           actions: [
             IconButton(
@@ -57,7 +56,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
         ),
         body: BlocBuilder<QuestionCounterBloc, int>(
           builder: (context, state) {
-            if (state == widget.checkListEntity.count) {
+            if (state == widget.surveyEntity.count) {
               return doneWidget(context);
             } else {
               return BlocBuilder<QuestionCubit, BaseState>(
@@ -65,7 +64,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
                 if (state is LoadingState) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is LoadedListState<QuestionEntity>) {
-                  return doingWidget(state.entities, questionBloc, context);
+                  return doingWidget(state.entities, questionCubit, context);
                 } else if (state is ErrorState) {
                   return Center(
                     child: Text(state.text),
@@ -85,8 +84,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
       BuildContext context) {
     final questionCounterBloc = context.watch<QuestionCounterBloc>();
     context
-        .read<AnswerBloc>()
-        .add(LoadListEvent(id: questions[questionCounterBloc.state].id));
+        .read<AnswerCubit>().loadListData(questions[questionCounterBloc.state].id);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -110,7 +108,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
                     ),
               AppSubtitle(
                   value:
-                      "${questionCounterBloc.state + 1} / ${widget.checkListEntity.count}")
+                      "${questionCounterBloc.state + 1} / ${widget.surveyEntity.count}")
             ],
           ),
           questions[questionCounterBloc.state].question != null ? SizedBox(
@@ -127,7 +125,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
           const SizedBox(
             height: 16,
           ),
-          BlocBuilder<AnswerBloc, BaseState>(builder: (context, state) {
+          BlocBuilder<AnswerCubit, BaseState>(builder: (context, state) {
             if (state is LoadedListState<AnswerEntity>) {
               return Expanded(
                 child: ListView.builder(
@@ -168,7 +166,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
   }
 
   Widget doneWidget(BuildContext context) {
-    final checklistBloc = context.read<CheckListBloc>().add(LoadListEvent());
+    final checklistBloc = context.read<SurveyCubit>().loadListData(0);
     // checkListBloc.;
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -176,21 +174,22 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AppSubtitle(
-              value: 'Вы успешно завершили опрос "${widget.checkListEntity.name}"',
+              value: 'Вы успешно завершили опрос "${widget.surveyEntity.name}"',
               textAlign: TextAlign.center),
-          BlocBuilder<CheckListBloc, BaseState>(
+          BlocBuilder<SurveyCubit, BaseState>(
             builder: (context, state) {
               if (state is LoadedListState) {
                 return ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, 'result_page',
-                          arguments: state.entities[widget.checkListEntity.id - 1]);
+                          arguments: state.entities[widget.surveyEntity.id - 1]);
                     },
                     child: const AppSubtitle(
                       value: 'Посмотреть результат',
                     ));
-              } else
+              } else {
                 return const Center(child: CircularProgressIndicator());
+              }
             },
           ),
         ],
@@ -214,7 +213,7 @@ class _CheckListDoingPageState extends State<CheckListDoingPage> {
                   children: [
                     AppText(
                         value:
-                        widget.checkListEntity.instruction ?? 'Инструкцию не завезли =('),
+                        widget.surveyEntity.instruction ?? 'Инструкцию не завезли =('),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);

@@ -1,4 +1,4 @@
-import '../../domain/entities/checklist_entities/survey_entity.dart';
+import '../../domain/entities/survey_entity.dart';
 
 abstract class BaseState {}
 

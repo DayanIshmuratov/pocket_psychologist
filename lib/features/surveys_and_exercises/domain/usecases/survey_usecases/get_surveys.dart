@@ -6,9 +6,9 @@ import 'package:pocket_psychologist/features/surveys_and_exercises/domain/reposi
 import '../../../../../core/usecases/usecase_with_parameters.dart';
 import '../question_usecases/get_questions.dart';
 
-class GetCheckLists extends UseCaseWithParameters<Future<List<SurveyEntity>>, GetByIdParameters> {
+class GetSurveys extends UseCaseWithParameters<Future<List<SurveyEntity>>, GetByIdParameters> {
   final SurveyRepository repository;
-  GetCheckLists({required this.repository});
+  GetSurveys({required this.repository});
   @override
   Future<List<SurveyEntity>> call(GetByIdParameters getByIdParameters) {
     return repository.getSurveys(getByIdParameters.id);

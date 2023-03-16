@@ -11,7 +11,6 @@ class SurveyEntity extends BaseEntity with EquatableMixin {
   final int lieSum;
   final int done;
   final int count;
-  // final bool done;
 
   SurveyEntity({
     required this.id,
@@ -22,10 +21,6 @@ class SurveyEntity extends BaseEntity with EquatableMixin {
     required this.lieSum,
     required this.done,
     required this.count,
-    // required this.questions,
-    // required this.results,
-    // required this.lieResults,
-    // required this.surveys_and_exercises,
 });
 
   @override

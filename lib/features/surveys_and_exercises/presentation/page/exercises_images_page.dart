@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/exercise_entity.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/checklist_entities/image_entity.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_events.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/bloc_states.dart';
-import 'package:pocket_psychologist/features/exercises/presentation/state/image_state/image_bloc.dart';
+
+import '../../domain/entities/exercise_entity.dart';
+import '../../domain/entities/image_entity.dart';
+import '../state/bloc_states.dart';
+import '../state/image_state/image_cubit.dart';
 
 class TechniqueImagesPage extends StatelessWidget {
   final ExercisesEntity entity;
@@ -13,13 +13,13 @@ class TechniqueImagesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<ImageBloc>().add(LoadListEvent(id : entity.id));
+    context.read<ImageCubit>().loadListData(entity.id);
     return Scaffold(
       appBar: AppBar(
         title: AppSubtitle(value: '${entity.name}'),
       ),
 
-      body: BlocBuilder<ImageBloc, BaseState>(
+      body: BlocBuilder<ImageCubit, BaseState>(
         builder: (context, state) {
           if (state is LoadedListState<ImageEntity>) {
             return ListView.builder(
@@ -40,7 +40,7 @@ class TechniqueImagesPage extends StatelessWidget {
               }
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         }
       ),
