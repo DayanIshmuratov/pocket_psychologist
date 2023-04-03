@@ -9,7 +9,7 @@ import 'package:pocket_psychologist/service_locator/service_locator.dart';
 import '../state/bloc_states.dart';
 import '../widgets/survey_card.dart';
 
-class CheckListsPage extends StatelessWidget {
+class SurveysPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<SurveyCubit>().loadListData(0);

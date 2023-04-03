@@ -31,10 +31,10 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget build(BuildContext context) {
-    final _color = AppColors.mainColor;
+    final color = Theme.of(context).primaryColor;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: TextStyle(
+        selectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
         // backgroundColor: Colors.blue,
@@ -42,27 +42,27 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Домашняя",
-            backgroundColor: _color,
+            backgroundColor: color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.done),
-            label: "Упражнения",
-            backgroundColor: _color,
+            label: "Опросы",
+            backgroundColor: color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble),
             label: "Чат",
-            backgroundColor: _color,
+            backgroundColor: color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.attach_money),
             label: "VIP",
-            backgroundColor: _color,
+            backgroundColor: color,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: "Профиль",
-            backgroundColor: _color,
+            backgroundColor: color,
           ),
         ],
         currentIndex: _selectedIndex,

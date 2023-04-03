@@ -13,28 +13,76 @@ import '../data_models/survey_model.dart';
 
 abstract class SurveyLocalDataSource<T> {
   Future<List<ResultModel>> getResults(int surveyId);
-
   Future<List<LieResultModel>> getLieResults(int surveyId);
-
   Future<List<ExercisesModel>> getExercises(int surveyId);
-
   Future<List<ImageModel>> getImages(int exerciseId);
-
   Future<List<SurveyModel>> getSurveys(int surveyId);
-
   Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer(int surveyId);
-
   Future<List<QuestionModel>> getQuestions(int surveyId);
-
   Future<List<AnswerModel>> getAnswers(int questionId);
-
   Future<void> updateQuestion(QuestionModel model);
-// Future<T> getEntity(int id, String tableName);
-// Future<List<T>> getEntityLists(String tableName, Function fromJson);
-// Future<void> updateById(T entity, String tableName);
 }
 
-class SurveyLocalDataSourceImpl<T> extends SurveyLocalDataSource {
+
+class SurveyLocalDataSourceSecondImpl implements SurveyLocalDataSource {
+  @override
+  Future<List<AnswerModel>> getAnswers(int questionId) {
+    // TODO: implement getAnswers
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ExercisesModel>> getExercises(int surveyId) {
+    // TODO: implement getExercises
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ImageModel>> getImages(int exerciseId) {
+    // TODO: implement getImages
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<LieResultModel>> getLieResults(int surveyId) {
+    // TODO: implement getLieResults
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer(int surveyId) {
+    // TODO: implement getQuestionWithAnswer
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<QuestionModel>> getQuestions(int surveyId) {
+    // TODO: implement getQuestions
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ResultModel>> getResults(int surveyId) {
+    // TODO: implement getResults
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<SurveyModel>> getSurveys(int surveyId) {
+    // TODO: implement getSurveys
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateQuestion(QuestionModel model) {
+    // TODO: implement updateQuestion
+    throw UnimplementedError();
+  }
+
+}
+
+
+class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
   final DBProvider db;
 
   SurveyLocalDataSourceImpl({required this.db});
@@ -195,4 +243,5 @@ class SurveyLocalDataSourceImpl<T> extends SurveyLocalDataSource {
     }
   }
 }
+
 

@@ -1,4 +1,4 @@
-package com.pocket.psychologist.pocket_psychologist
+package com.dayname.chowa
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -14,3 +14,4 @@ class QuestionWithAnswerModel extends QuestionWithAnswerEntity {
     );
   }
 }
+

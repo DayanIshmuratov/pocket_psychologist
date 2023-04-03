@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:pocket_psychologist/core/db/database.dart';
+import 'package:pocket_psychologist/core/server/appwrite.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/data/data_sources/remote_data_source.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/domain/usecases/survey_usecases/get_surveys.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/answer_state/answer_cubit.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/result_state/result_cubit.dart';
@@ -23,10 +25,7 @@ import '../features/surveys_and_exercises/presentation/state/question_with_answe
 
 final sl = GetIt.instance;
 void init() {
-
-
  // Bloc / Cubit
- // sl.registerFactory(() => QuestionBloc(getQuestions: sl()));
  sl.registerFactory(() => SurveyCubit(getSurveys: sl(),));
  sl.registerFactory(() => ExercisesCubit(getExercises: sl()));
  sl.registerFactory(() => QuestionCubit(getQuestion: sl(), updateQuestion: sl()));
@@ -38,7 +37,6 @@ void init() {
 
  // Usecases
  sl.registerLazySingleton(() => GetSurveys(repository: sl()));
- // sl.registerLazySingleton(() => UpdateCheckList(repository: sl()));
  sl.registerLazySingleton(() => GetQuestions(repository: sl()));
  sl.registerLazySingleton(() => UpdateQuestion(repository: sl()));
  sl.registerLazySingleton(() => GetAnswers(repository: sl()));
@@ -47,16 +45,10 @@ void init() {
  sl.registerLazySingleton(() => GetImages(repository: sl()));
  sl.registerLazySingleton(() => GetExercises(repository: sl()));
  sl.registerLazySingleton(() => GetQuestionsWithAnswer(repository: sl()));
- // sl.registerLazySingleton(() => GetQuestions(repository: sl()));
 
  // Repository
- sl.registerLazySingleton<SurveyRepository>(() => SurveyRepositoryImpl(surveyLocalDataSource: sl()));
+ sl.registerLazySingleton<SurveyRepository>(() => SurveyRepositoryImpl(surveyLocalDataSource: sl(), surveyRemoteDataSource: sl()));
+ // sl.registerLazySingleton<SurveyLocalDataSource>(() => SurveyLocalDataSourceSecondImpl());
  sl.registerLazySingleton<SurveyLocalDataSource>(() => SurveyLocalDataSourceImpl(db: DBProvider.db));
- // sl.registerLazySingleton<QuestionLocalDataSource>(() => QuestionLocalDataSourceImpl(db: DBProvider.db));
-
- // Core
-
-
- // External
-
+ sl.registerLazySingleton<SurveyRemoteDataSource>(() => SurveyRemoteDataSourceImpl(client: AppWriteProvider().client));
 }

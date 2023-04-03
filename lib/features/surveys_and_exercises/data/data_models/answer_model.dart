@@ -7,7 +7,6 @@ class AnswerModel extends AnswerEntity {
     required super.value,
     required super.lieValue,
     required super.questionId
-    // required super.isChoosen,
   });
 
   factory AnswerModel.fromJson(Map<String, dynamic> json) {

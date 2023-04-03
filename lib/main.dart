@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/constants/app_colors/app_colors.dart';
+import 'package:pocket_psychologist/constants/app_colors/app_theme.dart';
 import 'package:pocket_psychologist/core/bloc_observer/bloc_observer.dart';
 import 'package:pocket_psychologist/core/error_handler/error_handler.dart';
 import 'package:pocket_psychologist/core/logger/logger.dart';
+import 'package:pocket_psychologist/features/auth/presentation/page/sign_in_page.dart';
 import 'package:pocket_psychologist/main_page/main_page.dart';
 import 'package:pocket_psychologist/service_locator/service_locator.dart' as di;
 import 'package:pocket_psychologist/service_locator/service_locator.dart';
-
+import 'core/server/appwrite.dart';
+import 'features/auth/presentation/state/auth_cubit.dart';
 import 'features/surveys_and_exercises/domain/entities/exercise_entity.dart';
 import 'features/surveys_and_exercises/domain/entities/survey_entity.dart';
 import 'features/surveys_and_exercises/presentation/page/survey_doing_page.dart';
@@ -33,7 +36,7 @@ void main() async {
   await runZonedGuarded<Future<void>>(() async {
     initLogger();
     logger.info('Start main');
-    runApp(MyApp());
+    runApp(Wrapper());
     di.init();
     // SystemChrome.setSystemUIOverlayStyle(
     //   SystemUiOverlayStyle(
@@ -41,8 +44,7 @@ void main() async {
     //   ),
     // );
     ErrorHandler.init();
-  }, ErrorHandler.recordError
-  );
+  }, ErrorHandler.recordError);
 }
 
 class Wrapper extends StatelessWidget {
@@ -50,50 +52,95 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AppTheme(),
+        ),
+        BlocProvider(
+          create: (context) => AuthCubit(AppWriteProvider().client),
+        ),
+      ],
+      child: MyApp(),
+    );
   }
 }
-
 
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AnswerCubit>(create: (context) => sl<AnswerCubit>(),),
+        BlocProvider<AnswerCubit>(
+          create: (context) => sl<AnswerCubit>(),
+        ),
         BlocProvider<ResultCubit>(create: (context) => sl<ResultCubit>()),
         BlocProvider<LieResultCubit>(create: (context) => sl<LieResultCubit>()),
         BlocProvider<ImageCubit>(create: (context) => sl<ImageCubit>()),
-        BlocProvider<QuestionWithAnswerCubit>(create: (context) => sl<QuestionWithAnswerCubit>(),),
-        BlocProvider<QuestionCubit>(create: (context) => sl<QuestionCubit>()),
-        BlocProvider<SurveyCubit>(create: (context) => sl<SurveyCubit>(),),
-        BlocProvider<ExercisesCubit>(create: (context) => sl<ExercisesCubit>(),),
-      ],
-      child: MaterialApp(
-        onGenerateRoute: (RouteSettings settings) {
-          switch (settings.name) {
-            case 'techniques_page' : return MaterialPageRoute(builder: (context) => ExercisesPage());
-            case 'technique_images_page' :
-              final ExercisesEntity entity = settings.arguments as ExercisesEntity;
-              return MaterialPageRoute(builder: (context) => TechniqueImagesPage(entity: entity,));
-            case 'checklists_page' : return MaterialPageRoute(builder: (context) => CheckListsPage(),);
-            case 'tests_page' : return MaterialPageRoute(builder: (context) => TestsPage(),);
-            case 'checklist_doing_page' :
-              final SurveyEntity entity = settings.arguments as SurveyEntity;
-              return MaterialPageRoute(builder: (context) => SurveyDoingPage(surveyEntity: entity,));
-            case 'result_page' :
-              final SurveyEntity entity = settings.arguments as SurveyEntity;
-              return MaterialPageRoute(builder: (context) => ResultPage(surveyEntity: entity));
-          }
-        },
-        // color: AppColors.mainColor,
-        theme: ThemeData(
-          // primaryColor: AppColors.mainColor,
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: AppColors.mainColor,
-          ),
-          fontFamily: "Nunito",
+        BlocProvider<QuestionWithAnswerCubit>(
+          create: (context) => sl<QuestionWithAnswerCubit>(),
         ),
-        home: MainPage(),
+        BlocProvider<QuestionCubit>(create: (context) => sl<QuestionCubit>()),
+        BlocProvider<SurveyCubit>(
+          create: (context) => sl<SurveyCubit>(),
+        ),
+        BlocProvider<ExercisesCubit>(
+          create: (context) => sl<ExercisesCubit>(),
+        ),
+      ],
+      child: BlocBuilder<AppTheme, AppThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: (RouteSettings settings) {
+              switch (settings.name) {
+                case 'techniques_page':
+                  return MaterialPageRoute(
+                      builder: (context) => ExercisesPage());
+                case 'technique_images_page':
+                  final ExercisesEntity entity =
+                  settings.arguments as ExercisesEntity;
+                  return MaterialPageRoute(
+                      builder: (context) =>
+                          TechniqueImagesPage(
+                            entity: entity,
+                          ));
+                case 'checklists_page':
+                  return MaterialPageRoute(
+                    builder: (context) => SurveysPage(),
+                  );
+                case 'tests_page':
+                  return MaterialPageRoute(
+                    builder: (context) => TestsPage(),
+                  );
+                case 'checklist_doing_page':
+                  final SurveyEntity entity =
+                  settings.arguments as SurveyEntity;
+                  return MaterialPageRoute(
+                      builder: (context) =>
+                          SurveyDoingPage(
+                            surveyEntity: entity,
+                          ));
+                case 'result_page':
+                  final SurveyEntity entity =
+                  settings.arguments as SurveyEntity;
+                  return MaterialPageRoute(
+                      builder: (context) => ResultPage(surveyEntity: entity));
+                case 'sign_in_page':
+                  return MaterialPageRoute(builder: (context) => SignInPage());
+              }
+            },
+            // color: AppColors.mainColor,
+            theme: ThemeData(
+              primaryColor: state.mainColor,
+              secondaryHeaderColor: state.secondaryColor,
+              colorScheme: ColorScheme.fromSwatch(
+                primarySwatch: state.mainColor as MaterialColor,
+              ),
+              fontFamily: "Nunito",
+            ),
+            home: MainPage(),
+          );
+        },
       ),
     );
   }

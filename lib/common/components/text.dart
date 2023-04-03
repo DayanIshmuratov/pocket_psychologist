@@ -44,19 +44,25 @@ class AppSubtitle extends StatelessWidget {
 }
 
 class AppText extends StatelessWidget {
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final Color? color;
   final String value;
   static const textSize = 18.0;
 
-  const AppText({super.key, required this.value});
+  const AppText({super.key, required this.value, this.textAlign, this.color, this.maxLines});
 
   @override
   Widget build(BuildContext context) {
     return Text(
       value,
-      style: TextStyle(
+      style:  TextStyle(
+        color: color,
         fontSize: textSize,
         fontWeight: FontWeight.w600,
       ),
+      textAlign: textAlign,
+      maxLines: maxLines,
     );
   }
 }

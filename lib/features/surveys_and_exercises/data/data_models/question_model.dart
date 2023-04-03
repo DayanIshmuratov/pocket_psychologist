@@ -9,17 +9,13 @@ class QuestionModel extends QuestionEntity {
          question: json['question'],
          nameId: json['survey_id'],
          answerId: json['question_answer_id'],
-         // answerName: json['answer_name']
      );
     }
 
   Map<String, dynamic> toMap() {
     return {
       'question_id' : id,
-      // 'question' : question,
       'question_answer_id' : answerId,
-      // 'name_id' : model.answerId,
-      // 'name_id' : model.nameId,
     };
   }
 }

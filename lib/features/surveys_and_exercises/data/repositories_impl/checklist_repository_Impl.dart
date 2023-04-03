@@ -11,12 +11,13 @@ import '../../domain/entities/result_entity.dart';
 import '../../domain/entities/survey_entity.dart';
 import '../../domain/repositories/survey_repository.dart';
 import '../data_models/question_model.dart';
+import '../data_sources/remote_data_source.dart';
 
-class SurveyRepositoryImpl<T extends BaseEntity> extends SurveyRepository{
+class SurveyRepositoryImpl<T extends BaseEntity> implements SurveyRepository{
   final SurveyLocalDataSource surveyLocalDataSource;
-  // final QuestionLocalDataSource questionLocalDataSource;
+  final SurveyRemoteDataSource surveyRemoteDataSource;
 
-  SurveyRepositoryImpl({required this.surveyLocalDataSource});
+  SurveyRepositoryImpl({required this.surveyLocalDataSource, required this.surveyRemoteDataSource});
 
   @override
   Future<List<SurveyEntity>> getSurveys(int id) async {
@@ -31,7 +32,8 @@ class SurveyRepositoryImpl<T extends BaseEntity> extends SurveyRepository{
 
   @override
   Future<void> updateQuestion(QuestionEntity entity) async {
-    return await surveyLocalDataSource.updateQuestion(entity as QuestionModel);
+    await surveyRemoteDataSource.saveData(entity as QuestionModel);
+    return await surveyLocalDataSource.updateQuestion(entity);
   }
 
   @override

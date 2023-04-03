@@ -8,6 +8,7 @@ import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entiti
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/lie_result_state/lie_result_cubit.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/question_with_answer_cubit.dart';
 
+import '../../../../common/animations/expanded_section.dart';
 import '../../domain/entities/answer_entity.dart';
 import '../../domain/entities/lie_results_entity.dart';
 import '../../domain/entities/question_with_answer_entity.dart';
@@ -56,31 +57,61 @@ class _ResultPageState extends State<ResultPage> {
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        alignment: Alignment.topRight,
+                      child: Column(
+                        // mainAxisSize: MainAxisSize.min,
                         children: [
-                          IconButton(
-                              onPressed: () {
-                                _lieResultDialog(
-                                    context, widget.surveyEntity);
-                              },
-                              color: AppColors.mainColor,
-                              // autofocus: true,
-                              // focusNode: FocusNode(),
-                              icon: const Icon(Icons.sentiment_neutral),
-                              tooltip: 'Результат лжи'),
-                          Column(
-                            // mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Center(
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.mainColor,
-                                    shape: BoxShape.circle,
+                          Center(
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Theme.of(context).secondaryHeaderColor,
+                                      blurRadius: 10,
+                                      offset: Offset.fromDirection(2,7)
+                                  )
+                                ],
+                              ),
+                              child: Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  Container(
+                                    width: 55,
+                                    height: 55,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black38,
+                                          // spreadRadius: 10,
+                                          blurRadius: 10,
+                                          offset: Offset(-5, 5),
+                                        ),
+                                      ],
+                                        // gradient: LinearGradient(colors: [
+                                        //   Theme.of(context).secondaryHeaderColor,
+                                        //   Theme.of(context).primaryColor,
+                                        // ],
+                                        //   begin: Alignment.bottomLeft,
+                                        //   end: Alignment.topRight,
+                                        // )
+                                    ),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          _lieResultDialog(
+                                              context, widget.surveyEntity);
+                                        },
+                                        color: Colors.white,
+                                        // autofocus: true,
+                                        // focusNode: FocusNode(),
+                                        icon: const Icon(Icons.sentiment_neutral),
+                                        tooltip: 'Результат лжи'),
                                   ),
-                                  child: Column(
+                                  Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment
                                         .center,
@@ -96,42 +127,42 @@ class _ResultPageState extends State<ResultPage> {
                                         color: Colors.white,)
                                     ],
                                   ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              _toogleExpand();
+                            },
+                            child: const AppText(value: 'Подробнее'),
+                          ),
+                          ExpandedSection(
+                            expand: _isExpanded,
+                            // resultEntities: state.entities,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListView.builder(
+                                  // physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: state.entities.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: AppText(
+                                        value:
+                                        "${state.entities[index]
+                                            .minValue} - ${state
+                                            .entities[index]
+                                            .maxValue} : ${state
+                                            .entities[index].result}",
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  _toogleExpand();
-                                },
-                                child: const AppText(value: 'Подробнее'),
-                              ),
-                              ExpandedSection(
-                                expand: _isExpanded,
-                                resultEntities: state.entities,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListView.builder(
-                                      // physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: state.entities.length,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: AppText(
-                                            value:
-                                            "${state.entities[index]
-                                                .minValue} - ${state
-                                                .entities[index]
-                                                .maxValue} : ${state
-                                                .entities[index].result}",
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -206,61 +237,6 @@ String _getLieResult(int sum, List<LieResultEntity> entities) {
   return entities[i].result;
 }
 
-class ExpandedSection extends StatefulWidget {
-  final List<ResultEntity> resultEntities;
-  final Widget child;
-  final bool expand;
-
-  ExpandedSection(
-      {this.expand = false, required this.child, required this.resultEntities});
-
-  @override
-  _ExpandedSectionState createState() => _ExpandedSectionState();
-}
-
-class _ExpandedSectionState extends State<ExpandedSection>
-    with SingleTickerProviderStateMixin {
-  late AnimationController expandController;
-  late Animation<double> animation;
-
-  @override
-  void initState() {
-    super.initState();
-    prepareAnimations();
-  }
-
-  void prepareAnimations() {
-    expandController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    Animation<double> curve = CurvedAnimation(
-      parent: expandController,
-      curve: Curves.fastOutSlowIn,
-    );
-    animation = Tween(begin: 0.0, end: 1.0).animate(curve);
-  }
-
-  @override
-  void didUpdateWidget(ExpandedSection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.expand) {
-      expandController.forward();
-    } else {
-      expandController.reverse();
-    }
-  }
-
-  @override
-  void dispose() {
-    expandController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizeTransition(
-        axisAlignment: 1.0, sizeFactor: animation, child: widget.child);
-  }
-}
 
 Future<void> _lieResultDialog(BuildContext context,
     SurveyEntity surveyEntity) {
