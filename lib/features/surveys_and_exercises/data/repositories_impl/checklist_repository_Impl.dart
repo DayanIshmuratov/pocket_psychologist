@@ -1,6 +1,8 @@
 
+import 'package:pocket_psychologist/core/server/account.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/data/data_sources/survey_local_data_source.dart';
 
+import '../../../../core/logger/logger.dart';
 import '../../domain/entities/answer_entity.dart';
 import '../../domain/entities/exercise_entity.dart';
 import '../../domain/entities/image_entity.dart';
@@ -32,8 +34,15 @@ class SurveyRepositoryImpl<T extends BaseEntity> implements SurveyRepository{
 
   @override
   Future<void> updateQuestion(QuestionEntity entity) async {
-    await surveyRemoteDataSource.saveData(entity as QuestionModel);
-    return await surveyLocalDataSource.updateQuestion(entity);
+    try {
+      await AccountProvider().account.get();
+      await surveyRemoteDataSource.saveData(entity as QuestionModel);
+    } catch (e) {
+      logger.severe(e);
+    }
+    finally {
+      return await surveyLocalDataSource.updateQuestion(entity as QuestionModel);
+    }
   }
 
   @override

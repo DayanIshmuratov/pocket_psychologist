@@ -12,7 +12,7 @@ class AccountProvider {
       email: email,
       password: password,
     );
-    signIn(email, password);
+    await signIn(email, password);
   }
 
   signIn(String email, String password) async {

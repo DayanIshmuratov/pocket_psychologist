@@ -26,7 +26,9 @@ class _SignUpPageState extends State<SignUpPage> {
           TextFormField(
             controller: _passwordController,
           ),
-          ElevatedButton(onPressed: () {}, child: AppSubtitle(value: "Регистрация")),
+          ElevatedButton(onPressed: () {
+
+          }, child: AppSubtitle(value: "Регистрация")),
         ],
       ),
     );

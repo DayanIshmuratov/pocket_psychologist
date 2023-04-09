@@ -1,9 +1,11 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/features/profile/widget/profile_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../constants/app_colors/app_theme.dart';
 import '../../../core/server/account.dart';
 import '../../../core/server/appwrite.dart';
 
@@ -36,9 +38,10 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
                               AssetImage('assets/images/no_image.jpg'),
                         ),
                         SizedBox(
-                          child:
-                              Center(child: AppTitle(value: snapshot.data?.name ?? "Гость")),
-                          width: MediaQuery.of(context).size.width-112,
+                          child: Center(
+                              child: AppTitle(
+                                  value: snapshot.data?.name ?? "Гость")),
+                          width: MediaQuery.of(context).size.width - 112,
                         ),
                       ],
                     ),
@@ -55,6 +58,15 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
                       ),
                     if (snapshot.data != null)
                       ProfileCard(text: 'Редактировать'),
+                    SizedBox(
+                      height: spaceHeight / 3,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        _changingThemeDialog(context);
+                      },
+                      child: ProfileCard(text: 'Сменить тему'),
+                    ),
                     SizedBox(
                       height: spaceHeight / 3,
                     ),
@@ -117,14 +129,73 @@ Future<void> _aboutUsDialog(BuildContext context) {
       });
 }
 
-void launchTelegram() async{
-  String url =
-      "https://t.me/idsids2";
+Future<void> _changingThemeDialog(BuildContext context) {
+  final appTheme = context.read<AppTheme>();
+  const double sizeOfCircle = 40;
+  // int choosenTheme = ;
+  // List<Widget> themes = [
+  //
+  // ];
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Center(
+            child: AppTitle(value: "Выберите нужный цвет"),
+          ),
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      appTheme.changeToPurple();
+                    },
+                    child: Container(
+                      height: sizeOfCircle,
+                      width: sizeOfCircle,
+                      decoration: BoxDecoration(
+                        color: Colors.indigo,
+                        shape: BoxShape.circle,
+                      ),
+                      child: appTheme.state is PurpleAppThemeState
+                          ? Icon(Icons.done, color: Colors.white)
+                          : SizedBox.shrink(),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      appTheme.changeToGreen();
+                    },
+                    child: Container(
+                      height: sizeOfCircle,
+                      width: sizeOfCircle,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                      ),
+                      child: appTheme.state is GreenAppThemeState
+                          ? Icon(Icons.done, color: Colors.white)
+                          : SizedBox.shrink(),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      });
+}
+
+void launchTelegram() async {
+  String url = "https://t.me/idsids2";
   final Uri uri = Uri.parse(url);
   if (!await launchUrl(uri)) {
     throw 'Could not launch $uri';
   } else {
-    await launchUrl(uri,
-        mode: LaunchMode.externalApplication);
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }
