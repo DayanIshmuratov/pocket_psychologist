@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:page_transition/page_transition.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:pocket_psychologist/core/bloc_observer/bloc_observer.dart';
 import 'package:pocket_psychologist/core/error_handler/error_handler.dart';
 import 'package:pocket_psychologist/core/logger/logger.dart';
 import 'package:pocket_psychologist/features/auth/presentation/page/sign_in_page.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/page/exercises_image_page.dart';
 import 'package:pocket_psychologist/main_page/main_page.dart';
 import 'package:pocket_psychologist/service_locator/service_locator.dart' as di;
 import 'package:pocket_psychologist/service_locator/service_locator.dart';
@@ -58,7 +61,7 @@ class Wrapper extends StatelessWidget {
           create: (context) => AppTheme(),
         ),
         BlocProvider(
-          create: (context) => AuthCubit(AppWriteProvider().client),
+          create: (context) => AuthCubit(),
         ),
       ],
       child: MyApp(),
@@ -127,6 +130,9 @@ class MyApp extends StatelessWidget {
                       builder: (context) => ResultPage(surveyEntity: entity));
                 case 'sign_in_page':
                   return MaterialPageRoute(builder: (context) => SignInPage());
+                case 'image_page' :
+                  final path = settings.arguments as String;
+                  return MaterialPageRoute(builder: (context) => ImagePage(path: path));
               }
             },
             // color: AppColors.mainColor,
@@ -138,7 +144,14 @@ class MyApp extends StatelessWidget {
               ),
               fontFamily: "Nunito",
             ),
-            home: MainPage(),
+            home: AnimatedSplashScreen(
+              splashIconSize: 200,
+                duration: 5000,
+                splash: Image.asset('assets/images/common/splash_screen.png', fit: BoxFit.fill,),
+                nextScreen: MainPage(),
+                splashTransition: SplashTransition.fadeTransition,
+                pageTransitionType: PageTransitionType.bottomToTop,
+                backgroundColor: Colors.white),
           );
         },
       ),

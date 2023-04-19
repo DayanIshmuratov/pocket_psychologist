@@ -1,13 +1,17 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart' as models;
+import 'package:pocket_psychologist/core/db/database.dart';
+import 'package:pocket_psychologist/core/server/database.dart';
+import 'package:pocket_psychologist/utilities/utilities.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/features/profile/widget/profile_card.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../constants/app_colors/app_theme.dart';
+import '../../../core/logger/logger.dart';
 import '../../../core/server/account.dart';
-import '../../../core/server/appwrite.dart';
+import '../../auth/presentation/state/auth_cubit.dart';
 
 class ProfileWidgets extends StatefulWidget {
   State<ProfileWidgets> createState() => _ProfileWidgetsState();
@@ -16,83 +20,98 @@ class ProfileWidgets extends StatefulWidget {
 class _ProfileWidgetsState extends State<ProfileWidgets> {
   static const double spaceHeight = 16.0;
 
+  Future<models.Account> getAccount(Account account) async {
+    final user = await account.get();
+    logger.info(user.prefs.data);
+    // final localAnswers = await utils.loadFromLocalDB(await DBProvider.db.database);
+    // final remoteAnswers = await utils.loadFromRemoteDB(AppWriteDBProvider().db, user);
+    // if (localAnswers.length > remoteAnswers.total) {
+    //   utils.loadToServer(localAnswers, user, AppWriteDBProvider().db, true);
+    // }
+    return user;
+  }
+
   @override
-  build(BuildContext context) {
-    Account account = Account(AppWriteProvider().client);
+  build(BuildContext context)  {
+    final authCubit = context.read<AuthCubit>();
+    final account =  AccountProvider.get().account;
     return Scaffold(
-      body: FutureBuilder(
-          future: account.get(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      // mainAxisSize: MainAxisSize.max,
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundImage:
-                              AssetImage('assets/images/no_image.jpg'),
-                        ),
-                        SizedBox(
-                          child: Center(
-                              child: AppTitle(
-                                  value: snapshot.data?.name ?? "Гость")),
-                          width: MediaQuery.of(context).size.width - 112,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: spaceHeight,
-                    ),
-                    if (snapshot.data == null)
-                      InkWell(
-                        onTap: () async {
-                          await Navigator.pushNamed(context, 'sign_in_page');
-                          setState(() {});
-                        },
-                        child: ProfileCard(text: 'Войти в аккаунт'),
+      body: BlocBuilder<AuthCubit, AuthState> (
+          builder: (context, state) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage:
+                        AssetImage('assets/images/no_image.jpg'),
                       ),
-                    if (snapshot.data != null)
-                      ProfileCard(text: 'Редактировать'),
-                    SizedBox(
-                      height: spaceHeight / 3,
-                    ),
+                      if (state is AuthSigned)
+                      SizedBox(
+                        child: Center(
+                            child: AppTitle(
+                                value: state.userInfo.name)),
+                        width: MediaQuery.of(context).size.width - 112,
+                      ),
+                      if (state is AuthUnSigned)
+                      SizedBox(
+                        child: Center(
+                            child: AppTitle(
+                                value: 'Гость')),
+                        width: MediaQuery.of(context).size.width - 112,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                      height: spaceHeight
+                  ),
+                  if (state is AuthUnSigned)
                     InkWell(
-                      onTap: () {
-                        _changingThemeDialog(context);
+                      onTap: () async {
+                        await Navigator.pushNamed(context, 'sign_in_page');
+                        setState(() {});
                       },
-                      child: ProfileCard(text: 'Сменить тему'),
+                      child: ProfileCard(text: 'Войти в аккаунт'),
                     ),
-                    SizedBox(
-                      height: spaceHeight / 3,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        _aboutUsDialog(context);
+                  if (state is AuthSigned)
+                    ProfileCard(text: 'Редактировать'),
+                  SizedBox(
+                      height: spaceHeight / 3
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _changingThemeDialog(context);
+                    },
+                    child: ProfileCard(text: 'Сменить тему'),
+                  ),
+                  SizedBox(
+                      height: spaceHeight / 3
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _aboutUsDialog(context);
+                    },
+                    child: ProfileCard(text: 'О нас'),
+                  ),
+                  SizedBox(
+                      height: spaceHeight / 3
+                  ),
+                  InkWell(
+                      onTap: () async {
+                        await authCubit.logOut();
+                        setState(() {});
                       },
-                      child: ProfileCard(text: 'О нас'),
-                    ),
-                    SizedBox(
-                      height: spaceHeight / 3,
-                    ),
-                    InkWell(
-                        onTap: () async {
-                          await AccountProvider().logOut();
-                          setState(() {});
-                        },
-                        child: ProfileCard(
-                          text: 'Выйти из аккаунта',
-                        ))
-                  ],
-                ),
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          }),
+                      child: ProfileCard(
+                        text: 'Выйти из аккаунта',
+                      ),)
+                ],
+              ),
+            );
+          },
+      ),
     );
   }
 }
@@ -120,22 +139,20 @@ Future<void> _aboutUsDialog(BuildContext context) {
                         Icons.telegram,
                         color: Colors.blue,
                         size: 40,
-                      )),
+                      ),
+                  ),
                 ],
               ),
             ),
           ],
         );
-      });
+      }
+      );
 }
 
 Future<void> _changingThemeDialog(BuildContext context) {
   final appTheme = context.read<AppTheme>();
   const double sizeOfCircle = 40;
-  // int choosenTheme = ;
-  // List<Widget> themes = [
-  //
-  // ];
   return showDialog(
       context: context,
       builder: (context) {
@@ -182,6 +199,38 @@ Future<void> _changingThemeDialog(BuildContext context) {
                           : SizedBox.shrink(),
                     ),
                   ),
+                  InkWell(
+                    onTap: () {
+                      appTheme.changeToRed();
+                    },
+                    child: Container(
+                      height: sizeOfCircle,
+                      width: sizeOfCircle,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: appTheme.state is RedAppThemeState
+                          ? Icon(Icons.done, color: Colors.white)
+                          : SizedBox.shrink(),
+                    ),
+                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     appTheme.changeToBlack();
+                  //   },
+                  //   child: Container(
+                  //     height: sizeOfCircle,
+                  //     width: sizeOfCircle,
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.black38,
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     child: appTheme.state is BlackAppThemeState
+                  //         ? Icon(Icons.done, color: Colors.white)
+                  //         : SizedBox.shrink(),
+                  //   ),
+                  // ),
                 ],
               ),
             )
@@ -199,3 +248,78 @@ void launchTelegram() async {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }
+
+
+
+
+//      FutureBuilder(
+//           future: getAccount(account),
+//           builder: (context, snapshot) {
+//             if (snapshot.connectionState == ConnectionState.done) {
+//               return Padding(
+//                 padding: const EdgeInsets.all(16.0),
+//                 child: Column(
+//                   children: [
+//                     Row(
+//                       children: [
+//                         CircleAvatar(
+//                           radius: 40,
+//                           backgroundImage:
+//                               AssetImage('assets/images/no_image.jpg'),
+//                         ),
+//                         SizedBox(
+//                           child: Center(
+//                               child: AppTitle(
+//                                   value: snapshot.data?.name ?? "Гость")),
+//                           width: MediaQuery.of(context).size.width - 112,
+//                         ),
+//                       ],
+//                     ),
+//                     SizedBox(
+//                       height: spaceHeight
+//                     ),
+//                     if (snapshot.data == null)
+//                       InkWell(
+//                         onTap: () async {
+//                           await Navigator.pushNamed(context, 'sign_in_page');
+//                           setState(() {});
+//                         },
+//                         child: ProfileCard(text: 'Войти в аккаунт'),
+//                       ),
+//                     if (snapshot.data != null)
+//                       ProfileCard(text: 'Редактировать'),
+//                     SizedBox(
+//                       height: spaceHeight / 3
+//                     ),
+//                     InkWell(
+//                       onTap: () {
+//                         _changingThemeDialog(context);
+//                       },
+//                       child: ProfileCard(text: 'Сменить тему'),
+//                     ),
+//                     SizedBox(
+//                       height: spaceHeight / 3
+//                     ),
+//                     InkWell(
+//                       onTap: () {
+//                         _aboutUsDialog(context);
+//                       },
+//                       child: ProfileCard(text: 'О нас'),
+//                     ),
+//                     SizedBox(
+//                       height: spaceHeight / 3
+//                     ),
+//                     InkWell(
+//                         onTap: () async {
+//                           await AccountProvider.get().logOut();
+//                           setState(() {});
+//                         },
+//                         child: ProfileCard(
+//                           text: 'Выйти из аккаунта',
+//                         ))
+//                   ],
+//                 ),
+//               );
+//             }
+//             return Center(child: CircularProgressIndicator());
+//           })

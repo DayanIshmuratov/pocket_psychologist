@@ -26,16 +26,12 @@ class TechniqueImagesPage extends StatelessWidget {
               itemCount: state.entities.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onDoubleTap: () {
-
+                  onTap: () {
+                    Navigator.pushNamed(context, 'image_page', arguments: state.entities[index].path);
                   },
-                  child: Card(child: InteractiveViewer(
-                    // scaleFactor: 1,
-                      panEnabled: true,
-                      boundaryMargin: EdgeInsets.all(100),
-                      minScale: 1,
-                      maxScale: 2.5,
-                      child: Image.asset(state.entities[index].path))),
+                  child: Card(child:
+                  Image.asset(state.entities[index].path),
+                 ),
                 );
               }
             );

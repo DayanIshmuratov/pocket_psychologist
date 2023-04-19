@@ -39,6 +39,7 @@ class AppSubtitle extends StatelessWidget {
       ),
       textAlign: textAlign,
       maxLines: maxLines,
+
     );
   }
 }

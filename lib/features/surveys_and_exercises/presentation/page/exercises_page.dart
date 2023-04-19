@@ -14,7 +14,7 @@ class ExercisesPage extends StatelessWidget {
     bloc.loadListData(0);
     return Scaffold(
       appBar: AppBar(
-        title: const AppSubtitle(value: 'Опросы'),
+        title: const AppSubtitle(value: 'Упражнения'),
         centerTitle: true,
       ),
       body: BlocBuilder<ExercisesCubit, BaseState>(

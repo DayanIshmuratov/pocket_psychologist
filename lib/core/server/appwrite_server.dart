@@ -1,8 +1,78 @@
+import 'dart:async';
+
 import 'package:dart_appwrite/dart_appwrite.dart';
+import 'package:pocket_psychologist/constants/appwrite_constants/appwrite_constants.dart' as constants;
+
+import '../logger/logger.dart';
 
 class AppWriteServerProvider {
-  Client client = Client()
-      .setEndpoint('http://192.168.0.12:17181/v1') // Your API Endpoint
-      .setProject('641e94ff0df16b5a4814')                // Your project ID
-      .setKey('86d2306895f508813b57b312fdb32bc4823930907fbc2bde9bdde684fbd358aed0c966f56f9417adb3b2a3787ce8a805041e61d9289143b6f57724954fb42f0297ffe9cd0639da29d37ff70b4475d41b8bfbd919c2213f2ff1522dba7f38833a9455f776090da8a4dbd36f491bc61f9403856b7984b2612bd7812763a7c9e76a');
+
+  static AppWriteServerProvider instance = AppWriteServerProvider._internal();
+
+  late Client client;
+  factory AppWriteServerProvider() {
+    return instance;
+  }
+
+  AppWriteServerProvider._internal() {
+    client = Client()
+        .setEndpoint(constants.appwriteEndpoint)
+        .setProject(constants.appwriteProjectId)
+        .setKey(constants.appwriteServerKey);
+
+  }
+
+  Future<void> createCollection(String id) async {
+    final db = Databases(client);
+    await db.createCollection(
+      databaseId: constants.appwriteUsersAnswersDatabaseId,
+      collectionId: id,
+      name: id,
+      permissions: [
+        Permission.read(Role.user(id)),
+        Permission.update(Role.user(id)),
+        Permission.create(Role.user(id)),
+        Permission.write(Role.user(id)),
+        Permission.delete(Role.user(id)),
+      ],
+    );
+    await db.createIntegerAttribute(
+        databaseId: constants.appwriteUsersAnswersDatabaseId,
+        collectionId: id,
+        key: 'question_id',
+        xrequired: true);
+    await db.createIntegerAttribute(
+        databaseId: constants.appwriteUsersAnswersDatabaseId,
+        collectionId: id,
+        key: 'question_answer_id',
+        xrequired: true);
+    await isAttributesCreated(db, id);
+    }
+
+  Future<void> isAttributesCreated(Databases db, String id) async {
+    while (true) {
+      final collection = await db.getCollection(
+        databaseId: constants.appwriteUsersAnswersDatabaseId,
+        collectionId: id,
+      );
+      if (collection.attributes.length == 2) {
+        final first = collection.attributes[0]['status'];
+        final second = collection.attributes[1]['status'];
+        if (first == 'available' && second == 'available')  {
+          logger.info(collection.attributes);
+          break;
+        }
+      }
+      Timer(Duration(milliseconds: 1000), () {
+        logger.info("Ждем создание атрибутов");
+      });
+    }
+  }
+
+  Future<void> deleteCollection(String id) async {
+    final db = Databases(client);
+    await db.deleteCollection(
+        databaseId: constants.appwriteUsersAnswersDatabaseId,
+        collectionId: id);
+  }
 }

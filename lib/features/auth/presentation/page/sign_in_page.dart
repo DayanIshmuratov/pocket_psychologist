@@ -1,14 +1,17 @@
 import 'package:dart_appwrite/dart_appwrite.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/common/validators/validators.dart';
+import 'package:pocket_psychologist/core/exceptions/exceptions.dart';
 import 'package:pocket_psychologist/core/server/account.dart';
 import 'package:pocket_psychologist/core/server/appwrite_server.dart';
 import 'package:pocket_psychologist/features/auth/presentation/state/auth_cubit.dart';
 
+import '../../../../common/widgets/snackbars.dart';
 import '../../../../core/logger/logger.dart';
-import '../../../../utilities/utilities.dart';
+import '../../../../utilities/utilities.dart' as utils;
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -21,7 +24,8 @@ class _SignInPageState extends State<SignInPage> {
   final _key = GlobalKey<FormState>();
   final space = 16.0;
   bool isSignUp = false;
-  final _nameController = TextEditingController(text: 'ff');
+  bool isHidden = true;
+  final _nameController = TextEditingController(text: 'Dayan');
   final _emailController =
       TextEditingController(text: 'ishmuratovdayan11@gmail.com');
   final _passwordController = TextEditingController(text: '123123123');
@@ -34,6 +38,7 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _authCubit = context.read<AuthCubit>();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -98,8 +103,13 @@ class _SignInPageState extends State<SignInPage> {
                   height: space,
                 ),
                 TextFormField(
+                  obscureText: isHidden,
                   controller: _passwordController,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(onPressed: () {
+                      isHidden = !isHidden;
+                      setState(() {});
+                    }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
                     hintText: 'Пароль',
                   ),
                   validator: (value) {
@@ -113,8 +123,13 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 if (isSignUp)
                   TextFormField(
+                    obscureText: isHidden,
                     controller: _secondPasswordController,
                     decoration: InputDecoration(
+                      suffixIcon: IconButton(onPressed: () {
+                        isHidden = !isHidden;
+                        setState(() {});
+                      }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
                       hintText: 'Пароль',
                     ),
                     validator: (value) {
@@ -133,7 +148,7 @@ class _SignInPageState extends State<SignInPage> {
                           MediaQuery.of(context).size.width * 0.7),
                     ),
                     onPressed: () {
-                      _submit();
+                      _submit(_authCubit);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -150,41 +165,27 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  void _submit() async {
+  void _submit(AuthCubit authCubit) async {
     if (_key.currentState!.validate()) {
       if (!isSignUp) {
-        await AccountProvider()
-            .signIn(_emailController.text, _passwordController.text);
-        Utilities().checkAnswersSignIn(context);
+        try {
+          await authCubit.signInWithEmail(_emailController.text, _passwordController.text);
+        } on NetworkException catch (e) {
+          SnackBars.showSnackBar(context, e.message, Colors.red);
+        } catch (e) {
+          SnackBars.showSnackBar(context, e.toString(), Colors.red);
+        }
+        finally {
+          SnackBars.showSnackBar(context, 'Вы успешно вошли в аккаунт', Theme.of(context).primaryColor);
+        }
+        utils.checkAnswersSignIn(context);
+        // logger.info('USERID - ${user.$id}');
+        Navigator.pop(context);
       } else {
-        final db = Databases(AppWriteServerProvider().client);
-        await AccountProvider().signUp(_emailController.text,
-            _passwordController.text, _nameController.text);
-        final user = await AccountProvider().account.get();
-        await db.createCollection(
-          databaseId: 'users_answers',
-          collectionId: user.$id,
-          name: user.$id,
-          permissions: [
-            Permission.read(Role.user(user.$id)),
-            Permission.update(Role.user(user.$id)),
-            Permission.create(Role.user(user.$id)),
-            Permission.write(Role.user(user.$id)),
-            Permission.delete(Role.user(user.$id)),
-          ],
-        );
-        logger.info('USERID - ${user.$id}');
-        await db.createIntegerAttribute(
-            databaseId: 'users_answers',
-            collectionId: user.$id,
-            key: 'question_id',
-            xrequired: true);
-        await db.createIntegerAttribute(
-            databaseId: 'users_answers',
-            collectionId: user.$id,
-            key: 'question_answer_id',
-            xrequired: true);
-        Utilities().checkAnswersSignUp();
+        await authCubit.signUpWithEmail(_nameController.text, _emailController.text, _passwordController.text);
+        utils.checkAnswersSignUp();
+        Navigator.pop(context);
+        SnackBars.showSnackBar(context, 'Вы успешно создали аккаунт', Theme.of(context).primaryColor);
       }
     }
   }

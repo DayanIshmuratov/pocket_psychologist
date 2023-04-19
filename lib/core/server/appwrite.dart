@@ -1,8 +1,20 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:pocket_psychologist/constants/appwrite_constants/appwrite_constants.dart' as constants;
 
 class AppWriteProvider {
-  Client client = Client()
-      .setEndpoint('http://192.168.0.12:17181/v1')
-      .setProject('641e94ff0df16b5a4814')
-      .setSelfSigned();
+
+  static final AppWriteProvider instance = AppWriteProvider._internal();
+
+  late final Client client;
+
+  factory AppWriteProvider() {
+    return instance;
+  }
+
+  AppWriteProvider._internal() {
+    client = Client()
+        .setEndpoint(constants.appwriteEndpoint)
+        .setProject(constants.appwriteProjectId)
+        .setSelfSigned();
+  }
 }

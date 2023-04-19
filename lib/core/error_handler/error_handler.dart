@@ -25,7 +25,6 @@ class ErrorHandler {
     // print(error.exception);
     // print(error.stack);
     logger.info('_recordFlutterError');
-
     logger.severe(error.toStringShort(), error.exception, error.stack);
   }
 

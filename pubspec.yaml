@@ -62,7 +62,15 @@ dependencies:
 
   #url_launcher
   url_launcher: ^6.1.10
+
+  #dart_appwrite
   dart_appwrite: ^7.3.0
+
+  #splash_screen:
+  animated_splash_screen: ^1.3.0
+
+  #internet_connection_checker:
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +101,7 @@ flutter:
     - assets/images/example_image.jpg
     - assets/images/common/techniques_image.jpg
     - assets/images/common/polls_image.jpg
+    - assets/images/common/splash_screen.png
     - assets/images/exercises/first/first_exercise_first.jpg
     - assets/images/exercises/first/first_exercise_second.jpg
     - assets/images/exercises/first/first_exercise_third.jpg

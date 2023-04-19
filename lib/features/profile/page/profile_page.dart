@@ -11,7 +11,6 @@ import '../widget/profile_widget.dart';
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authCubit = context.read<AuthCubit>();
     return Scaffold(
       appBar: AppBar(
         // actions: [AppThemeSwitcher()],

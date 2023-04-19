@@ -59,7 +59,7 @@ class _SurveyAndExerciseCardState extends State<SurveyAndExerciseCard> {
                     ExpandedSection(
                       expand: _isExpanded,
                       child: AppSubtitle(
-                          value: widget.description),
+                          value: widget.description, textAlign: TextAlign.justify,),
                     ),
                     ElevatedButton(
                       onPressed: () {

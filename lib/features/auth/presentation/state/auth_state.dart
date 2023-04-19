@@ -4,16 +4,17 @@ abstract class AuthState extends Equatable {
   const AuthState();
 }
 
-class AuthInSigned extends AuthState {
+class AuthSigned extends AuthState {
+  final UserInfo userInfo;
 
+  AuthSigned({required this.userInfo});
   @override
   List<Object> get props => [];
 }
 
-class AuthSigned extends AuthState {
-  final Account account;
+class AuthUnSigned extends AuthState {
 
-  AuthSigned(this.account);
+  AuthUnSigned();
 
   @override
   List<Object?> get props => [];

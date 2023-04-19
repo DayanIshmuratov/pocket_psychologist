@@ -35,7 +35,7 @@ class SurveyRepositoryImpl<T extends BaseEntity> implements SurveyRepository{
   @override
   Future<void> updateQuestion(QuestionEntity entity) async {
     try {
-      await AccountProvider().account.get();
+      await AccountProvider.get().account.get();
       await surveyRemoteDataSource.saveData(entity as QuestionModel);
     } catch (e) {
       logger.severe(e);
