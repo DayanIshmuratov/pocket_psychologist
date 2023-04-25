@@ -12,11 +12,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // actions: [AppThemeSwitcher()],
-        title: const Text('Профиль'),
-        centerTitle: true,
-      ),
       body: ProfileWidgets(),
       );
   }

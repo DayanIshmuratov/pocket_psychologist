@@ -1,112 +1,88 @@
-import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart' as models;
-import 'package:pocket_psychologist/core/db/database.dart';
-import 'package:pocket_psychologist/core/server/database.dart';
-import 'package:pocket_psychologist/utilities/utilities.dart' as utils;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/features/profile/widget/profile_card.dart';
+import 'package:pocket_psychologist/features/profile/widget/profile_listtile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/app_colors/app_theme.dart';
-import '../../../core/logger/logger.dart';
-import '../../../core/server/account.dart';
 import '../../auth/presentation/state/auth_cubit.dart';
 
 class ProfileWidgets extends StatefulWidget {
+  const ProfileWidgets({super.key});
+
+  @override
   State<ProfileWidgets> createState() => _ProfileWidgetsState();
 }
 
 class _ProfileWidgetsState extends State<ProfileWidgets> {
   static const double spaceHeight = 16.0;
 
-  Future<models.Account> getAccount(Account account) async {
-    final user = await account.get();
-    logger.info(user.prefs.data);
-    // final localAnswers = await utils.loadFromLocalDB(await DBProvider.db.database);
-    // final remoteAnswers = await utils.loadFromRemoteDB(AppWriteDBProvider().db, user);
-    // if (localAnswers.length > remoteAnswers.total) {
-    //   utils.loadToServer(localAnswers, user, AppWriteDBProvider().db, true);
-    // }
-    return user;
-  }
-
   @override
   build(BuildContext context)  {
+    Color color = Theme.of(context).primaryColor;
     final authCubit = context.read<AuthCubit>();
-    final account =  AccountProvider.get().account;
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+          toolbarHeight: 0,
+        systemOverlayStyle: SystemUiOverlayStyle(
+
+          statusBarColor: color,
+        ),
+      ),
       body: BlocBuilder<AuthCubit, AuthState> (
           builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
+            return SafeArea(
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage:
-                        AssetImage('assets/images/no_image.jpg'),
-                      ),
-                      if (state is AuthSigned)
-                      SizedBox(
-                        child: Center(
-                            child: AppTitle(
-                                value: state.userInfo.name)),
-                        width: MediaQuery.of(context).size.width - 112,
-                      ),
-                      if (state is AuthUnSigned)
-                      SizedBox(
-                        child: Center(
-                            child: AppTitle(
-                                value: 'Гость')),
-                        width: MediaQuery.of(context).size.width - 112,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                      height: spaceHeight
-                  ),
+                  if (state is AuthSigned)
+                    ProfileCard(name: state.userInfo.name),
+                  if (state is AuthUnSigned)
+                    ProfileCard(name: 'Гость',),
+                  // if (state is AuthUnSigned)
+                  // const SizedBox(
+                  //     height: spaceHeight
+                  // ),
                   if (state is AuthUnSigned)
                     InkWell(
                       onTap: () async {
                         await Navigator.pushNamed(context, 'sign_in_page');
                         setState(() {});
                       },
-                      child: ProfileCard(text: 'Войти в аккаунт'),
+                      child: const ProfileListTile(text: 'Войти в аккаунт', icon: Icons.person_outline,),
                     ),
                   if (state is AuthSigned)
-                    ProfileCard(text: 'Редактировать'),
-                  SizedBox(
-                      height: spaceHeight / 3
-                  ),
+                    const ProfileListTile(text: 'Редактировать', icon: Icons.person),
+                  Divider(color: color),
                   InkWell(
                     onTap: () {
                       _changingThemeDialog(context);
                     },
-                    child: ProfileCard(text: 'Сменить тему'),
+                    child: const ProfileListTile(text: 'Сменить тему',icon: Icons.palette_outlined),
                   ),
-                  SizedBox(
-                      height: spaceHeight / 3
-                  ),
+                  Divider(color: color),
                   InkWell(
                     onTap: () {
                       _aboutUsDialog(context);
                     },
-                    child: ProfileCard(text: 'О нас'),
+                    child: const ProfileListTile(text: 'О нас', icon: Icons.people_alt_outlined),
                   ),
-                  SizedBox(
-                      height: spaceHeight / 3
-                  ),
-                  InkWell(
-                      onTap: () async {
-                        await authCubit.logOut();
-                        setState(() {});
-                      },
-                      child: ProfileCard(
-                        text: 'Выйти из аккаунта',
-                      ),)
+
+                  if (authCubit.state is AuthSigned)
+                    Column(children: [
+                      Divider(color: color),
+                      InkWell(
+                        onTap: () async {
+                          await authCubit.logOut();
+                          setState(() {});
+                        },
+                        child: const ProfileListTile(
+                          text: 'Выйти из аккаунта', icon: Icons.logout,
+                        ),
+                      ),
+                    ],
+                    ),
                 ],
               ),
             );
@@ -121,21 +97,21 @@ Future<void> _aboutUsDialog(BuildContext context) {
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Center(
+          title: const Center(
             child: AppTitle(value: "О нас"),
           ),
           children: [
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  AppSubtitle(
+                  const AppSubtitle(
                       value: 'UX-design, development and release by dayname'),
                   IconButton(
                       onPressed: () {
                         launchTelegram();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.telegram,
                         color: Colors.blue,
                         size: 40,
@@ -157,12 +133,12 @@ Future<void> _changingThemeDialog(BuildContext context) {
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Center(
+          title: const Center(
             child: AppTitle(value: "Выберите нужный цвет"),
           ),
           children: [
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 mainAxisSize: MainAxisSize.max,
@@ -174,13 +150,13 @@ Future<void> _changingThemeDialog(BuildContext context) {
                     child: Container(
                       height: sizeOfCircle,
                       width: sizeOfCircle,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.indigo,
                         shape: BoxShape.circle,
                       ),
                       child: appTheme.state is PurpleAppThemeState
-                          ? Icon(Icons.done, color: Colors.white)
-                          : SizedBox.shrink(),
+                          ? const Icon(Icons.done, color: Colors.white)
+                          : const SizedBox.shrink(),
                     ),
                   ),
                   InkWell(
@@ -190,13 +166,13 @@ Future<void> _changingThemeDialog(BuildContext context) {
                     child: Container(
                       height: sizeOfCircle,
                       width: sizeOfCircle,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.green,
                         shape: BoxShape.circle,
                       ),
                       child: appTheme.state is GreenAppThemeState
-                          ? Icon(Icons.done, color: Colors.white)
-                          : SizedBox.shrink(),
+                          ? const Icon(Icons.done, color: Colors.white)
+                          : const SizedBox.shrink(),
                     ),
                   ),
                   InkWell(
@@ -206,13 +182,13 @@ Future<void> _changingThemeDialog(BuildContext context) {
                     child: Container(
                       height: sizeOfCircle,
                       width: sizeOfCircle,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: appTheme.state is RedAppThemeState
-                          ? Icon(Icons.done, color: Colors.white)
-                          : SizedBox.shrink(),
+                          ? const Icon(Icons.done, color: Colors.white)
+                          : const SizedBox.shrink(),
                     ),
                   ),
                   // InkWell(

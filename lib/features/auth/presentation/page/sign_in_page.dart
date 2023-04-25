@@ -11,7 +11,7 @@ import 'package:pocket_psychologist/features/auth/presentation/state/auth_cubit.
 
 import '../../../../common/widgets/snackbars.dart';
 import '../../../../core/logger/logger.dart';
-import '../../../../utilities/utilities.dart' as utils;
+import '../state/auth_utils.dart' as utils;
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -157,6 +157,9 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ),
+                IconButton(icon: Icon(Icons.g_mobiledata), onPressed: () {
+                  _authCubit.googleAuth();
+                },)
               ],
             ),
           ),
@@ -170,22 +173,28 @@ class _SignInPageState extends State<SignInPage> {
       if (!isSignUp) {
         try {
           await authCubit.signInWithEmail(_emailController.text, _passwordController.text);
+          if (authCubit.state is AuthSigned) {
+            SnackBars.showSnackBar(context, 'Вы успешно вошли в аккаунт', Theme.of(context).primaryColor);
+            // logger.info('USERID - ${user.$id}');
+            Navigator.pop(context);
+          }
         } on NetworkException catch (e) {
           SnackBars.showSnackBar(context, e.message, Colors.red);
-        } catch (e) {
-          SnackBars.showSnackBar(context, e.toString(), Colors.red);
+        } on AppwriteException catch (e) {
+          SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка. Сообщите разработчику'), Colors.red);
         }
-        finally {
-          SnackBars.showSnackBar(context, 'Вы успешно вошли в аккаунт', Theme.of(context).primaryColor);
-        }
-        utils.checkAnswersSignIn(context);
-        // logger.info('USERID - ${user.$id}');
-        Navigator.pop(context);
       } else {
-        await authCubit.signUpWithEmail(_nameController.text, _emailController.text, _passwordController.text);
-        utils.checkAnswersSignUp();
-        Navigator.pop(context);
-        SnackBars.showSnackBar(context, 'Вы успешно создали аккаунт', Theme.of(context).primaryColor);
+        try {
+          await authCubit.signUpWithEmail(_nameController.text, _emailController.text, _passwordController.text);
+          if (authCubit.state is AuthSigned) {
+            Navigator.pop(context);
+            SnackBars.showSnackBar(context, 'Вы успешно создали аккаунт', Theme.of(context).primaryColor);
+          }
+        } on NetworkException catch (e) {
+          SnackBars.showSnackBar(context, e.message, Colors.red);
+        } on AppwriteException catch (e) {
+          SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка.'), Colors.red);
+        }
       }
     }
   }
