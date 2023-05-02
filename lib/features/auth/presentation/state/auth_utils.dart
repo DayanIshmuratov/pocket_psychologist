@@ -56,14 +56,17 @@ void loadToDB(models.DocumentList remoteAnswers, Database localdb) async {
   }
 }
 
-// checkAnswersSignUp() async {
-//   final localdb = await DBProvider.db.database;
-//   final remotedb = AppWriteDBProvider().db;
-//   final user = await AccountProvider.get().account.get();
-//   final localAnswers = await localdb
-//       .rawQuery('SELECT question_id, question_answer_id from questions WHERE question_answer_id != 0');
-//   await loadToServer(localAnswers, user, remotedb, false);
-// }
+checkAnswersSignUp() async {
+  final localdb = await DBProvider.db.database;
+  final remotedb = AppWriteDBProvider().db;
+  await isReady(() async {
+    await AccountProvider.get().account.get();
+  });
+  final user = await AccountProvider.get().account.get();
+  final localAnswers = await localdb
+      .rawQuery('SELECT question_id, question_answer_id from questions WHERE question_answer_id != 0');
+  await loadToServer(localAnswers, user, remotedb, false);
+}
 
 Future<void> loadToServer(List<Map<String, Object?>> localAnswers,
     models.Account user, Databases remotedb, bool delete) async {
@@ -95,6 +98,22 @@ String errorTypeToString(String type) {
   switch (type) {
     case 'user_invalid_credentials' : return "Неправильная почта или пароль.";
     case 'user_blocked' : return 'Пользователь заблокирован.';
+    case 'user_already_exists' : return 'Пользователь уже существует';
   }
   return type;
+}
+
+Future<void> isReady(Function callback) async {
+  int i = 5;
+  while (i > 0) {
+    await Future.delayed(const Duration(seconds: 2)).then((value) async {
+      try {
+        await callback;
+      } catch (e) {
+        print(e.toString());
+        print(i);
+      }
+    });
+    i--;
+  }
 }

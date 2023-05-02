@@ -27,7 +27,6 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
         elevation: 0,
           toolbarHeight: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
-
           statusBarColor: color,
         ),
       ),

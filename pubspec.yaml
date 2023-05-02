@@ -72,6 +72,8 @@ dependencies:
   #internet_connection_checker:
   internet_connection_checker: ^1.0.0+1
 
+  #photo_view:
+  photo_view: ^0.14.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -106,6 +108,8 @@ flutter:
     - assets/images/exercises/first/first_exercise_second.jpg
     - assets/images/exercises/first/first_exercise_third.jpg
     - assets/images/exercises/first/first_exercise_fourth.jpg
+    - assets/images/small_images/icons/google.png
+    - assets/images/small_images/icons/vk.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

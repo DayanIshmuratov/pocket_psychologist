@@ -8,6 +8,7 @@ import 'package:pocket_psychologist/core/exceptions/exceptions.dart';
 import 'package:pocket_psychologist/core/server/account.dart';
 import 'package:pocket_psychologist/core/server/appwrite_server.dart';
 import 'package:pocket_psychologist/features/auth/presentation/state/auth_cubit.dart';
+import 'package:pocket_psychologist/features/auth/presentation/widgets/oauth_buttons.dart';
 
 import '../../../../common/widgets/snackbars.dart';
 import '../../../../core/logger/logger.dart';
@@ -27,7 +28,7 @@ class _SignInPageState extends State<SignInPage> {
   bool isHidden = true;
   final _nameController = TextEditingController(text: 'Dayan');
   final _emailController =
-      TextEditingController(text: 'ishmuratovdayan11@gmail.com');
+      TextEditingController(text: 'dayanishmuratov11@yandex.ru');
   final _passwordController = TextEditingController(text: '123123123');
   final _secondPasswordController = TextEditingController(text: '123123123');
 
@@ -157,9 +158,14 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ),
-                IconButton(icon: Icon(Icons.g_mobiledata), onPressed: () {
-                  _authCubit.googleAuth();
-                },)
+                SizedBox(height: space),
+                OauthButtons(authCubit: _authCubit),
+                InkWell(
+                  onTap: () {
+                    _authCubit.password();
+                },
+                  child: Text('Пароль'),
+                )
               ],
             ),
           ),

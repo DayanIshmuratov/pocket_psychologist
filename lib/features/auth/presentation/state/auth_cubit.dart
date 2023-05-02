@@ -36,8 +36,14 @@ class AuthCubit extends Cubit<AuthState> {
     account.createOAuth2Session(provider: 'google');
   }
 
+  vkAuth() {
+    // account.createOAuth2Session(provider: 'vk');
+    logger.info("VK Auth");
+  }
+
   signInWithEmail(String email, String password) async {
     if (await InternetConnectionChecker().hasConnection) {
+      try {
       await account.createEmailSession(
         email: email,
         password: password,
@@ -46,6 +52,10 @@ class AuthCubit extends Cubit<AuthState> {
       await _setUserPrefs();
       final userInfo = await _getUserPrefs();
       emit(AuthSigned(userInfo: userInfo));
+      }
+      on AppwriteException{
+        rethrow;
+      }
     } else {
       throw NetworkException();
     }
@@ -53,16 +63,39 @@ class AuthCubit extends Cubit<AuthState> {
 
   signUpWithEmail(String name, String email, String password) async {
     if (await InternetConnectionChecker().hasConnection) {
-      await account.create(
-        userId: ID.unique(),
-        name: name,
-        email: email,
-        password: password,
-      );
-      await signInWithEmail(email, password);
+      try {
+        await account.create(
+          userId: ID.unique(),
+          name: name,
+          email: email,
+          password: password,
+        );
+        await utils.checkAnswersSignUp();
+        await signInWithEmail(email, password);
+      }
+      on AppwriteException {
+        rethrow;
+      }
     } else {
       throw NetworkException();
     }
+  }
+
+  password() async {
+    final result = await account.createRecovery(
+      email: 'dayanishmuratov11@yandex.ru',
+      url: 'https://chowapp.site',
+    );
+  }
+
+  passwordSecond() async {
+    final acc = await account.get();
+    Future result = account.updateRecovery(
+      userId: acc.$id,
+      secret: '[SECRET]',
+      password: 'password',
+      passwordAgain: 'password',
+    );
   }
 
   _loadAuth() async {
