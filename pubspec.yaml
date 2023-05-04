@@ -72,6 +72,10 @@ dependencies:
   #internet_connection_checker:
   internet_connection_checker: ^1.0.0+1
 
+
+  #flutter_web_auth_2:
+  flutter_web_auth_2: ^2.1.4
+
   #photo_view:
   photo_view: ^0.14.0
 dev_dependencies:

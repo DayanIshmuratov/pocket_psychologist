@@ -1,4 +1,5 @@
-import 'package:dart_appwrite/dart_appwrite.dart';
+// import 'package:dart_appwrite/dart_appwrite.dart';
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -179,10 +180,12 @@ class _SignInPageState extends State<SignInPage> {
       if (!isSignUp) {
         try {
           await authCubit.signInWithEmail(_emailController.text, _passwordController.text);
-          if (authCubit.state is AuthSigned) {
-            SnackBars.showSnackBar(context, 'Вы успешно вошли в аккаунт', Theme.of(context).primaryColor);
-            // logger.info('USERID - ${user.$id}');
-            Navigator.pop(context);
+          if (mounted) {
+            if (authCubit.state is AuthSigned) {
+              SnackBars.showSnackBar(context, 'Вы успешно вошли в аккаунт', Theme.of(context).primaryColor);
+              // logger.info('USERID - ${user.$id}');
+              Navigator.pop(context);
+            }
           }
         } on NetworkException catch (e) {
           SnackBars.showSnackBar(context, e.message, Colors.red);
@@ -192,9 +195,11 @@ class _SignInPageState extends State<SignInPage> {
       } else {
         try {
           await authCubit.signUpWithEmail(_nameController.text, _emailController.text, _passwordController.text);
-          if (authCubit.state is AuthSigned) {
-            Navigator.pop(context);
-            SnackBars.showSnackBar(context, 'Вы успешно создали аккаунт', Theme.of(context).primaryColor);
+          if (mounted) {
+            if (authCubit.state is AuthSigned) {
+              Navigator.pop(context);
+              SnackBars.showSnackBar(context, 'Вы успешно создали аккаунт', Theme.of(context).primaryColor);
+            }
           }
         } on NetworkException catch (e) {
           SnackBars.showSnackBar(context, e.message, Colors.red);

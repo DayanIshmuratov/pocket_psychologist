@@ -36,7 +36,7 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
               child: Column(
                 children: [
                   if (state is AuthSigned)
-                    ProfileCard(name: state.userInfo.name),
+                    ProfileCard(name: state.userData.name),
                   if (state is AuthUnSigned)
                     ProfileCard(name: 'Гость',),
                   // if (state is AuthUnSigned)

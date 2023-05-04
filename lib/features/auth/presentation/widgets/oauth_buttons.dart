@@ -1,6 +1,10 @@
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
+import 'package:pocket_psychologist/common/widgets/snackbars.dart';
 import 'package:pocket_psychologist/features/auth/presentation/state/auth_cubit.dart';
+import 'package:pocket_psychologist/features/auth/presentation/state/auth_utils.dart' as utils;
+import '../../../../core/exceptions/exceptions.dart';
 
 class OauthButtons extends StatelessWidget {
   final AuthCubit authCubit;
@@ -18,10 +22,25 @@ class OauthButtons extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               GestureDetector(
-                  onTap: () {
-                    authCubit.googleAuth();
-                  },
-                  child: oauthButton('assets/images/small_images/icons/google.png')),
+                onTap: () async {
+                  try {
+                    await authCubit.googleAuth();
+                    if (authCubit.state is AuthSigned) {
+                      Navigator.pop(context);
+                      SnackBars.showSnackBar(
+                          context,
+                          'Вы успешно вошли в аккаунт',
+                          Theme.of(context).primaryColor);
+                    }
+                  } on NetworkException catch (e) {
+                    SnackBars.showSnackBar(context, e.message, Colors.red);
+                  } on AppwriteException catch (e) {
+                    SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка.'), Colors.red);
+                  }
+                },
+                child:
+                    oauthButton('assets/images/small_images/icons/google.png'),
+              ),
               GestureDetector(
                 onTap: () {
                   authCubit.vkAuth();

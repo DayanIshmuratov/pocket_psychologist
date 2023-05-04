@@ -5,9 +5,9 @@ abstract class AuthState extends Equatable {
 }
 
 class AuthSigned extends AuthState {
-  final UserInfo userInfo;
+  final UserData userData;
 
-  AuthSigned({required this.userInfo});
+  AuthSigned({required this.userData});
   @override
   List<Object> get props => [];
 }

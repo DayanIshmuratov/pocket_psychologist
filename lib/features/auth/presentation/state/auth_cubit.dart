@@ -2,8 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:pocket_psychologist/constants/appwrite_constants/appwrite_constants.dart' as consts;
 import 'package:equatable/equatable.dart';
 import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart' as models;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:pocket_psychologist/core/server/account.dart';
+import 'package:pocket_psychologist/features/auth/domain/entity/userData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/exceptions/exceptions.dart';
@@ -15,6 +17,7 @@ class AuthCubit extends Cubit<AuthState> {
   final String _keyAuthState = 'isSigned';
   final String _keyEmail = 'user_email';
   final String _keyName = 'user_name';
+  final String _keyId = 'user_id';
   Account account = AccountProvider.get().account;
   SharedPreferences? _prefs;
 
@@ -28,12 +31,24 @@ class AuthCubit extends Cubit<AuthState> {
     // _prefs?.setString(key, 'purple');
   }
 
-  _savePrefs(bool isSigned) {
+  _saveAuthState(bool isSigned) {
     _prefs?.setBool(_keyAuthState, isSigned);
   }
 
-  googleAuth() {
-    account.createOAuth2Session(provider: 'google');
+  googleAuth() async {
+    if (await InternetConnectionChecker().hasConnection) {
+      try {
+        await account.createOAuth2Session(provider: 'google');
+        final models.Account user = await AccountProvider.get().account.get();
+        final userData = UserData.fromMap(user);
+        utils.checkAnswersSignIn(userData);
+        emit(AuthSigned(userData: userData));
+      } on AppwriteException {
+        rethrow;
+      }
+    } else {
+      throw NetworkException();
+    }
   }
 
   vkAuth() {
@@ -48,12 +63,14 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
-      await utils.checkAnswersSignIn();
-      await _setUserPrefs();
-      final userInfo = await _getUserPrefs();
-      emit(AuthSigned(userInfo: userInfo));
+      final models.Account user = await AccountProvider.get().account.get();
+      final userData = UserData.fromMap(user);
+      await utils.checkAnswersSignIn(userData);
+      await _setUserPrefs(userData);
+      // final userData = await _getUserPrefs();
+      emit(AuthSigned(userData: userData));
       }
-      on AppwriteException{
+      on AppwriteException {
         rethrow;
       }
     } else {
@@ -64,14 +81,32 @@ class AuthCubit extends Cubit<AuthState> {
   signUpWithEmail(String name, String email, String password) async {
     if (await InternetConnectionChecker().hasConnection) {
       try {
-        await account.create(
+        final user = await account.create(
           userId: ID.unique(),
           name: name,
           email: email,
           password: password,
         );
-        await utils.checkAnswersSignUp();
-        await signInWithEmail(email, password);
+        await account.createEmailSession(
+          email: email,
+          password: password,
+        );
+        final userData = UserData.fromMap(user);
+
+        /// TODO: ДОЖИДАЕМСЯ СОЗДАНИЯ АККАУНТА НА СЕРВАКЕ
+        // await utils.isReady(() async {
+        //   try {
+        //     await AccountProvider
+        //         .get()
+        //         .account
+        //         .get();
+        //   } catch (e) {
+        //     rethrow;
+        //   }
+        // });
+        await utils.checkAnswersSignUp(userData);
+        await _setUserPrefs(userData);
+        emit(AuthSigned(userData: userData));
       }
       on AppwriteException {
         rethrow;
@@ -105,22 +140,23 @@ class AuthCubit extends Cubit<AuthState> {
     } else if (await InternetConnectionChecker().hasConnection) {
       try {
         final user = await account.get();
-        final userInfo = await _getUserPrefs();
-        emit(AuthSigned(userInfo: userInfo));
+        final userData = UserData.fromMap(user);
+        // final userInfo = await _getUserPrefs();
+        emit(AuthSigned(userData: userData));
         //Check is there distinction between data in the localDB and remoteDB
-        await utils.checkDistinction(user);
+        await utils.checkDistinction(userData);
       } catch (e, s) {
         logger.severe(e, s);
       }
     } else {
-      final userInfo = await _getUserPrefs();
-      emit(AuthSigned(userInfo: userInfo));
+      final userData = await _getUserPrefs();
+      emit(AuthSigned(userData: userData));
     }
   }
 
   logOut() async {
     emit(AuthUnSigned());
-    _savePrefs(false);
+    _saveAuthState(false);
     _deleteUserPrefs();
   }
 
@@ -129,28 +165,28 @@ class AuthCubit extends Cubit<AuthState> {
     _prefs?.remove(_keyEmail);
   }
 
-  Future<void> _setUserPrefs() async {
-    final user = await account.get();
-    _prefs?.setString(_keyName, user.name);
-    _prefs?.setString(_keyEmail, user.email);
+  Future<void> _setUserPrefs(UserData userData) async {
+    _prefs?.setString(_keyId, userData.id);
+    _prefs?.setString(_keyName, userData.name);
+    _prefs?.setString(_keyEmail, userData.email);
   }
 
-  Future<UserInfo> _getUserPrefs() async {
+  Future<UserData> _getUserPrefs() async {
     final name = _prefs?.getString(_keyName) ?? 'Гость';
     final email = _prefs?.getString(_keyEmail) ?? 'aaa@example.com';
-    return UserInfo(
+    final id = _prefs?.getString(_keyId) ?? '';
+    return UserData(
       name: name,
       email: email,
+      id: id,
+      registration: null,
+      status: null,
+      emailVerification: null,
+      passwordUpdate: null,
+      prefs: null,
     );
   }
 
 
 
-}
-
-class UserInfo {
-  final String name;
-  final String email;
-
-  UserInfo({required this.name, required this.email});
 }
