@@ -24,7 +24,7 @@ class OauthButtons extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   try {
-                    await authCubit.googleAuth();
+                    await authCubit.googleAuth(context);
                     if (authCubit.state is AuthSigned) {
                       Navigator.pop(context);
                       SnackBars.showSnackBar(

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dart_appwrite/dart_appwrite.dart';
+import 'package:dart_appwrite/models.dart';
 import 'package:pocket_psychologist/constants/appwrite_constants/appwrite_constants.dart' as constants;
 
 import '../logger/logger.dart';
@@ -50,21 +51,21 @@ class AppWriteServerProvider {
     }
 
   Future<void> isAttributesCreated(Databases db, String id) async {
-    while (true) {
-      final collection = await db.getCollection(
+    bool isReady = false;
+    while (!isReady) {
+      Collection collection = await db.getCollection(
         databaseId: constants.appwriteUsersAnswersDatabaseId,
         collectionId: id,
       );
-      if (collection.attributes.length == 2) {
-        final first = collection.attributes[0]['status'];
-        final second = collection.attributes[1]['status'];
-        if (first == 'available' && second == 'available')  {
+      await Future.delayed( const Duration(seconds: 2)).then((_) {
           logger.info(collection.attributes);
-          break;
+          logger.info("Ждем создание атрибутов");
+          logger.info(isReady);
+      if (collection.attributes.length == 2) {
+      if (collection.attributes[0]['status'] == 'available' && collection.attributes[1]['status'] == 'available')  {
+          isReady = true;
         }
       }
-      Timer(Duration(milliseconds: 1000), () {
-        logger.info("Ждем создание атрибутов");
       });
     }
   }

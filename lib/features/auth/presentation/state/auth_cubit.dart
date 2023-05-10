@@ -1,5 +1,6 @@
+
 import 'package:bloc/bloc.dart';
-import 'package:pocket_psychologist/constants/appwrite_constants/appwrite_constants.dart' as consts;
+import 'package:flutter/cupertino.dart';
 import 'package:equatable/equatable.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
@@ -35,13 +36,14 @@ class AuthCubit extends Cubit<AuthState> {
     _prefs?.setBool(_keyAuthState, isSigned);
   }
 
-  googleAuth() async {
+  googleAuth(BuildContext context) async {
     if (await InternetConnectionChecker().hasConnection) {
       try {
         await account.createOAuth2Session(provider: 'google');
         final models.Account user = await AccountProvider.get().account.get();
         final userData = UserData.fromMap(user);
-        utils.checkAnswersSignIn(userData);
+        utils.checkAnswers(userData, context);
+        await _setUserPrefs(userData);
         emit(AuthSigned(userData: userData));
       } on AppwriteException {
         rethrow;
@@ -56,7 +58,7 @@ class AuthCubit extends Cubit<AuthState> {
     logger.info("VK Auth");
   }
 
-  signInWithEmail(String email, String password) async {
+  signInWithEmail(BuildContext context, String email, String password) async {
     if (await InternetConnectionChecker().hasConnection) {
       try {
       await account.createEmailSession(
@@ -65,7 +67,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       final models.Account user = await AccountProvider.get().account.get();
       final userData = UserData.fromMap(user);
-      await utils.checkAnswersSignIn(userData);
+      await utils.checkAnswers(userData, context);
       await _setUserPrefs(userData);
       // final userData = await _getUserPrefs();
       emit(AuthSigned(userData: userData));
@@ -78,7 +80,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  signUpWithEmail(String name, String email, String password) async {
+  signUpWithEmail(BuildContext context, String name, String email, String password) async {
     if (await InternetConnectionChecker().hasConnection) {
       try {
         final user = await account.create(
@@ -92,19 +94,7 @@ class AuthCubit extends Cubit<AuthState> {
           password: password,
         );
         final userData = UserData.fromMap(user);
-
-        /// TODO: ДОЖИДАЕМСЯ СОЗДАНИЯ АККАУНТА НА СЕРВАКЕ
-        // await utils.isReady(() async {
-        //   try {
-        //     await AccountProvider
-        //         .get()
-        //         .account
-        //         .get();
-        //   } catch (e) {
-        //     rethrow;
-        //   }
-        // });
-        await utils.checkAnswersSignUp(userData);
+        await utils.checkAnswers(userData, context);
         await _setUserPrefs(userData);
         emit(AuthSigned(userData: userData));
       }
@@ -116,21 +106,36 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  password() async {
-    final result = await account.createRecovery(
-      email: 'dayanishmuratov11@yandex.ru',
-      url: 'https://chowapp.site',
+  // passwordSecond() async {
+  //   final acc = await account.get();
+  //   Future result = account.updateRecovery(
+  //     userId: acc.$id,
+  //     secret: '[SECRET]',
+  //     password: 'password',
+  //     passwordAgain: 'password',
+  //   );
+  // }
+
+  passwordRecovery(String email) async {
+    final token = await account.createRecovery(
+      email: email,
+      url: 'https://chowapp.site/recovery/recovery.html',
     );
+    logger.info(token);
+    logger.info(token.toMap());
+    logger.info(token.secret);
   }
 
-  passwordSecond() async {
-    final acc = await account.get();
-    Future result = account.updateRecovery(
-      userId: acc.$id,
-      secret: '[SECRET]',
-      password: 'password',
-      passwordAgain: 'password',
-    );
+  updateName(String name) async {
+    if (await InternetConnectionChecker().hasConnection) {
+      try {
+        await account.updateName(name: name);
+      } on AppwriteException {
+        rethrow;
+      }
+    } else {
+      throw NetworkException();
+    }
   }
 
   _loadAuth() async {
@@ -155,6 +160,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   logOut() async {
+    await account.deleteSession(sessionId: 'current');
     emit(AuthUnSigned());
     _saveAuthState(false);
     _deleteUserPrefs();

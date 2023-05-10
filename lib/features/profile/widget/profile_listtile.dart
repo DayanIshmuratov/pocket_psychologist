@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 
 class ProfileListTile extends StatelessWidget {
-  final String text;
+  final String title;
   final IconData icon;
 
-  const ProfileListTile({super.key, required this.text, required this.icon});
+  const ProfileListTile({super.key, required this.title, required this.icon});
 
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
     return ListTile(
       title: AppSubtitle(
-        value: text,
+        value: title,
       ),
       leading: Container(
         width: 40,

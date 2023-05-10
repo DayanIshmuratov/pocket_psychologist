@@ -10,12 +10,15 @@ import 'package:pocket_psychologist/constants/app_colors/app_theme.dart';
 import 'package:pocket_psychologist/core/bloc_observer/bloc_observer.dart';
 import 'package:pocket_psychologist/core/error_handler/error_handler.dart';
 import 'package:pocket_psychologist/core/logger/logger.dart';
+import 'package:pocket_psychologist/features/auth/presentation/page/password_recovery_page.dart';
 import 'package:pocket_psychologist/features/auth/presentation/page/sign_in_page.dart';
+import 'package:pocket_psychologist/features/profile/page/edit_profile_page.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/page/exercises_image_page.dart';
 import 'package:pocket_psychologist/main_page/main_page.dart';
 import 'package:pocket_psychologist/service_locator/service_locator.dart' as di;
 import 'package:pocket_psychologist/service_locator/service_locator.dart';
 import 'core/server/appwrite.dart';
+import 'features/auth/domain/entity/userData.dart';
 import 'features/auth/presentation/state/auth_cubit.dart';
 import 'features/surveys_and_exercises/domain/entities/exercise_entity.dart';
 import 'features/surveys_and_exercises/domain/entities/survey_entity.dart';
@@ -129,10 +132,16 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(
                       builder: (context) => ResultPage(surveyEntity: entity));
                 case 'sign_in_page':
-                  return MaterialPageRoute(builder: (context) => SignInPage());
+                  return MaterialPageRoute(builder: (context) => const SignInPage());
                 case 'image_page' :
                   final path = settings.arguments as String;
                   return MaterialPageRoute(builder: (context) => ImagePage(path: path));
+                case 'password_recovery_page' :
+                  final data = settings.arguments as Map<String, Object>;
+                  return MaterialPageRoute(builder: (context) => PasswordRecoveryPage(authCubit: data['authCubit'] as AuthCubit, email: data['email'] as String));
+                case 'edit_profile_page' :
+                  final userData = settings.arguments as UserData;
+                  return MaterialPageRoute(builder: (context) => EditProfilePage(userData: userData));
               }
             },
             // color: AppColors.mainColor,

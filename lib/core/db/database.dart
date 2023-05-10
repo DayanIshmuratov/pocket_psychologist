@@ -26,4 +26,8 @@ class DBProvider {
     var db = await openDatabase(path);
     return db;
     }
+
+  static void resetDB()  {
+    db.database.then((value) => value.rawUpdate("Update questions set question_answer_id = 0"));
+  }
   }

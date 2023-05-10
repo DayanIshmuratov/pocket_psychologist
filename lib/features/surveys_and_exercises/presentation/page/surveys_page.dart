@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
-import 'package:pocket_psychologist/common/to_delete_later/clear_db.dart';
 import 'package:pocket_psychologist/core/db/database.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/survey_entity.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/survey_state/survey_cubit.dart';
@@ -19,7 +18,7 @@ class SurveysPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.traffic_outlined),
             onPressed: () {
-              ResetDB().reset();
+              DBProvider.resetDB();
             },
           ),
         ],

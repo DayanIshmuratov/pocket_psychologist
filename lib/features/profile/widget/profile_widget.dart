@@ -21,7 +21,7 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
   @override
   build(BuildContext context)  {
     Color color = Theme.of(context).primaryColor;
-    final authCubit = context.read<AuthCubit>();
+    AuthCubit authCubit = context.read<AuthCubit>();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -49,23 +49,26 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
                         await Navigator.pushNamed(context, 'sign_in_page');
                         setState(() {});
                       },
-                      child: const ProfileListTile(text: 'Войти в аккаунт', icon: Icons.person_outline,),
+                      child: const ProfileListTile(title: 'Войти в аккаунт', icon: Icons.person_outline,),
                     ),
                   if (state is AuthSigned)
-                    const ProfileListTile(text: 'Редактировать', icon: Icons.person),
+                    InkWell(onTap: () async {
+                      await Navigator.pushNamed(context, 'edit_profile_page', arguments: state.userData);
+                      authCubit = context.read<AuthCubit>();
+                    }, child: const ProfileListTile(title: 'Редактировать', icon: Icons.person)),
                   Divider(color: color),
                   InkWell(
                     onTap: () {
                       _changingThemeDialog(context);
                     },
-                    child: const ProfileListTile(text: 'Сменить тему',icon: Icons.palette_outlined),
+                    child: const ProfileListTile(title: 'Сменить тему',icon: Icons.palette_outlined),
                   ),
                   Divider(color: color),
                   InkWell(
                     onTap: () {
                       _aboutUsDialog(context);
                     },
-                    child: const ProfileListTile(text: 'О нас', icon: Icons.people_alt_outlined),
+                    child: const ProfileListTile(title: 'О нас', icon: Icons.people_alt_outlined),
                   ),
 
                   if (authCubit.state is AuthSigned)
@@ -77,7 +80,7 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
                           setState(() {});
                         },
                         child: const ProfileListTile(
-                          text: 'Выйти из аккаунта', icon: Icons.logout,
+                          title: 'Выйти из аккаунта', icon: Icons.logout,
                         ),
                       ),
                     ],

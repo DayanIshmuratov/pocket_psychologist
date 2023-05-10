@@ -161,11 +161,24 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 SizedBox(height: space),
                 OauthButtons(authCubit: _authCubit),
-                InkWell(
-                  onTap: () {
-                    _authCubit.password();
-                },
-                  child: Text('Пароль'),
+                if (!isSignUp)
+                SizedBox(height: space),
+                if (!isSignUp)
+                  Center(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        'password_recovery_page',
+                        arguments: <String, Object>{
+                          'email': _emailController.text,
+                          'authCubit' : _authCubit,
+                        },
+                      );
+                      // _authCubit.password();
+                  },
+                    child: const AppText(value: 'Забыли пароль?'),
+                  ),
                 )
               ],
             ),
@@ -179,7 +192,7 @@ class _SignInPageState extends State<SignInPage> {
     if (_key.currentState!.validate()) {
       if (!isSignUp) {
         try {
-          await authCubit.signInWithEmail(_emailController.text, _passwordController.text);
+          await authCubit.signInWithEmail(context, _emailController.text, _passwordController.text);
           if (mounted) {
             if (authCubit.state is AuthSigned) {
               SnackBars.showSnackBar(context, 'Вы успешно вошли в аккаунт', Theme.of(context).primaryColor);
@@ -194,7 +207,7 @@ class _SignInPageState extends State<SignInPage> {
         }
       } else {
         try {
-          await authCubit.signUpWithEmail(_nameController.text, _emailController.text, _passwordController.text);
+          await authCubit.signUpWithEmail(context, _nameController.text, _emailController.text, _passwordController.text);
           if (mounted) {
             if (authCubit.state is AuthSigned) {
               Navigator.pop(context);
