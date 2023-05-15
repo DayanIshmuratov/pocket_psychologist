@@ -53,8 +53,9 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
                     ),
                   if (state is AuthSigned)
                     InkWell(onTap: () async {
-                      await Navigator.pushNamed(context, 'edit_profile_page', arguments: state.userData);
-                      authCubit = context.read<AuthCubit>();
+                      await Navigator.pushNamed(context, 'edit_profile_page');
+                      await authCubit.refresh();
+                      setState(() {});
                     }, child: const ProfileListTile(title: 'Редактировать', icon: Icons.person)),
                   Divider(color: color),
                   InkWell(

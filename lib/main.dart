@@ -140,8 +140,7 @@ class MyApp extends StatelessWidget {
                   final data = settings.arguments as Map<String, Object>;
                   return MaterialPageRoute(builder: (context) => PasswordRecoveryPage(authCubit: data['authCubit'] as AuthCubit, email: data['email'] as String));
                 case 'edit_profile_page' :
-                  final userData = settings.arguments as UserData;
-                  return MaterialPageRoute(builder: (context) => EditProfilePage(userData: userData));
+                  return MaterialPageRoute(builder: (context) => EditProfilePage());
               }
             },
             // color: AppColors.mainColor,

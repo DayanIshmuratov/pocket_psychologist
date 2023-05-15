@@ -93,6 +93,7 @@ class AuthCubit extends Cubit<AuthState> {
           email: email,
           password: password,
         );
+        await account.createVerification(url: 'https://verify.chowapp.site');
         final userData = UserData.fromMap(user);
         await utils.checkAnswers(userData, context);
         await _setUserPrefs(userData);
@@ -104,6 +105,12 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       throw NetworkException();
     }
+  }
+
+  refresh() async {
+    final user = await account.get();
+    final userData = UserData.fromMap(user);
+    emit(AuthSigned(userData: userData));
   }
 
   // passwordSecond() async {
@@ -119,7 +126,7 @@ class AuthCubit extends Cubit<AuthState> {
   passwordRecovery(String email) async {
     final token = await account.createRecovery(
       email: email,
-      url: 'https://chowapp.site/recovery/recovery.html',
+      url: 'https://recovery.chowapp.site',
     );
     logger.info(token);
     logger.info(token.toMap());
@@ -130,6 +137,30 @@ class AuthCubit extends Cubit<AuthState> {
     if (await InternetConnectionChecker().hasConnection) {
       try {
         await account.updateName(name: name);
+      } on AppwriteException {
+        rethrow;
+      }
+    } else {
+      throw NetworkException();
+    }
+  }
+
+  updatePassword(String oldPassword, String newPassword) async{
+    if (await InternetConnectionChecker().hasConnection) {
+    try {
+    await account.updatePassword(password: newPassword, oldPassword: oldPassword);
+    } on AppwriteException {
+    rethrow;
+    }
+    } else {
+    throw NetworkException();
+    }
+  }
+
+  updateEmail(String email, String password) async{
+    if (await InternetConnectionChecker().hasConnection) {
+      try {
+        await account.updateEmail(email: email, password: password);
       } on AppwriteException {
         rethrow;
       }
@@ -192,7 +223,4 @@ class AuthCubit extends Cubit<AuthState> {
       prefs: null,
     );
   }
-
-
-
 }

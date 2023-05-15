@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class AppTitle extends StatelessWidget {
   final String value;
   final Color? color;
-  static const textSize = 28.0;
+  static const textSize = 26.0;
   const AppTitle({super.key, required this.value, this.color});
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class AppSubtitle extends StatelessWidget {
   final int? maxLines;
   final Color? color;
   final String value;
-  static const textSize = 22.0;
+  static const textSize = 20.0;
 
   const AppSubtitle({super.key, required this.value, this.textAlign, this.color, this.maxLines});
 
@@ -49,7 +49,7 @@ class AppText extends StatelessWidget {
   final int? maxLines;
   final Color? color;
   final String value;
-  static const textSize = 18.0;
+  static const textSize = 16.0;
 
   const AppText({super.key, required this.value, this.textAlign, this.color, this.maxLines});
 
