@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pocket_psychologist/constants/app_colors/app_colors.dart';
-import 'package:pocket_psychologist/features/chat/page/chat_page.dart';
 import 'package:pocket_psychologist/features/home/page/home_page.dart';
 import 'package:pocket_psychologist/features/profile/page/profile_page.dart';
 import 'package:pocket_psychologist/features/vip/page/vip_page.dart';
 
+import '../features/chat/presentation/page/chat_page.dart';
 import '../features/surveys_and_exercises/presentation/page/surveys_and_exercises_page.dart';
 
 class MainPage extends StatefulWidget {

@@ -12,6 +12,7 @@ import 'package:pocket_psychologist/core/error_handler/error_handler.dart';
 import 'package:pocket_psychologist/core/logger/logger.dart';
 import 'package:pocket_psychologist/features/auth/presentation/page/password_recovery_page.dart';
 import 'package:pocket_psychologist/features/auth/presentation/page/sign_in_page.dart';
+import 'package:pocket_psychologist/features/chat/presentation/state/chat_cubit.dart';
 import 'package:pocket_psychologist/features/profile/page/edit_profile_page.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/page/exercises_image_page.dart';
 import 'package:pocket_psychologist/main_page/main_page.dart';
@@ -66,6 +67,9 @@ class Wrapper extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthCubit(),
         ),
+        BlocProvider(
+          create: (context) => ChatCubit(),
+        )
       ],
       child: MyApp(),
     );
