@@ -42,20 +42,25 @@ class _ChatWidgetsState extends State<ChatWidgets> {
                   child: ListView.builder(
                       itemCount: messages.length,
                       itemBuilder: (context, i) {
-                        return ListTile(
-                          title: AppText(
-                            value: messages[i].message,
-                            color: Colors.red,
-                          ),
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: widget.userData.id == messages[i].userId ? MainAxisAlignment.end : MainAxisAlignment.start,
+                          children: [
+                          AppText(
+                                value: messages[i].message,
+                                color: Colors.red,
+                              ),
+                              // subtitle: Text(messages[i].date!.toIso8601String()),
+                          ],
                         );
                       }),
                 );
               } else if (snapshot.hasError) {
               // Handle any errors
-              return Text('Error: ${snapshot.error}');
+              return Text('Ошибка: ${snapshot.error}');
             } else {
               // Initial loading state or no data yet
-              return CircularProgressIndicator();
+              return SizedBox();
             }
           },
         ),

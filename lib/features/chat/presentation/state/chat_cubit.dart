@@ -23,9 +23,9 @@ class ChatCubit extends Cubit<ChatState> {
     subscription = realtime.subscribe(['databases.chat.collections.messages.documents']);
     subscription!.stream.listen((response) {
       final result = response.payload;
+      logger.severe(result);
       final Message message = Message.fromJson(result);
       _streamController.add(message);
-      logger.severe(result);
     });
   }
 

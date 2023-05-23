@@ -6,19 +6,20 @@ class Message extends Equatable {
   final DateTime? date;
   final String action;
 
-  Message({required this.message, required this.userId, required this.date, required this.action});
+  const Message({required this.message, required this.userId, required this.date, required this.action});
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
         message: json['message'],
         userId: json['user_id'],
-        date: json['permissions']['createdAt'],
+        date: json['createdAt'],
         action: json['action']);
   }
 
   @override
   // TODO: implement props
   List<Object?> get props => [message, userId, date, action];
-
-
 }
+
+
+
