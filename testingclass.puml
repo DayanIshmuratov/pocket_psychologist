@@ -1,0 +1,1123 @@
+@startuml
+set namespaceSeparator ::
+
+class "pocket_psychologist::common::animations::expanded_section.dart::ExpandedSection" {
+  +Widget child
+  +bool expand
+  +_ExpandedSectionState createState()
+}
+
+"pocket_psychologist::common::animations::expanded_section.dart::ExpandedSection" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::common::animations::expanded_section.dart::ExpandedSection"
+
+class "pocket_psychologist::common::animations::expanded_section.dart::_ExpandedSectionState" {
+  +AnimationController expandController
+  +Animation<double> animation
+  +void initState()
+  +void prepareAnimations()
+  +void didUpdateWidget()
+  +void dispose()
+  +Widget build()
+}
+
+"pocket_psychologist::common::animations::expanded_section.dart::_ExpandedSectionState" o-- "flutter::src::animation::animation_controller.dart::AnimationController"
+"pocket_psychologist::common::animations::expanded_section.dart::_ExpandedSectionState" o-- "flutter::src::animation::animation.dart::Animation<double>"
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::common::animations::expanded_section.dart::_ExpandedSectionState"
+"flutter::src::widgets::ticker_provider.dart::SingleTickerProviderStateMixin" <|-- "pocket_psychologist::common::animations::expanded_section.dart::_ExpandedSectionState"
+
+class "pocket_psychologist::common::components::text.dart::AppTitle" {
+  +String value
+  +Color? color
+  {static} +double textSize
+  +Widget build()
+}
+
+"pocket_psychologist::common::components::text.dart::AppTitle" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::common::components::text.dart::AppTitle"
+
+class "pocket_psychologist::common::components::text.dart::AppSubtitle" {
+  +TextAlign? textAlign
+  +int? maxLines
+  +Color? color
+  +String value
+  {static} +double textSize
+  +Widget build()
+}
+
+"pocket_psychologist::common::components::text.dart::AppSubtitle" o-- "dart::ui::TextAlign"
+"pocket_psychologist::common::components::text.dart::AppSubtitle" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::common::components::text.dart::AppSubtitle"
+
+class "pocket_psychologist::common::components::text.dart::AppText" {
+  +TextAlign? textAlign
+  +int? maxLines
+  +Color? color
+  +String value
+  {static} +double textSize
+  +Widget build()
+}
+
+"pocket_psychologist::common::components::text.dart::AppText" o-- "dart::ui::TextAlign"
+"pocket_psychologist::common::components::text.dart::AppText" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::common::components::text.dart::AppText"
+
+class "pocket_psychologist::common::validators::validators.dart::Validators" {
+  {static} +String? validateTitle()
+  {static} +String? validateText()
+  {static} +String? validateName()
+  {static} +String? validateEmail()
+  {static} +String? validatePassword()
+  {static} +String? validateSecondPassword()
+}
+
+class "pocket_psychologist::common::widgets::dialogs.dart::Dialogs" {
+  {static} +dynamic showDataConfirmationDialog()
+  {static} +dynamic showNameChangeDialog()
+  {static} +dynamic showPasswordChangeDialog()
+  {static} +dynamic showEmailChangeDialog()
+}
+
+class "pocket_psychologist::common::widgets::snackbars.dart::SnackBars" {
+  {static} +dynamic showSnackBar()
+}
+
+class "pocket_psychologist::constants::app_colors::app_colors.dart::AppColors" {
+  {static} +MaterialColor mainPurpleColor
+  {static} +Color secondaryPurpleColor
+  {static} +MaterialColor mainGreenColor
+  {static} +Color secondaryGreenColor
+}
+
+"pocket_psychologist::constants::app_colors::app_colors.dart::AppColors" o-- "flutter::src::material::colors.dart::MaterialColor"
+"pocket_psychologist::constants::app_colors::app_colors.dart::AppColors" o-- "dart::ui::Color"
+
+class "pocket_psychologist::constants::app_colors::app_theme.dart::AppTheme" {
+  +String key
+  -SharedPreferences? _prefs
+  -dynamic _initialisePrefs()
+  -dynamic _loadPrefs()
+  -dynamic _savePrefs()
+  +dynamic changeToGreen()
+  +dynamic changeToPurple()
+  +dynamic changeToRed()
+  +dynamic changeToBlack()
+  -AppThemeState _fromThemeToAppThemeState()
+}
+
+"pocket_psychologist::constants::app_colors::app_theme.dart::AppTheme" o-- "shared_preferences::shared_preferences.dart::SharedPreferences"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::constants::app_colors::app_theme.dart::AppTheme"
+
+abstract class "pocket_psychologist::constants::app_colors::app_theme.dart::AppThemeState" {
+  +Color mainColor
+  +Color secondaryColor
+}
+
+"pocket_psychologist::constants::app_colors::app_theme.dart::AppThemeState" o-- "dart::ui::Color"
+
+class "pocket_psychologist::constants::app_colors::app_theme.dart::PurpleAppThemeState" {
+  +Color mainColor
+  +Color secondaryColor
+}
+
+"pocket_psychologist::constants::app_colors::app_theme.dart::PurpleAppThemeState" o-- "dart::ui::Color"
+"pocket_psychologist::constants::app_colors::app_theme.dart::AppThemeState" <|-- "pocket_psychologist::constants::app_colors::app_theme.dart::PurpleAppThemeState"
+
+class "pocket_psychologist::constants::app_colors::app_theme.dart::GreenAppThemeState" {
+  +Color mainColor
+  +Color secondaryColor
+}
+
+"pocket_psychologist::constants::app_colors::app_theme.dart::GreenAppThemeState" o-- "dart::ui::Color"
+"pocket_psychologist::constants::app_colors::app_theme.dart::AppThemeState" <|-- "pocket_psychologist::constants::app_colors::app_theme.dart::GreenAppThemeState"
+
+class "pocket_psychologist::constants::app_colors::app_theme.dart::RedAppThemeState" {
+  +Color mainColor
+  +Color secondaryColor
+}
+
+"pocket_psychologist::constants::app_colors::app_theme.dart::RedAppThemeState" o-- "dart::ui::Color"
+"pocket_psychologist::constants::app_colors::app_theme.dart::AppThemeState" <|-- "pocket_psychologist::constants::app_colors::app_theme.dart::RedAppThemeState"
+
+class "pocket_psychologist::constants::app_colors::app_theme.dart::BlackAppThemeState" {
+  +Color mainColor
+  +Color secondaryColor
+}
+
+"pocket_psychologist::constants::app_colors::app_theme.dart::BlackAppThemeState" o-- "dart::ui::Color"
+"pocket_psychologist::constants::app_colors::app_theme.dart::AppThemeState" <|-- "pocket_psychologist::constants::app_colors::app_theme.dart::BlackAppThemeState"
+
+class "pocket_psychologist::core::bloc_observer::bloc_observer.dart::MainBlocObserver" {
+  +void onCreate()
+  +void onChange()
+  +void onError()
+}
+
+"bloc::src::bloc_observer.dart::BlocObserver" <|-- "pocket_psychologist::core::bloc_observer::bloc_observer.dart::MainBlocObserver"
+
+class "pocket_psychologist::core::db::database.dart::DBProvider" {
+  {static} +DBProvider db
+  {static} -Database _database
+  +Future<Database> database
+  -Future<Database> _initialDB()
+  {static} +void resetDB()
+}
+
+"pocket_psychologist::core::db::database.dart::DBProvider" o-- "pocket_psychologist::core::db::database.dart::DBProvider"
+"pocket_psychologist::core::db::database.dart::DBProvider" o-- "sqflite_common::sqlite_api.dart::Database"
+
+class "pocket_psychologist::core::error_handler::error_handler.dart::ErrorHandler" {
+  {static} +void init()
+  {static} +void recordError()
+  {static} -void _recordFlutterError()
+}
+
+class "pocket_psychologist::core::exceptions::exceptions.dart::ServerException" {
+  +String msg
+  +String message
+}
+
+"dart::core::Exception" <|-- "pocket_psychologist::core::exceptions::exceptions.dart::ServerException"
+
+class "pocket_psychologist::core::exceptions::exceptions.dart::NetworkException" {
+  +String msg
+  +String message
+}
+
+"dart::core::Exception" <|-- "pocket_psychologist::core::exceptions::exceptions.dart::NetworkException"
+
+class "pocket_psychologist::core::exceptions::exceptions.dart::CacheException" {
+  +String msg
+  +String message
+}
+
+"dart::core::Exception" <|-- "pocket_psychologist::core::exceptions::exceptions.dart::CacheException"
+
+class "pocket_psychologist::core::server::account.dart::AccountProvider" {
+  {static} +AccountProvider? instance
+  +Account account
+  {static} +dynamic get()
+  +dynamic signUp()
+  +dynamic signIn()
+  +dynamic logOut()
+}
+
+"pocket_psychologist::core::server::account.dart::AccountProvider" o-- "pocket_psychologist::core::server::account.dart::AccountProvider"
+"pocket_psychologist::core::server::account.dart::AccountProvider" o-- "appwrite::appwrite.dart::Account"
+
+class "pocket_psychologist::core::server::appwrite.dart::AppWriteProvider" {
+  {static} +AppWriteProvider instance
+  +Client client
+}
+
+"pocket_psychologist::core::server::appwrite.dart::AppWriteProvider" o-- "pocket_psychologist::core::server::appwrite.dart::AppWriteProvider"
+"pocket_psychologist::core::server::appwrite.dart::AppWriteProvider" o-- "appwrite::src::client.dart::Client"
+
+class "pocket_psychologist::core::server::appwrite_server.dart::AppWriteServerProvider" {
+  {static} +AppWriteServerProvider instance
+  +Client client
+  +Future<void> createCollection()
+  +Future<void> isAttributesCreated()
+  +Future<void> deleteCollection()
+}
+
+"pocket_psychologist::core::server::appwrite_server.dart::AppWriteServerProvider" o-- "pocket_psychologist::core::server::appwrite_server.dart::AppWriteServerProvider"
+"pocket_psychologist::core::server::appwrite_server.dart::AppWriteServerProvider" o-- "dart_appwrite::src::client.dart::Client"
+
+class "pocket_psychologist::core::server::database.dart::AppWriteDBProvider" {
+  {static} +AppWriteDBProvider instance
+  +Databases db
+}
+
+"pocket_psychologist::core::server::database.dart::AppWriteDBProvider" o-- "pocket_psychologist::core::server::database.dart::AppWriteDBProvider"
+"pocket_psychologist::core::server::database.dart::AppWriteDBProvider" o-- "appwrite::appwrite.dart::Databases"
+
+abstract class "pocket_psychologist::core::usecases::usecase_without_parameters.dart::UseCaseWithoutParameters" {
+  +Type call()
+}
+
+abstract class "pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" {
+  +Type call()
+}
+
+class "pocket_psychologist::features::auth::domain::entity::userData.dart::UserData" {
+  +String id
+  +String name
+  +String? registration
+  +bool? status
+  +String? passwordUpdate
+  +String email
+  +bool? emailVerification
+  +Map<String, dynamic>? prefs
+  +List<Object?> props
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "pocket_psychologist::features::auth::domain::entity::userData.dart::UserData"
+
+class "pocket_psychologist::features::auth::presentation::page::password_recovery_page.dart::PasswordRecoveryPage" {
+  -GlobalKey<FormState> _key
+  +String email
+  +AuthCubit authCubit
+  +Widget build()
+}
+
+"pocket_psychologist::features::auth::presentation::page::password_recovery_page.dart::PasswordRecoveryPage" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"pocket_psychologist::features::auth::presentation::page::password_recovery_page.dart::PasswordRecoveryPage" o-- "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthCubit"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::auth::presentation::page::password_recovery_page.dart::PasswordRecoveryPage"
+
+class "pocket_psychologist::features::auth::presentation::page::sign_in_page.dart::SignInPage" {
+  +State<SignInPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::auth::presentation::page::sign_in_page.dart::SignInPage"
+
+class "pocket_psychologist::features::auth::presentation::page::sign_in_page.dart::_SignInPageState" {
+  -GlobalKey<FormState> _key
+  +double space
+  +bool isSignUp
+  +bool isHidden
+  -TextEditingController _nameController
+  -TextEditingController _emailController
+  -TextEditingController _passwordController
+  -TextEditingController _secondPasswordController
+  -void _toogle()
+  +Widget build()
+  -void _submit()
+}
+
+"pocket_psychologist::features::auth::presentation::page::sign_in_page.dart::_SignInPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"pocket_psychologist::features::auth::presentation::page::sign_in_page.dart::_SignInPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::auth::presentation::page::sign_in_page.dart::_SignInPageState"
+
+class "pocket_psychologist::features::auth::presentation::page::sign_up_page.dart::SignUpPage" {
+  +State<SignUpPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::auth::presentation::page::sign_up_page.dart::SignUpPage"
+
+class "pocket_psychologist::features::auth::presentation::page::sign_up_page.dart::_SignUpPageState" {
+  -TextEditingController _nameController
+  -TextEditingController _emailController
+  -TextEditingController _passwordController
+  +Widget build()
+}
+
+"pocket_psychologist::features::auth::presentation::page::sign_up_page.dart::_SignUpPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::auth::presentation::page::sign_up_page.dart::_SignUpPageState"
+
+class "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthCubit" {
+  -String _keyAuthState
+  -String _keyEmail
+  -String _keyName
+  -String _keyId
+  +Account account
+  -SharedPreferences? _prefs
+  -dynamic _initialisePrefs()
+  -dynamic _saveAuthState()
+  +dynamic googleAuth()
+  +dynamic vkAuth()
+  +dynamic signInWithEmail()
+  +dynamic signUpWithEmail()
+  +dynamic refresh()
+  +dynamic passwordRecovery()
+  +dynamic updateName()
+  +dynamic updatePassword()
+  +dynamic updateEmail()
+  -dynamic _loadAuth()
+  +dynamic logOut()
+  -void _deleteUserPrefs()
+  -Future<void> _setUserPrefs()
+  -Future<UserData> _getUserPrefs()
+}
+
+"pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthCubit" o-- "appwrite::appwrite.dart::Account"
+"pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthCubit" o-- "shared_preferences::shared_preferences.dart::SharedPreferences"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthCubit"
+
+abstract class "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthState" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthState"
+
+class "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthSigned" {
+  +UserData userData
+  +List<Object> props
+}
+
+"pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthSigned" o-- "pocket_psychologist::features::auth::domain::entity::userData.dart::UserData"
+"pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthState" <|-- "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthSigned"
+
+class "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthUnSigned" {
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthState" <|-- "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthUnSigned"
+
+class "pocket_psychologist::features::auth::presentation::widgets::oauth_buttons.dart::OauthButtons" {
+  +AuthCubit authCubit
+  +Widget build()
+}
+
+"pocket_psychologist::features::auth::presentation::widgets::oauth_buttons.dart::OauthButtons" o-- "pocket_psychologist::features::auth::presentation::state::auth_cubit.dart::AuthCubit"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::auth::presentation::widgets::oauth_buttons.dart::OauthButtons"
+
+class "pocket_psychologist::features::chat::domain::entity::message_entity.dart::Message" {
+  +String message
+  +String userId
+  +DateTime? date
+  +String action
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "pocket_psychologist::features::chat::domain::entity::message_entity.dart::Message"
+
+class "pocket_psychologist::features::chat::presentation::page::chat_page.dart::ChatPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::chat::presentation::page::chat_page.dart::ChatPage"
+
+class "pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatCubit" {
+  -StreamController<dynamic> _streamController
+  +RealtimeSubscription? subscription
+  +Stream<dynamic> resultStream
+  +void subscribe()
+  +void dispose()
+  +Future<void> sendMessage()
+}
+
+"pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatCubit" o-- "dart::async::StreamController<dynamic>"
+"pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatCubit" o-- "appwrite::src::realtime_subscription.dart::RealtimeSubscription"
+"pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatCubit" o-- "dart::async::Stream<dynamic>"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatCubit"
+
+abstract class "pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatState" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatState"
+
+class "pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatInitial" {
+  +List<Object> props
+}
+
+"pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatState" <|-- "pocket_psychologist::features::chat::presentation::state::chat_cubit.dart::ChatInitial"
+
+class "pocket_psychologist::features::chat::presentation::widgets::chat_widgets.dart::ChatWidgets" {
+  +UserData userData
+  +State<ChatWidgets> createState()
+}
+
+"pocket_psychologist::features::chat::presentation::widgets::chat_widgets.dart::ChatWidgets" o-- "pocket_psychologist::features::auth::domain::entity::userData.dart::UserData"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::chat::presentation::widgets::chat_widgets.dart::ChatWidgets"
+
+class "pocket_psychologist::features::chat::presentation::widgets::chat_widgets.dart::_ChatWidgetsState" {
+  +List<Message> messages
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::chat::presentation::widgets::chat_widgets.dart::_ChatWidgetsState"
+
+class "pocket_psychologist::features::home::page::home_page.dart::HomePage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::home::page::home_page.dart::HomePage"
+
+class "pocket_psychologist::features::profile::page::edit_profile_page.dart::EditProfilePage" {
+  +State<EditProfilePage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::profile::page::edit_profile_page.dart::EditProfilePage"
+
+class "pocket_psychologist::features::profile::page::edit_profile_page.dart::_EditProfilePageState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::profile::page::edit_profile_page.dart::_EditProfilePageState"
+
+class "pocket_psychologist::features::profile::page::profile_page.dart::ProfilePage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::profile::page::profile_page.dart::ProfilePage"
+
+class "pocket_psychologist::features::profile::widget::app_theme_switcher.dart::AppThemeSwitcher" {
+  +State<AppThemeSwitcher> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::profile::widget::app_theme_switcher.dart::AppThemeSwitcher"
+
+class "pocket_psychologist::features::profile::widget::app_theme_switcher.dart::_AppThemeSwitcherState" {
+  -bool _isExpanded
+  -void _toogleExpand()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::profile::widget::app_theme_switcher.dart::_AppThemeSwitcherState"
+
+class "pocket_psychologist::features::profile::widget::edit_listtile.dart::EditListTile" {
+  +String title
+  +String subtitle
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::profile::widget::edit_listtile.dart::EditListTile"
+
+class "pocket_psychologist::features::profile::widget::profile_card.dart::ProfileCard" {
+  +String name
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::profile::widget::profile_card.dart::ProfileCard"
+
+class "pocket_psychologist::features::profile::widget::profile_listtile.dart::ProfileListTile" {
+  +String title
+  +IconData icon
+  +Widget build()
+}
+
+"pocket_psychologist::features::profile::widget::profile_listtile.dart::ProfileListTile" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::profile::widget::profile_listtile.dart::ProfileListTile"
+
+class "pocket_psychologist::features::profile::widget::profile_widget.dart::ProfileWidgets" {
+  +State<ProfileWidgets> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::profile::widget::profile_widget.dart::ProfileWidgets"
+
+class "pocket_psychologist::features::profile::widget::profile_widget.dart::_ProfileWidgetsState" {
+  {static} +double spaceHeight
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::profile::widget::profile_widget.dart::_ProfileWidgetsState"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::answer_model.dart::AnswerModel" {
+  +Map<String, dynamic> toMap()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::answer_entity.dart::AnswerEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::answer_model.dart::AnswerModel"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::exercise_model.dart::ExercisesModel" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::exercise_entity.dart::ExercisesEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::exercise_model.dart::ExercisesModel"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::image_model.dart::ImageModel" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::image_entity.dart::ImageEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::image_model.dart::ImageModel"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::lie_result_model.dart::LieResultModel" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::lie_results_entity.dart::LieResultEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::lie_result_model.dart::LieResultModel"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::question_model.dart::QuestionModel" {
+  +Map<String, dynamic> toMap()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::question_entity.dart::QuestionEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::question_model.dart::QuestionModel"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::question_with_answer_model.dart::QuestionWithAnswerModel" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::question_with_answer_entity.dart::QuestionWithAnswerEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::question_with_answer_model.dart::QuestionWithAnswerModel"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::result_model.dart::ResultModel" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::result_entity.dart::ResultEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::result_model.dart::ResultModel"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_models::survey_model.dart::SurveyModel" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::SurveyEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_models::survey_model.dart::SurveyModel"
+
+abstract class "pocket_psychologist::features::surveys_and_exercises::data::data_sources::remote_data_source.dart::SurveyRemoteDataSource" {
+  +dynamic saveData()
+}
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_sources::remote_data_source.dart::SurveyRemoteDataSourceImpl" {
+  +Client client
+  +Databases database
+  +dynamic saveData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::data::data_sources::remote_data_source.dart::SurveyRemoteDataSourceImpl" o-- "appwrite::src::client.dart::Client"
+"pocket_psychologist::features::surveys_and_exercises::data::data_sources::remote_data_source.dart::SurveyRemoteDataSourceImpl" o-- "appwrite::appwrite.dart::Databases"
+"pocket_psychologist::features::surveys_and_exercises::data::data_sources::remote_data_source.dart::SurveyRemoteDataSource" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_sources::remote_data_source.dart::SurveyRemoteDataSourceImpl"
+
+abstract class "pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSource" {
+  +Future<List<ResultModel>> getResults()
+  +Future<List<LieResultModel>> getLieResults()
+  +Future<List<ExercisesModel>> getExercises()
+  +Future<List<ImageModel>> getImages()
+  +Future<List<SurveyModel>> getSurveys()
+  +Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer()
+  +Future<List<QuestionModel>> getQuestions()
+  +Future<List<AnswerModel>> getAnswers()
+  +Future<void> updateQuestion()
+}
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSourceSecondImpl" {
+  +Future<List<AnswerModel>> getAnswers()
+  +Future<List<ExercisesModel>> getExercises()
+  +Future<List<ImageModel>> getImages()
+  +Future<List<LieResultModel>> getLieResults()
+  +Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer()
+  +Future<List<QuestionModel>> getQuestions()
+  +Future<List<ResultModel>> getResults()
+  +Future<List<SurveyModel>> getSurveys()
+  +Future<void> updateQuestion()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSource" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSourceSecondImpl"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSourceImpl" {
+  +DBProvider db
+  +Future<List<SurveyModel>> getSurveys()
+  +Future<List<QuestionModel>> getQuestions()
+  +Future<void> updateQuestion()
+  +Future<List<AnswerModel>> getAnswers()
+  +Future<List<LieResultModel>> getLieResults()
+  +Future<List<ExercisesModel>> getExercises()
+  +Future<List<ImageModel>> getImages()
+  +Future<List<ResultModel>> getResults()
+  +Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSourceImpl" o-- "pocket_psychologist::core::db::database.dart::DBProvider"
+"pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSource" <|-- "pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSourceImpl"
+
+class "pocket_psychologist::features::surveys_and_exercises::data::repositories_impl::checklist_repository_Impl.dart::SurveyRepositoryImpl" {
+  +SurveyLocalDataSource<dynamic> surveyLocalDataSource
+  +SurveyRemoteDataSource surveyRemoteDataSource
+  +Future<List<SurveyEntity>> getSurveys()
+  +Future<List<QuestionEntity>> getQuestions()
+  +Future<void> updateQuestion()
+  +Future<List<AnswerEntity>> getAnswers()
+  +Future<List<ExercisesEntity>> getExercises()
+  +Future<List<ImageEntity>> getImages()
+  +Future<List<LieResultEntity>> getLieResults()
+  +Future<List<ResultEntity>> getResults()
+  +Future<List<QuestionWithAnswerEntity>> getQuestionsWithAnswers()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::data::repositories_impl::checklist_repository_Impl.dart::SurveyRepositoryImpl" o-- "pocket_psychologist::features::surveys_and_exercises::data::data_sources::survey_local_data_source.dart::SurveyLocalDataSource<dynamic>"
+"pocket_psychologist::features::surveys_and_exercises::data::repositories_impl::checklist_repository_Impl.dart::SurveyRepositoryImpl" o-- "pocket_psychologist::features::surveys_and_exercises::data::data_sources::remote_data_source.dart::SurveyRemoteDataSource"
+"pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository" <|-- "pocket_psychologist::features::surveys_and_exercises::data::repositories_impl::checklist_repository_Impl.dart::SurveyRepositoryImpl"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::answer_entity.dart::AnswerEntity" {
+  +int id
+  +String answer
+  +int questionId
+  +int value
+  +int lieValue
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::answer_entity.dart::AnswerEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::answer_entity.dart::AnswerEntity"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::exercise_entity.dart::ExercisesEntity" {
+  +int id
+  +String name
+  +int surveyId
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::exercise_entity.dart::ExercisesEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::exercise_entity.dart::ExercisesEntity"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::image_entity.dart::ImageEntity" {
+  +int id
+  +String path
+  +int exerciseId
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::image_entity.dart::ImageEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::image_entity.dart::ImageEntity"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::lie_results_entity.dart::LieResultEntity" {
+  +int id
+  +String result
+  +int maxValue
+  +int minValue
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::lie_results_entity.dart::LieResultEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::lie_results_entity.dart::LieResultEntity"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::question_entity.dart::QuestionEntity" {
+  +int id
+  +String? question
+  +int nameId
+  +int answerId
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::question_entity.dart::QuestionEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::question_entity.dart::QuestionEntity"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::question_with_answer_entity.dart::QuestionWithAnswerEntity" {
+  +int id
+  +String? question
+  +int nameId
+  +int answerId
+  +String answerName
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::question_with_answer_entity.dart::QuestionWithAnswerEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::question_with_answer_entity.dart::QuestionWithAnswerEntity"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::result_entity.dart::ResultEntity" {
+  +int id
+  +String result
+  +int minValue
+  +int maxValue
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::result_entity.dart::ResultEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::result_entity.dart::ResultEntity"
+
+abstract class "pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" {
+}
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::SurveyEntity" {
+  +int id
+  +String name
+  +String? description
+  +String? instruction
+  +int sum
+  +int lieSum
+  +int done
+  +int count
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::BaseEntity" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::SurveyEntity"
+"equatable::src::equatable_mixin.dart::EquatableMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::SurveyEntity"
+
+abstract class "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository" {
+  +Future<List<QuestionWithAnswerEntity>> getQuestionsWithAnswers()
+  +Future<List<SurveyEntity>> getSurveys()
+  +Future<List<QuestionEntity>> getQuestions()
+  +Future<List<AnswerEntity>> getAnswers()
+  +Future<List<ResultEntity>> getResults()
+  +Future<List<LieResultEntity>> getLieResults()
+  +Future<List<ExercisesEntity>> getExercises()
+  +Future<List<ImageEntity>> getImages()
+  +Future<void> updateQuestion()
+}
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::answer_usecases::get_answers.dart::GetAnswers" {
+  +SurveyRepository repository
+  +Future<List<AnswerEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::answer_usecases::get_answers.dart::GetAnswers" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::answer_usecases::get_answers.dart::GetAnswers"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::exercises_usecases::get_exercises.dart::GetExercises" {
+  +SurveyRepository repository
+  +Future<List<ExercisesEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::exercises_usecases::get_exercises.dart::GetExercises" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::exercises_usecases::get_exercises.dart::GetExercises"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::image_usecases::get_images.dart::GetImages" {
+  +SurveyRepository repository
+  +Future<List<ImageEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::image_usecases::get_images.dart::GetImages" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::image_usecases::get_images.dart::GetImages"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::lie_result_usecases::get_lie_results.dart::GetLieResults" {
+  +SurveyRepository repository
+  +Future<List<LieResultEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::lie_result_usecases::get_lie_results.dart::GetLieResults" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::lie_result_usecases::get_lie_results.dart::GetLieResults"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::get_questions.dart::GetQuestions" {
+  +SurveyRepository repository
+  +Future<List<QuestionEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::get_questions.dart::GetQuestions" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::get_questions.dart::GetQuestions"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::get_questions.dart::GetByIdParameters" {
+  +int id
+}
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::update_question.dart::UpdateQuestion" {
+  +SurveyRepository repository
+  +Future<void> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::update_question.dart::UpdateQuestion" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::update_question.dart::UpdateQuestion"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::update_question.dart::UpdateTableParameters" {
+  +T entity
+  +List<Object?> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::update_question.dart::UpdateTableParameters"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_with_answer_usecases::get_questions_with_answer.dart::GetQuestionsWithAnswer" {
+  +SurveyRepository repository
+  +Future<List<QuestionWithAnswerEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_with_answer_usecases::get_questions_with_answer.dart::GetQuestionsWithAnswer" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_with_answer_usecases::get_questions_with_answer.dart::GetQuestionsWithAnswer"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::result_usecases::get_results.dart::GetResults" {
+  +SurveyRepository repository
+  +Future<List<ResultEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::result_usecases::get_results.dart::GetResults" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::result_usecases::get_results.dart::GetResults"
+
+class "pocket_psychologist::features::surveys_and_exercises::domain::usecases::survey_usecases::get_surveys.dart::GetSurveys" {
+  +SurveyRepository repository
+  +Future<List<SurveyEntity>> call()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::domain::usecases::survey_usecases::get_surveys.dart::GetSurveys" o-- "pocket_psychologist::features::surveys_and_exercises::domain::repositories::survey_repository.dart::SurveyRepository"
+"pocket_psychologist::core::usecases::usecase_with_parameters.dart::UseCaseWithParameters" <|-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::survey_usecases::get_surveys.dart::GetSurveys"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::exercises_images_page.dart::TechniqueImagesPage" {
+  +ExercisesEntity entity
+  +Widget build()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::page::exercises_images_page.dart::TechniqueImagesPage" o-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::exercise_entity.dart::ExercisesEnity"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::exercises_images_page.dart::TechniqueImagesPage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::exercises_image_page.dart::ImagePage" {
+  +String path
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::exercises_image_page.dart::ImagePage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::exercises_page.dart::ExercisesPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::exercises_page.dart::ExercisesPage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::result_page.dart::ResultPage" {
+  +SurveyEntity surveyEntity
+  +State<ResultPage> createState()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::page::result_page.dart::ResultPage" o-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::SurveyEntity"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::result_page.dart::ResultPage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::result_page.dart::_ResultPageState" {
+  -bool _isExpanded
+  -void _toogleExpand()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::result_page.dart::_ResultPageState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::surveys_and_exercises_page.dart::SurveysAndExercisesPage" {
+  +State<SurveysAndExercisesPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::surveys_and_exercises_page.dart::SurveysAndExercisesPage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::surveys_and_exercises_page.dart::_SurveysAndExercisesPageState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::surveys_and_exercises_page.dart::_SurveysAndExercisesPageState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::surveys_page.dart::SurveysPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::surveys_page.dart::SurveysPage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::survey_doing_page.dart::SurveyDoingPage" {
+  +SurveyEntity surveyEntity
+  +State<SurveyDoingPage> createState()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::page::survey_doing_page.dart::SurveyDoingPage" o-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::SurveyEntity"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::survey_doing_page.dart::SurveyDoingPage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::survey_doing_page.dart::_SurveyDoingPageState" {
+  +void initState()
+  +Widget build()
+  +Widget doingWidget()
+  +Widget doneWidget()
+  -Future<void> _instructionDialog()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::survey_doing_page.dart::_SurveyDoingPageState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::page::tests_page.dart::TestsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::page::tests_page.dart::TestsPage"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::answer_state::answer_cubit.dart::AnswerCubit" {
+  +GetAnswers getAnswers
+  +dynamic loadListData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::answer_state::answer_cubit.dart::AnswerCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::answer_usecases::get_answers.dart::GetAnswers"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::answer_state::answer_cubit.dart::AnswerCubit"
+
+abstract class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::BaseEvent" {
+}
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::LoadListEvent" {
+  +int? id
+  +int? secondId
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::BaseEvent" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::LoadListEvent"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::LoadEvent" {
+  +int id
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::BaseEvent" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::LoadEvent"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::UpdateEvent" {
+  +T entity
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::BaseEvent" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_events.dart::UpdateEvent"
+
+abstract class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::BaseState" {
+}
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::EmptyState" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::BaseState" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::EmptyState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::LoadingState" {
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::BaseState" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::LoadingState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::LoadedState" {
+  +T entity
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::BaseState" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::LoadedState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::LoadedListState" {
+  +List<T> entities
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::BaseState" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::LoadedListState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::ErrorState" {
+  +String text
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::BaseState" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::bloc_states.dart::ErrorState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::exercise_state::exercises_cubit.dart::ExercisesCubit" {
+  +GetExercises getExercises
+  +Future<void> loadListData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::exercise_state::exercises_cubit.dart::ExercisesCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::exercises_usecases::get_exercises.dart::GetExercises"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::exercise_state::exercises_cubit.dart::ExercisesCubit"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::image_state::image_cubit.dart::ImageCubit" {
+  +GetImages getImages
+  +Future<void> loadListData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::image_state::image_cubit.dart::ImageCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::image_usecases::get_images.dart::GetImages"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::image_state::image_cubit.dart::ImageCubit"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::lie_result_state::lie_result_cubit.dart::LieResultCubit" {
+  +GetLieResults getResults
+  +Future<void> loadListData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::lie_result_state::lie_result_cubit.dart::LieResultCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::lie_result_usecases::get_lie_results.dart::GetLieResults"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::lie_result_state::lie_result_cubit.dart::LieResultCubit"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterBloc" {
+  +int initialValue
+}
+
+"bloc::src::bloc.dart::Bloc" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterBloc"
+
+abstract class "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterEvent" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterEvent"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterInc"
+ {
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterEvent" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterInc"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterDec"
+ {
+  +List<Object?> props
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterEvent" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_counter_bloc::question_counter_bloc.dart::QuestionCounterDec"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_state::question_cubit.dart::QuestionCubit" {
+  +GetQuestions getQuestion
+  +UpdateQuestion updateQuestion
+  +Future<void> loadListData()
+  +Future<void> updateData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::question_state::question_cubit.dart::QuestionCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::get_questions.dart::GetQuestions"
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::question_state::question_cubit.dart::QuestionCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_usecases::update_question.dart::UpdateQuestion"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_state::question_cubit.dart::QuestionCubit"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_with_answer_cubit.dart::QuestionWithAnswerCubit" {
+  +GetQuestionsWithAnswer getQuestion
+  +Future<void> loadListData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::question_with_answer_cubit.dart::QuestionWithAnswerCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::question_with_answer_usecases::get_questions_with_answer.dart::GetQuestionsWithAnswer"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::question_with_answer_cubit.dart::QuestionWithAnswerCubit"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::result_state::result_cubit.dart::ResultCubit" {
+  +GetResults getResults
+  +Future<void> loadListData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::result_state::result_cubit.dart::ResultCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::result_usecases::get_results.dart::GetResults"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::result_state::result_cubit.dart::ResultCubit"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::state::survey_state::survey_cubit.dart::SurveyCubit" {
+  +GetSurveys getSurveys
+  +Future<void> loadListData()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::state::survey_state::survey_cubit.dart::SurveyCubit" o-- "pocket_psychologist::features::surveys_and_exercises::domain::usecases::survey_usecases::get_surveys.dart::GetSurveys"
+"bloc::src::cubit.dart::Cubit" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::state::survey_state::survey_cubit.dart::SurveyCubit"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::ExerciseCard" {
+  +ExercisesEntity entity
+  +State<ExerciseCard> createState()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::ExerciseCard" o-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::exercise_entity.dart::ExercisesEntity"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::ExerciseCard"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::_ExerciseCardState" {
+  -AnimationController _controller
+  -Animation<double> _animation
+  -bool _isDone
+  -bool _isClosed
+  +Widget build()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::_ExerciseCardState" o-- "flutter::src::animation::animation_controller.dart::AnimationController"
+"pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::_ExerciseCardState" o-- "flutter::src::animation::animation.dart::Animation<double>"
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::_ExerciseCardState"
+"flutter::src::widgets::ticker_provider.dart::TickerProviderStateMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::exercise_card.dart::_ExerciseCardState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_and_exercise_card.dart::SurveyAndExerciseCard" {
+  +String title
+  +String image
+  +String description
+  +String page
+  +State<SurveyAndExerciseCard> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_and_exercise_card.dart::SurveyAndExerciseCard"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_and_exercise_card.dart::_SurveyAndExerciseCardState" {
+  -bool _isExpanded
+  -void _toogleExpand()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_and_exercise_card.dart::_SurveyAndExerciseCardState"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::CheckListCard" {
+  +SurveyEntity entity
+  +State<CheckListCard> createState()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::CheckListCard" o-- "pocket_psychologist::features::surveys_and_exercises::domain::entities::survey_entity.dart::SurveyEntity"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::CheckListCard"
+
+class "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::_CheckListCardState" {
+  -AnimationController _controller
+  -Animation<double> _animation
+  -bool _isDone
+  +void initState()
+  -dynamic _toggleContainer()
+  +Widget build()
+}
+
+"pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::_CheckListCardState" o-- "flutter::src::animation::animation_controller.dart::AnimationController"
+"pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::_CheckListCardState" o-- "flutter::src::animation::animation.dart::Animation<double>"
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::_CheckListCardState"
+"flutter::src::widgets::ticker_provider.dart::TickerProviderStateMixin" <|-- "pocket_psychologist::features::surveys_and_exercises::presentation::widgets::survey_card.dart::_CheckListCardState"
+
+class "pocket_psychologist::features::vip::page::vip_page.dart::VipPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::features::vip::page::vip_page.dart::VipPage"
+
+class "pocket_psychologist::main.dart::Wrapper" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::main.dart::Wrapper"
+
+class "pocket_psychologist::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pocket_psychologist::main.dart::MyApp"
+
+class "pocket_psychologist::main_page::main_page.dart::MainPage" {
+  +State<MainPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pocket_psychologist::main_page::main_page.dart::MainPage"
+
+class "pocket_psychologist::main_page::main_page.dart::_MainPageState" {
+  -int _selectedIndex
+  -List<Widget> _widgetOptions
+  -void _onItemTapped()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "pocket_psychologist::main_page::main_page.dart::_MainPageState"
+
+
+@enduml

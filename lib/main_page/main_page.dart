@@ -15,6 +15,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
   int _selectedIndex = 1;
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(),

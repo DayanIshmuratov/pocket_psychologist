@@ -1,168 +1,130 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pocket_psychologist/common/widgets/snackbars.dart';
 import 'package:pocket_psychologist/features/chat/presentation/state/chat_cubit.dart';
 
 import '../../../../common/components/text.dart';
+import '../../../../core/exceptions/exceptions.dart';
+import '../../../../core/logger/logger.dart';
 import '../../../auth/domain/entity/userData.dart';
 import '../../domain/entity/message_entity.dart';
+import 'message_widget.dart';
 
 class ChatWidgets extends StatefulWidget {
   final UserData userData;
-  ChatWidgets({required this.userData});
+  final ChatCubit chatCubit;
+
+  const ChatWidgets({super.key, required this.userData, required this.chatCubit});
+
+  @override
   State<ChatWidgets> createState() {
     return _ChatWidgetsState();
   }
 }
 
 class _ChatWidgetsState extends State<ChatWidgets> {
+  StreamSubscription<Message>? subscription;
   List<Message> messages = [];
 
   @override
-  void initState() {
-    // TODO: implement initState
-    // chatCubit.sendMessage();
+  void initState()  {
     super.initState();
+    subscription = widget.chatCubit.resultStream.listen((message) {
+      logger.info("ПОЙМАНО $message");
+      messages.add(message);
+      setState(() {
+        logger.info("ВЫЗВАНО SETSTTATE");
+      });
+    });
+    joinToChat();
+  }
+  // StreamSubscription<Message> subscription = stream.listen((event) {
+  //
+  // });
+
+  void joinToChat() {
+    widget.chatCubit.sendMessage(
+      Message(
+          message: '', userId: widget.userData.id, date: null, action: 'in'),
+    );
+    widget.chatCubit.subscribe();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    subscription!.cancel();
+    subscription = null;
+    widget.chatCubit.dispose();
+    widget.chatCubit.sendMessage(
+      Message(message: '', userId: widget.userData.id, date: null, action: 'out'),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final chatCubit = context.read<ChatCubit>();
     final messageController = TextEditingController();
-    chatCubit.subscribe();
-    return Column(
-      children: [
-        Expanded(
-          child: StreamBuilder(
-          stream: chatCubit.resultStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              messages.add(snapshot.data);
-              // Update the UI with the new result
-                return Expanded(
-                  child: ListView.builder(
-                      itemCount: messages.length,
-                      itemBuilder: (context, i) {
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: widget.userData.id == messages[i].userId ? MainAxisAlignment.end : MainAxisAlignment.start,
-                          children: [
-                          AppText(
-                                value: messages[i].message,
-                                color: Colors.red,
-                              ),
-                              // subtitle: Text(messages[i].date!.toIso8601String()),
-                          ],
-                        );
-                      }),
-                );
-              } else if (snapshot.hasError) {
-              // Handle any errors
-              return Text('Ошибка: ${snapshot.error}');
-            } else {
-              // Initial loading state or no data yet
-              return SizedBox();
-            }
-          },
+
+    return BlocBuilder<ChatCubit, ChatState>(
+      builder: (context, state) {
+        if (state is ChatLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state is ChatLoaded) {
+          messages = state.lastMessages;
+          return Column(
+            children: [
+          Expanded(
+          child: ListView.builder(
+          itemCount: messages.length,
+              itemBuilder: (context, i) {
+                return MessageWidget(message: messages[i], userData: widget.userData,);
+              }),
         ),
-        ),
-        TextFormField(
-          controller: messageController,
-          decoration: InputDecoration(
-            suffixIcon: IconButton(
-              onPressed: () {
-                chatCubit.sendMessage(Message(
-                    message: messageController.text,
-                    userId: widget.userData.id,
-                    date: null,
-                    action: 'message'));
-              },
-              icon: Icon(Icons.send),
-            ),
-          ),
-        ),
-      ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: messageController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () async {
+                        try {
+                         await widget.chatCubit.sendMessage(Message(
+                              message: messageController.text,
+                              userId: widget.userData.id,
+                              date: null,
+                              action: 'message'));
+                        } on NetworkException catch (e) {
+                          SnackBars.showSnackBar(context, e.message, Colors.red);
+                        }
+                      },
+                      icon: const Icon(Icons.send),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+        if (state is ChatError) {
+          return Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AppTitle(value: 'Нет соединения'),
+              ElevatedButton(onPressed: () {
+                setState(() {});
+              }, child: AppSubtitle(value: 'Обновить',))
+            ],
+          ));
+        }
+        return const Center(child: AppTitle(value: 'Неожиданная ошибка'));
+      },
     );
   }
 }
-
-
-
-
-// import 'package:appwrite/appwrite.dart';
-// import 'package:flutter/material.dart';
-// import 'package:pocket_psychologist/common/components/text.dart';
-// import 'package:pocket_psychologist/core/server/appwrite.dart';
-// import 'package:pocket_psychologist/core/server/database.dart';
-//
-// class ChatPage extends StatefulWidget {
-//   @override
-//   State<ChatPage> createState() => _ChatPageState();
-// }
-//
-// class _ChatPageState extends State<ChatPage> {
-//   final userID = '646091f7b49e95e0c530';
-//
-//   final messageController = TextEditingController();
-//   List<String> messages = [];
-//   RealtimeSubscription? subscription;
-//   @override
-//   void initState() {
-//     subscribe();
-//     super.initState();
-//   }
-
-//   void subscribe() {
-//     final realtime = Realtime(AppWriteProvider().client);
-//     subscription = realtime.subscribe(['databases.chat.collections.messages.documents']);
-//     subscription!.stream.listen((response) {
-//       final result = response.payload;
-//       messages.add(result['message']);
-//       print(result['permissions']);
-//       print(result);
-//       setState(() {});
-//     });
-//   }
-//   @override
-//   void dispose() {
-//     subscription!.close();
-//     super.dispose();
-//   }
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Чат'),
-//         centerTitle: true,
-//       ),
-//       body: Column(
-//         children: [
-//           TextField(
-//             controller: messageController,
-//           ),
-//           ElevatedButton(onPressed: () {
-//             Future result = AppWriteDBProvider().db.createDocument(
-//               databaseId: 'chat',
-//               collectionId: 'messages',
-//               documentId: ID.unique(),
-//               data: {
-//                 'message' : messageController.text,
-//                 'user_id' : userID,
-//                 'action' : 'message'
-//               },
-//             );
-//           }, child: AppText(value: 'Отправить')),
-//           Expanded(
-//             child: ListView.builder(
-//                 itemCount: messages.length, itemBuilder: (context, i) {
-//                   return ListTile(
-//                     title: AppText(value: messages[i],color:  Colors.red,),
-//                   );
-//             }),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

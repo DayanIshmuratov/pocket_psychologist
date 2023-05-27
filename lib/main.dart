@@ -37,6 +37,7 @@ import 'features/surveys_and_exercises/presentation/state/question_state/questio
 import 'features/surveys_and_exercises/presentation/state/question_with_answer_cubit.dart';
 import 'features/surveys_and_exercises/presentation/state/result_state/result_cubit.dart';
 import 'features/surveys_and_exercises/presentation/state/survey_state/survey_cubit.dart';
+import 'package:dcdg/dcdg.dart';
 
 void main() async {
   Bloc.observer = MainBlocObserver();

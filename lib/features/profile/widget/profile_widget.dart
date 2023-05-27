@@ -32,6 +32,9 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
       ),
       body: BlocBuilder<AuthCubit, AuthState> (
           builder: (context, state) {
+            if(state is AuthLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
             return SafeArea(
               child: Column(
                 children: [

@@ -22,9 +22,33 @@ class AuthCubit extends Cubit<AuthState> {
   Account account = AccountProvider.get().account;
   SharedPreferences? _prefs;
 
-  AuthCubit() : super(AuthUnSigned()) {
+  AuthCubit() : super(AuthLoading()) {
     _loadAuth();
   }
+
+  _loadAuth() async {
+    await _initialisePrefs();
+    bool? authState = _prefs?.getBool(_keyAuthState);
+    if (authState == null || authState == false) {
+      emit(AuthUnSigned());
+    } else if (await InternetConnectionChecker().hasConnection) {
+      try {
+        final user = await account.get();
+        final userData = UserData.fromMap(user);
+        // final userInfo = await _getUserPrefs();
+        emit(AuthSigned(userData: userData));
+        //Check is there distinction between data in the localDB and remoteDB
+        await utils.checkDistinction(userData);
+      } catch (e, s) {
+        logger.severe(e, s);
+      }
+    } else {
+      final userData = await _getUserPrefs();
+      emit(AuthSigned(userData: userData));
+    }
+  }
+
+
 
   _initialisePrefs() async {
     // SharedPreferences.setMockInitialValues({});
@@ -44,6 +68,7 @@ class AuthCubit extends Cubit<AuthState> {
         final userData = UserData.fromMap(user);
         utils.checkAnswers(userData, context);
         await _setUserPrefs(userData);
+        _saveAuthState(true);
         emit(AuthSigned(userData: userData));
       } on AppwriteException {
         rethrow;
@@ -69,6 +94,7 @@ class AuthCubit extends Cubit<AuthState> {
       final userData = UserData.fromMap(user);
       await utils.checkAnswers(userData, context);
       await _setUserPrefs(userData);
+      _saveAuthState(true);
       // final userData = await _getUserPrefs();
       emit(AuthSigned(userData: userData));
       }
@@ -97,6 +123,7 @@ class AuthCubit extends Cubit<AuthState> {
         final userData = UserData.fromMap(user);
         await utils.checkAnswers(userData, context);
         await _setUserPrefs(userData);
+        _saveAuthState(true);
         emit(AuthSigned(userData: userData));
       }
       on AppwriteException {
@@ -169,26 +196,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  _loadAuth() async {
-    await _initialisePrefs();
-    if (_prefs?.getBool(_keyAuthState) ?? false) {
-      emit(AuthUnSigned());
-    } else if (await InternetConnectionChecker().hasConnection) {
-      try {
-        final user = await account.get();
-        final userData = UserData.fromMap(user);
-        // final userInfo = await _getUserPrefs();
-        emit(AuthSigned(userData: userData));
-        //Check is there distinction between data in the localDB and remoteDB
-        await utils.checkDistinction(userData);
-      } catch (e, s) {
-        logger.severe(e, s);
-      }
-    } else {
-      final userData = await _getUserPrefs();
-      emit(AuthSigned(userData: userData));
-    }
-  }
 
   logOut() async {
     await account.deleteSession(sessionId: 'current');

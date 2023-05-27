@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/features/auth/presentation/state/auth_cubit.dart';
+import 'package:pocket_psychologist/features/chat/presentation/state/chat_cubit.dart';
 import 'package:pocket_psychologist/features/chat/presentation/widgets/chat_widgets.dart';
 
 class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
+    final chatCubit = context.read<ChatCubit>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Чат'),
@@ -26,10 +28,13 @@ class ChatPage extends StatelessWidget {
                 ],
               ),
             );
-          } if (state is AuthSigned) {
-            return ChatWidgets(userData: state.userData);
+          } else if (state is AuthSigned) {
+            return ChatWidgets(userData: state.userData, chatCubit: chatCubit,);
+          } else if (state is AuthLoading) {
+            return const Center(child: CircularProgressIndicator());
           }
-          return Center(child: AppText(value: 'Такой ошибки быть не может. Удали читы'));
+          return const Center(child: AppText(value: 'Такой ошибки быть не может. Удали читы'));
+
         },
       ),
     );
