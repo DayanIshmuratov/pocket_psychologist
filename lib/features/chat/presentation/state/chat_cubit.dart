@@ -54,6 +54,7 @@ class ChatCubit extends Cubit<ChatState> {
           'message' : message.message,
           'user_id' : message.userId,
           'action' : message.action,
+          'sender_name' : message.senderName,
         },
       );
     } else {

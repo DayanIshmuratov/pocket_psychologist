@@ -26,6 +26,8 @@ class ChatWidgets extends StatefulWidget {
 }
 
 class _ChatWidgetsState extends State<ChatWidgets> {
+
+  ScrollController _scrollController = ScrollController();
   StreamSubscription<Message>? subscription;
   List<Message> messages = [];
 
@@ -35,6 +37,9 @@ class _ChatWidgetsState extends State<ChatWidgets> {
     subscription = widget.chatCubit.resultStream.listen((message) {
       logger.info("ПОЙМАНО $message");
       messages.add(message);
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent + 100,
+          curve: Curves.linear, duration: Duration(milliseconds: 500));
+
       setState(() {
         logger.info("ВЫЗВАНО SETSTTATE");
       });
@@ -48,7 +53,7 @@ class _ChatWidgetsState extends State<ChatWidgets> {
   void joinToChat() {
     widget.chatCubit.sendMessage(
       Message(
-          message: '', userId: widget.userData.id, date: null, action: 'in'),
+          message: '', userId: widget.userData.id, action: 'in', senderName: widget.userData.name),
     );
     widget.chatCubit.subscribe();
   }
@@ -60,7 +65,7 @@ class _ChatWidgetsState extends State<ChatWidgets> {
     subscription = null;
     widget.chatCubit.dispose();
     widget.chatCubit.sendMessage(
-      Message(message: '', userId: widget.userData.id, date: null, action: 'out'),
+      Message(message: '', userId: widget.userData.id, date: null, action: 'out',  senderName: widget.userData.name),
     );
   }
 
@@ -79,27 +84,40 @@ class _ChatWidgetsState extends State<ChatWidgets> {
             children: [
           Expanded(
           child: ListView.builder(
-          itemCount: messages.length,
+              controller: _scrollController,
+              itemCount: messages.length,
               itemBuilder: (context, i) {
-                return MessageWidget(message: messages[i], userData: widget.userData,);
+              bool isPreceding = false;
+              if (i > 0) {
+                isPreceding = (messages[i].userId == messages[i - 1].userId) && (messages[i].action == 'message' && messages[i - 1].action == 'message');
+                }
+                return Column(
+                  children: [
+                    MessageWidget(message: messages[i], userData: widget.userData, isPreceding: isPreceding,),
+                    const SizedBox(height: 4,)
+                  ],
+                );
               }),
         ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: messageController,
+                  maxLength: 256,
+                  maxLines: null,
                   decoration: InputDecoration(
+                    hintText: 'Введите сообщение',
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     suffixIcon: IconButton(
                       onPressed: () async {
                         try {
-                         await widget.chatCubit.sendMessage(Message(
+                          await widget.chatCubit.sendMessage(Message(
                               message: messageController.text,
                               userId: widget.userData.id,
-                              date: null,
-                              action: 'message'));
+                              action: 'message',
+                              senderName: widget.userData.name));
                         } on NetworkException catch (e) {
                           SnackBars.showSnackBar(context, e.message, Colors.red);
                         }
