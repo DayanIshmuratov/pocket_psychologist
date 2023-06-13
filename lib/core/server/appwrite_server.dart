@@ -37,11 +37,13 @@ class AppWriteServerProvider {
         Permission.delete(Role.user(id)),
       ],
     );
+
     await db.createIntegerAttribute(
         databaseId: constants.appwriteUsersAnswersDatabaseId,
         collectionId: id,
         key: 'question_id',
         xrequired: true);
+
     await db.createIntegerAttribute(
         databaseId: constants.appwriteUsersAnswersDatabaseId,
         collectionId: id,
@@ -75,5 +77,27 @@ class AppWriteServerProvider {
     await db.deleteCollection(
         databaseId: constants.appwriteUsersAnswersDatabaseId,
         collectionId: id);
+    await waitForDeletionCompletion(db, id);
+  }
+
+  Future<void> waitForDeletionCompletion(Databases db, String id) async {
+    bool deletionCompleted = false;
+    while (!deletionCompleted) {
+      logger.info('Ждем удаления коллекции');
+      try {
+       await db.getCollection(databaseId: constants.appwriteUsersAnswersDatabaseId,
+           collectionId: id);
+      } on AppwriteException {
+        deletionCompleted = true;
+      }
+
+      if (deletionCompleted) {
+        // Deletion completed, exit the loop and return
+        break;
+      }
+
+      // Wait for a short duration before checking again
+      await Future.delayed(Duration(seconds: 1));
+    }
   }
 }

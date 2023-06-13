@@ -10,6 +10,8 @@ import '../../auth/domain/entity/userData.dart';
 import '../widget/edit_listtile.dart';
 
 class EditProfilePage extends StatefulWidget {
+  final AuthCubit authCubit;
+  EditProfilePage({required this.authCubit});
   State<EditProfilePage> createState() {
     return _EditProfilePageState();
   }
@@ -18,8 +20,7 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).primaryColor;
-    final authCubit = context.read<AuthCubit>();
-    final authCubitState = authCubit.state;
+    final authCubitState = widget.authCubit.state;
     late UserData userData;
     if (authCubitState is AuthSigned) {
       userData = authCubitState.userData;
@@ -36,24 +37,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
         children: [
           InkWell(
             onTap: () async {
-              await Dialogs.showNameChangeDialog(context, userData.name, authCubit);
-              await authCubit.refresh();
+              await Dialogs.showNameChangeDialog(context, userData.name, widget.authCubit);
+              await widget.authCubit.refresh();
               setState(() {});
             },
               child: EditListTile(title: userData.name, subtitle: 'Нажмите, чтобы изменить имя',)),
           Divider(color: color),
           InkWell(
             onTap: () async {
-              await Dialogs.showEmailChangeDialog(context, userData.email, authCubit);
-              await authCubit.refresh();
+              await Dialogs.showEmailChangeDialog(context, userData.email, widget.authCubit);
+              await widget.authCubit.refresh();
               setState(() {});
             },
               child: EditListTile(title: userData.email, subtitle: 'Нажмите, чтобы изменить почту',)),
           Divider(color: color),
           InkWell(
             onTap: () async {
-              await Dialogs.showPasswordChangeDialog(context, authCubit);
-              await authCubit.refresh();
+              await Dialogs.showPasswordChangeDialog(context, widget.authCubit);
+              await widget.authCubit.refresh();
               setState(() {});
             },
               child: EditListTile(title: 'Смена пароля', subtitle: 'Нажмите, чтобы изменить пароль',)),

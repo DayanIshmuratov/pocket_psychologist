@@ -36,60 +36,72 @@ class _ProfileWidgetsState extends State<ProfileWidgets> {
               return const Center(child: CircularProgressIndicator());
             }
             return SafeArea(
-              child: Column(
-                children: [
-                  if (state is AuthSigned)
-                    ProfileCard(name: state.userData.name),
-                  if (state is AuthUnSigned)
-                    ProfileCard(name: 'Гость',),
-                  // if (state is AuthUnSigned)
-                  // const SizedBox(
-                  //     height: spaceHeight
-                  // ),
-                  if (state is AuthUnSigned)
-                    InkWell(
-                      onTap: () async {
-                        await Navigator.pushNamed(context, 'sign_in_page');
-                        setState(() {});
-                      },
-                      child: const ProfileListTile(title: 'Войти в аккаунт', icon: Icons.person_outline,),
-                    ),
-                  if (state is AuthSigned)
-                    InkWell(onTap: () async {
-                      await Navigator.pushNamed(context, 'edit_profile_page');
-                      await authCubit.refresh();
-                      setState(() {});
-                    }, child: const ProfileListTile(title: 'Редактировать', icon: Icons.person)),
-                  Divider(color: color),
-                  InkWell(
-                    onTap: () {
-                      _changingThemeDialog(context);
-                    },
-                    child: const ProfileListTile(title: 'Сменить тему',icon: Icons.palette_outlined),
-                  ),
-                  Divider(color: color),
-                  InkWell(
-                    onTap: () {
-                      _aboutUsDialog(context);
-                    },
-                    child: const ProfileListTile(title: 'О нас', icon: Icons.people_alt_outlined),
-                  ),
-
-                  if (authCubit.state is AuthSigned)
-                    Column(children: [
-                      Divider(color: color),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (state is AuthSigned)
+                      ProfileCard(name: state.userData.name),
+                    if (state is AuthUnSigned)
+                      ProfileCard(name: 'Гость',),
+                    // if (state is AuthUnSigned)
+                    // const SizedBox(
+                    //     height: spaceHeight
+                    // ),
+                    if (state is AuthUnSigned)
                       InkWell(
                         onTap: () async {
-                          await authCubit.logOut();
+                          await Navigator.pushNamed(context, 'sign_in_page');
                           setState(() {});
                         },
-                        child: const ProfileListTile(
-                          title: 'Выйти из аккаунта', icon: Icons.logout,
-                        ),
+                        child: const ProfileListTile(title: 'Войти в аккаунт', icon: Icons.person_outline,),
                       ),
-                    ],
+                    if (state is AuthSigned)
+                      InkWell(onTap: () async {
+                        await Navigator.pushNamed(context, 'edit_profile_page', arguments: authCubit);
+                      }, child: const ProfileListTile(title: 'Редактировать', icon: Icons.person)),
+                    Divider(color: color),
+                    InkWell(
+                      onTap: () {
+                        _changingThemeDialog(context);
+                      },
+                      child: const ProfileListTile(title: 'Сменить тему',icon: Icons.palette_outlined),
                     ),
-                ],
+                    Divider(color: color),
+                    InkWell(
+                      onTap: () {
+                        _aboutUsDialog(context);
+                      },
+                      child: const ProfileListTile(title: 'О нас', icon: Icons.people_alt_outlined),
+                    ),
+                    Divider(color: color),
+                    InkWell(
+                      onTap: () async {
+                        String url = "https://forms.gle/R4121QDby9hEfaLB9";
+                        final Uri uri = Uri.parse(url);
+                        if (!await launchUrl(uri)) {
+                        throw 'Could not launch $uri';
+                        } else {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      child: const ProfileListTile(title: 'Бета-тест', icon: Icons.engineering_outlined),
+                    ),
+                    if (authCubit.state is AuthSigned)
+                      Column(children: [
+                        Divider(color: color),
+                        InkWell(
+                          onTap: () async {
+                            await authCubit.logOut();
+                            setState(() {});
+                          },
+                          child: const ProfileListTile(
+                            title: 'Выйти из аккаунта', icon: Icons.logout,
+                          ),
+                        ),
+                      ],
+                      ),
+                  ],
+                ),
               ),
             );
           },
@@ -111,8 +123,8 @@ Future<void> _aboutUsDialog(BuildContext context) {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  const AppSubtitle(
-                      value: 'UX-design, development and release by dayname'),
+                  const AppText(
+                      value: 'Приложение создано Даяном Ишмуратовым, при поддержке Руфы Байгужиной. Любые вопросы, пожелания - пишите!', textAlign: TextAlign.justify),
                   IconButton(
                       onPressed: () {
                         launchTelegram();
@@ -230,78 +242,3 @@ void launchTelegram() async {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }
-
-
-
-
-//      FutureBuilder(
-//           future: getAccount(account),
-//           builder: (context, snapshot) {
-//             if (snapshot.connectionState == ConnectionState.done) {
-//               return Padding(
-//                 padding: const EdgeInsets.all(16.0),
-//                 child: Column(
-//                   children: [
-//                     Row(
-//                       children: [
-//                         CircleAvatar(
-//                           radius: 40,
-//                           backgroundImage:
-//                               AssetImage('assets/images/no_image.jpg'),
-//                         ),
-//                         SizedBox(
-//                           child: Center(
-//                               child: AppTitle(
-//                                   value: snapshot.data?.name ?? "Гость")),
-//                           width: MediaQuery.of(context).size.width - 112,
-//                         ),
-//                       ],
-//                     ),
-//                     SizedBox(
-//                       height: spaceHeight
-//                     ),
-//                     if (snapshot.data == null)
-//                       InkWell(
-//                         onTap: () async {
-//                           await Navigator.pushNamed(context, 'sign_in_page');
-//                           setState(() {});
-//                         },
-//                         child: ProfileCard(text: 'Войти в аккаунт'),
-//                       ),
-//                     if (snapshot.data != null)
-//                       ProfileCard(text: 'Редактировать'),
-//                     SizedBox(
-//                       height: spaceHeight / 3
-//                     ),
-//                     InkWell(
-//                       onTap: () {
-//                         _changingThemeDialog(context);
-//                       },
-//                       child: ProfileCard(text: 'Сменить тему'),
-//                     ),
-//                     SizedBox(
-//                       height: spaceHeight / 3
-//                     ),
-//                     InkWell(
-//                       onTap: () {
-//                         _aboutUsDialog(context);
-//                       },
-//                       child: ProfileCard(text: 'О нас'),
-//                     ),
-//                     SizedBox(
-//                       height: spaceHeight / 3
-//                     ),
-//                     InkWell(
-//                         onTap: () async {
-//                           await AccountProvider.get().logOut();
-//                           setState(() {});
-//                         },
-//                         child: ProfileCard(
-//                           text: 'Выйти из аккаунта',
-//                         ))
-//                   ],
-//                 ),
-//               );
-//             }
-//             return Center(child: CircularProgressIndicator());
-//           })

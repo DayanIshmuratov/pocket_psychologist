@@ -12,7 +12,7 @@ class AccountProvider {
      account = Account(AppWriteProvider().client);
   }
 
-  static get() {
+  static AccountProvider get() {
     return instance ??= AccountProvider._internal();
   }
 

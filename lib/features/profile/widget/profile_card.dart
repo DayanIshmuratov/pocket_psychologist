@@ -38,9 +38,13 @@ class ProfileCard extends StatelessWidget {
                 children: [
                   AppTitle(value: 'Профиль', color: Colors.white),
                   SizedBox(height: 32),
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: AssetImage('assets/images/no_image.jpg'),
+                  Tooltip(
+                    triggerMode: TooltipTriggerMode.tap,
+                    message: 'В разработке',
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundImage: AssetImage('assets/images/no_image.jpg'),
+                    ),
                   ),
                   AppSubtitle(value: name),
                 ],

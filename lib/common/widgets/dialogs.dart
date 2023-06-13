@@ -24,7 +24,9 @@ class Dialogs {
       return SimpleDialog(
         title: AppText(value: 'На вашем аккаунте обнаружены результаты раннее пройденных тестов. Хотите их загрузить?'),
         children: [
-          Row(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
             ElevatedButton(onPressed: () {
               loadToDB(remoteAnswers, localdb);
               Navigator.pop(context);
@@ -96,117 +98,137 @@ class Dialogs {
           final oldPasswordController = TextEditingController();
           final newPasswordController = TextEditingController();
           final newPasswordConfirmController = TextEditingController();
-          return SimpleDialog(
-            title: AppSubtitle(value: 'Смена пароля'),
-            children: [
-              Form(
-                key: key,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                       const Text(
-                          'Старый пароль',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Введите ваш старый пароль',
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
+          return StatefulBuilder(
+            builder: (context, setState) {
+              bool isHidden = true;
+              return SimpleDialog(
+                title: AppSubtitle(value: 'Смена пароля'),
+                children: [
+                  Form(
+                    key: key,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                           const Text(
+                              'Старый пароль',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
-                            contentPadding: EdgeInsets.all(16),
-                          ),
-                          controller: oldPasswordController,
-                          validator: (value) {
-                            return Validators.validatePassword(
-                                password: value as String);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Новый пароль',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Введите ваш новый пароль',
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
+                            TextFormField(
+                              obscureText: isHidden,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(onPressed: () {
+                                  setState(() {
+                                    isHidden = !isHidden;
+                                  });
+                                }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
+                                hintText: 'Введите ваш старый пароль',
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                              controller: oldPasswordController,
+                              validator: (value) {
+                                return Validators.validatePassword(
+                                    password: value as String);
+                              },
                             ),
-                            contentPadding: EdgeInsets.all(16),
-                          ),
-                          controller: newPasswordController,
-                          validator: (value) {
-                            return Validators.validatePassword(
-                                password: value as String);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Подтвердите новый пароль',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Подтвердите ваш новый пароль',
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
+                            SizedBox(height: 16),
+                            Text(
+                              'Новый пароль',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
-                            contentPadding: EdgeInsets.all(16),
-                          ),
-                          controller: newPasswordConfirmController,
-                          validator: (value) {
-                            return Validators.validateSecondPassword(first: newPasswordController.text,
-                                second: value as String);
-                          },
-                        ),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (key.currentState!.validate()) {
-                              try {
-                                await authCubit.updatePassword(oldPasswordController.text, newPasswordController.text);
-                                Navigator.pop(context);
-                              }  on NetworkException catch (e) {
-                                SnackBars.showSnackBar(context, e.message, Colors.red);
-                              } on AppwriteException catch (e) {
-                                SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка. Сообщите разработчику'), Colors.red);
-                              }
-                            }
-                          },
-                          child: const AppText(value: 'Потвердить'),
-                        ),
-                      )
-                    ],
+                            TextFormField(
+                              obscureText: isHidden,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(onPressed: () {
+                                  setState(() {
+                                    isHidden = !isHidden;
+                                  });
+                                }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
+                                hintText: 'Введите ваш новый пароль',
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                              controller: newPasswordController,
+                              validator: (value) {
+                                return Validators.validatePassword(
+                                    password: value as String);
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'Подтвердите новый пароль',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextFormField(
+                              obscureText: isHidden,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(onPressed: () {
+                                  setState(() {
+                                    isHidden = !isHidden;
+                                  });
+                                }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
+                                hintText: 'Подтвердите ваш новый пароль',
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                              controller: newPasswordConfirmController,
+                              validator: (value) {
+                                return Validators.validateSecondPassword(first: newPasswordController.text,
+                                    second: value as String);
+                              },
+                            ),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (key.currentState!.validate()) {
+                                  try {
+                                    await authCubit.updatePassword(oldPasswordController.text, newPasswordController.text);
+                                    Navigator.pop(context);
+                                  }  on NetworkException catch (e) {
+                                    SnackBars.showSnackBar(context, e.message, Colors.red);
+                                  } on AppwriteException catch (e) {
+                                    SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка. Сообщите разработчику'), Colors.red);
+                                  }
+                                }
+                              },
+                              child: const AppText(value: 'Потвердить'),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            }
           );
         }
     );
@@ -214,98 +236,131 @@ class Dialogs {
 
   static showEmailChangeDialog(BuildContext context,String email, AuthCubit authCubit) {
     final key = GlobalKey<FormState>();
+    bool isHidden = true;
     return showDialog(
         context: context,
         builder: (context) {
           final emailController = TextEditingController();
           final passwordController = TextEditingController();
-          return SimpleDialog(
-            title: AppSubtitle(value: 'Смена почты'),
-            children: [
-              Form(
-                key: key,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                       const Text(
-                          'Новая почта',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Введите новую почту',
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return SimpleDialog(
+                title: AppSubtitle(value: 'Смена почты'),
+                children: [
+                  Form(
+                    key: key,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                           const Text(
+                              'Новая почта',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
-                            contentPadding: EdgeInsets.all(16),
-                          ),
-                          controller: emailController,
-                          validator: (value) {
-                            return Validators.validateEmail(
-                                email: value as String);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Пароль',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Введите ваш пароль',
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: 'Введите новую почту',
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                              controller: emailController,
+                              validator: (value) {
+                                return Validators.validateEmail(
+                                    email: value as String);
+                              },
                             ),
-                            contentPadding: EdgeInsets.all(16),
-                          ),
-                          controller: passwordController,
-                          validator: (value) {
-                            return Validators.validatePassword(
-                                password: value as String);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (key.currentState!.validate()) {
-                              try {
-                                await authCubit.updateEmail(emailController.text, passwordController.text);
-                                Navigator.pop(context);
-                              }  on NetworkException catch (e) {
-                                SnackBars.showSnackBar(context, e.message, Colors.red);
-                              } on AppwriteException catch (e) {
-                                SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка. Сообщите разработчику'), Colors.red);
-                              }
-                            }
-                          },
-                          child: const AppText(value: 'Потвердить'),
-                        ),
-                      )
-                    ],
+                            SizedBox(height: 16),
+                            Text(
+                              'Пароль',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextFormField(
+                              obscureText: isHidden,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(onPressed: () {
+                                  setState(() {
+                                    isHidden = !isHidden;
+                                  });
+                                }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
+                                hintText: 'Введите ваш пароль',
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                              controller: passwordController,
+                              validator: (value) {
+                                return Validators.validatePassword(
+                                    password: value as String);
+                              },
+                            ),
+                            SizedBox(height: 16),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (key.currentState!.validate()) {
+                                  try {
+                                    await authCubit.updateEmail(emailController.text, passwordController.text);
+                                    Navigator.pop(context);
+                                  }  on NetworkException catch (e) {
+                                    SnackBars.showSnackBar(context, e.message, Colors.red);
+                                  } on AppwriteException catch (e) {
+                                    SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка. Сообщите разработчику'), Colors.red);
+                                  }
+                                }
+                              },
+                              child: const AppText(value: 'Потвердить'),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            }
           );
         }
+    );
+  }
+
+  static showGreetingDialog(BuildContext context, String? text, String? gif) {
+    return showDialog(
+        // barrierDismissible: false,
+        context: context, builder: (context) {
+      return SimpleDialog(
+        // title: AppText(value: 'На вашем аккаунте обнаружены результаты раннее пройденных тестов. Хотите их загрузить?'),
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  AppSubtitle(value: text ?? '', textAlign: TextAlign.justify,),
+                  Image.network(gif ?? ''),
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    }
     );
   }
 }

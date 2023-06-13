@@ -5,7 +5,7 @@ import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/answer_entity.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/survey_entity.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/survey_state/survey_cubit.dart';
-
+import '../state/action_utils.dart' as utils;
 import '../../domain/entities/question_entity.dart';
 import '../state/answer_state/answer_cubit.dart';
 import '../state/bloc_states.dart';
@@ -40,6 +40,11 @@ class _SurveyDoingPageState extends State<SurveyDoingPage> {
           QuestionCounterBloc(initialValue: widget.surveyEntity.done),
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(onPressed: () {
+            Navigator.pop(context);
+            utils.loadToServer();
+          }, icon: const Icon(Icons.arrow_back)),
           // flexibleSpace: AppSubtitle(value: checkListEntity.name),
           title: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -138,8 +143,7 @@ class _SurveyDoingPageState extends State<SurveyDoingPage> {
                             : Colors.white,
                         child: InkWell(
                           onTap: () {
-                            questions[questionCounterBloc.state].answerId =
-                                state.entities[index].id;
+                            questions[questionCounterBloc.state].answerId = state.entities[index].id;
                             questionBloc.updateData(questions[questionCounterBloc.state]);
                             questionCounterBloc.add(QuestionCounterInc());
                           },
@@ -183,6 +187,7 @@ class _SurveyDoingPageState extends State<SurveyDoingPage> {
                     onPressed: () {
                       Navigator.pushNamed(context, 'result_page',
                           arguments: state.entities[widget.surveyEntity.id - 1]);
+                      utils.loadToServer();
                     },
                     child: const AppSubtitle(
                       value: 'Посмотреть результат',

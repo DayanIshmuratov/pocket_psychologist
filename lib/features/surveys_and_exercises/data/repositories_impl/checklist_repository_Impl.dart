@@ -1,4 +1,5 @@
 
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:pocket_psychologist/core/server/account.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/data/data_sources/survey_local_data_source.dart';
 
@@ -34,15 +35,15 @@ class SurveyRepositoryImpl<T extends BaseEntity> implements SurveyRepository{
 
   @override
   Future<void> updateQuestion(QuestionEntity entity) async {
-    try {
-      await AccountProvider.get().account.get();
-      await surveyRemoteDataSource.saveData(entity as QuestionModel);
-    } catch (e) {
-      logger.severe(e);
-    }
-    finally {
-      return await surveyLocalDataSource.updateQuestion(entity as QuestionModel);
-    }
+    // if (await InternetConnectionChecker().hasConnection) {
+    //   try {
+    //     await AccountProvider.get().account.get();
+    //     await surveyRemoteDataSource.saveData(entity as QuestionModel);
+    //   } catch (e) {
+    //     logger.severe(e);
+    //   }
+    // }
+      await surveyLocalDataSource.updateQuestion(entity as QuestionModel);
   }
 
   @override

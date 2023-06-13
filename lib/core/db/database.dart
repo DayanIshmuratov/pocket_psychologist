@@ -27,7 +27,7 @@ class DBProvider {
     return db;
     }
 
-  static void resetDB()  {
-    db.database.then((value) => value.rawUpdate("Update questions set question_answer_id = 0"));
+  static Future<void> resetDB()  async {
+    await db.database.then((value) => value.rawUpdate("Update questions set question_answer_id = 0"));
   }
   }

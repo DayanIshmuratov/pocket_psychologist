@@ -9,6 +9,7 @@ class HomePage extends StatelessWidget {
         title: const Text('Главное меню'),
         centerTitle: true,
       ),
+      body: const Center(child:  Text('Soon..')),
     );
   }
 }

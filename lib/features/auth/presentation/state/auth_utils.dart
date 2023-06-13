@@ -6,8 +6,6 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/db/database.dart';
 import '../../../../core/logger/logger.dart';
-import '../../../../core/server/account.dart';
-import '../../../../core/server/appwrite.dart';
 import '../../../../core/server/appwrite_server.dart';
 import '../../../../core/server/database.dart';
 import '../../domain/entity/userData.dart';
@@ -36,7 +34,7 @@ Future<void> checkAnswers(UserData userData, BuildContext context) async {
     );
     logger.info("Обе БД содержат данные");
   } else if (localAnswers.isEmpty && remoteAnswers.total != 0) {
-    loadToDB(remoteAnswers, localdb);
+    await loadToDB(remoteAnswers, localdb);
   }
 }
 
@@ -56,11 +54,11 @@ Future<List<Map<String, Object?>>> loadFromLocalDB(Database localdb) async {
 
 Future<void> loadToDB(models.DocumentList remoteAnswers, Database localdb) async {
   List<models.Document> documents = remoteAnswers.documents;
-  DBProvider.resetDB();
+  await DBProvider.resetDB();
   for (int i = 0; i < documents.length; i++) {
     documents[i].data.removeWhere((key, value) =>
     key != 'question_id' && key != 'question_answer_id');
-    // await localdb.update('questions',  documents[i].data, where: 'question_id = ?', whereArgs: [documents[i].data['question_answer_id']]);
+    logger.info(documents[i].data);
     await localdb.rawUpdate(
         'UPDATE questions SET question_answer_id = ${documents[i]
             .data['question_answer_id']} WHERE question_id = ${documents[i]

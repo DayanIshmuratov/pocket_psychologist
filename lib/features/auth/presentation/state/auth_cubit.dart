@@ -7,6 +7,7 @@ import 'package:appwrite/models.dart' as models;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:pocket_psychologist/core/server/account.dart';
 import 'package:pocket_psychologist/features/auth/domain/entity/userData.dart';
+import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/bloc_states.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/exceptions/exceptions.dart';
@@ -63,10 +64,11 @@ class AuthCubit extends Cubit<AuthState> {
   googleAuth(BuildContext context) async {
     if (await InternetConnectionChecker().hasConnection) {
       try {
+        // emit(AuthLoading());
         await account.createOAuth2Session(provider: 'google');
         final models.Account user = await AccountProvider.get().account.get();
         final userData = UserData.fromMap(user);
-        utils.checkAnswers(userData, context);
+        await utils.checkAnswers(userData, context);
         await _setUserPrefs(userData);
         _saveAuthState(true);
         emit(AuthSigned(userData: userData));
@@ -119,7 +121,7 @@ class AuthCubit extends Cubit<AuthState> {
           email: email,
           password: password,
         );
-        await account.createVerification(url: 'https://verify.chowapp.site');
+        await createEmailVerification();
         final userData = UserData.fromMap(user);
         await utils.checkAnswers(userData, context);
         await _setUserPrefs(userData);
@@ -135,20 +137,11 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   refresh() async {
+    emit(AuthLoading());
     final user = await account.get();
     final userData = UserData.fromMap(user);
     emit(AuthSigned(userData: userData));
   }
-
-  // passwordSecond() async {
-  //   final acc = await account.get();
-  //   Future result = account.updateRecovery(
-  //     userId: acc.$id,
-  //     secret: '[SECRET]',
-  //     password: 'password',
-  //     passwordAgain: 'password',
-  //   );
-  // }
 
   passwordRecovery(String email) async {
     final token = await account.createRecovery(
@@ -188,12 +181,17 @@ class AuthCubit extends Cubit<AuthState> {
     if (await InternetConnectionChecker().hasConnection) {
       try {
         await account.updateEmail(email: email, password: password);
+        await createEmailVerification();
       } on AppwriteException {
         rethrow;
       }
     } else {
       throw NetworkException();
     }
+  }
+
+  createEmailVerification() async {
+    await account.createVerification(url: 'https://verify.chowapp.site');
   }
 
 
@@ -205,6 +203,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void _deleteUserPrefs() {
+    _prefs?.remove(_keyId);
     _prefs?.remove(_keyName);
     _prefs?.remove(_keyEmail);
   }

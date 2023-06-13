@@ -18,6 +18,7 @@ import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/
 import 'package:pocket_psychologist/main_page/main_page.dart';
 import 'package:pocket_psychologist/service_locator/service_locator.dart' as di;
 import 'package:pocket_psychologist/service_locator/service_locator.dart';
+import 'common/greeting/greeting.dart';
 import 'core/server/appwrite.dart';
 import 'features/auth/domain/entity/userData.dart';
 import 'features/auth/presentation/state/auth_cubit.dart';
@@ -145,7 +146,8 @@ class MyApp extends StatelessWidget {
                   final data = settings.arguments as Map<String, Object>;
                   return MaterialPageRoute(builder: (context) => PasswordRecoveryPage(authCubit: data['authCubit'] as AuthCubit, email: data['email'] as String));
                 case 'edit_profile_page' :
-                  return MaterialPageRoute(builder: (context) => EditProfilePage());
+                  final authCubit = settings.arguments as AuthCubit;
+                  return MaterialPageRoute(builder: (context) => EditProfilePage(authCubit: authCubit,));
               }
             },
             // color: AppColors.mainColor,
@@ -161,7 +163,7 @@ class MyApp extends StatelessWidget {
               splashIconSize: 200,
                 duration: 5000,
                 splash: Image.asset('assets/images/common/splash_screen.png', fit: BoxFit.fill,),
-                nextScreen: MainPage(),
+                nextScreen: GreetPage(),
                 splashTransition: SplashTransition.fadeTransition,
                 pageTransitionType: PageTransitionType.bottomToTop,
                 backgroundColor: Colors.white),

@@ -9,6 +9,7 @@ class VipPage extends StatelessWidget {
         title: const Text('Особые предложения'),
         centerTitle: true,
       ),
+      body: const Center(child:  Text('Soon..')),
     );
   }
 }

@@ -36,7 +36,7 @@ class MessageWidget extends StatelessWidget {
                 child: Column (
                   crossAxisAlignment: isMine ?  CrossAxisAlignment.end : CrossAxisAlignment.start,
                    children: [
-                     Text(message.senderName),
+                     isPreceding ? const  SizedBox(width: 0, height: 0,) : Text(message.senderName),
                      Text(message.message,
                        style:  TextStyle(
                        fontSize: 16,

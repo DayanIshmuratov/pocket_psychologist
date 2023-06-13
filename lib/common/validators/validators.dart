@@ -7,11 +7,9 @@ class Validators {
     }
     return null;
   }
-  static String? validateText({required String text}) {
-    if (text == null) {
-      return null;
-    } if (text.isEmpty){
-      return "Содержимое не может быть пустым";
+  static String? validateMessage({required String text}) {
+    if (text.isEmpty){
+      return "Сообщение не может быть пустым";
     }
     return null;
   }

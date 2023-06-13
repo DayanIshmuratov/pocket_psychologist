@@ -41,11 +41,10 @@ class OauthButtons extends StatelessWidget {
                 child:
                     oauthButton('assets/images/small_images/icons/google.png'),
               ),
-              GestureDetector(
-                onTap: () {
-                  authCubit.vkAuth();
-                },
-              child: oauthButton('assets/images/small_images/icons/vk.png')),
+              Tooltip(
+                triggerMode: TooltipTriggerMode.tap,
+                message: 'В разработке',
+                  child: oauthButton('assets/images/small_images/icons/vk.png')),
             ],
           ),
         ],

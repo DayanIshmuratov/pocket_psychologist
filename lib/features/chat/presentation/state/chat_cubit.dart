@@ -25,7 +25,7 @@ class ChatCubit extends Cubit<ChatState> {
     if (await InternetConnectionChecker().hasConnection) {
       final realtime = Realtime(AppWriteProvider().client);
       subscription = realtime.subscribe(['databases.chat.collections.messages.documents']);
-      subscription!.stream.listen((response) {
+      subscription!.stream.asBroadcastStream().listen((response) {
         final result = response.payload;
         logger.severe(result);
         final message = Message.fromJson(result);
@@ -46,17 +46,21 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> sendMessage(Message message) async {
     if (await InternetConnectionChecker().hasConnection) {
-      AppWriteDBProvider().db.createDocument(
-        databaseId: appwriteConsts.appwriteChatDatabaseId,
-        collectionId: appwriteConsts.appwriteMessageCollectionId,
-        documentId: ID.unique(),
-        data: {
-          'message' : message.message,
-          'user_id' : message.userId,
-          'action' : message.action,
-          'sender_name' : message.senderName,
-        },
-      );
+      try {
+        AppWriteDBProvider().db.createDocument(
+          databaseId: appwriteConsts.appwriteChatDatabaseId,
+          collectionId: appwriteConsts.appwriteMessageCollectionId,
+          documentId: ID.unique(),
+          data: {
+            'message' : message.message,
+            'user_id' : message.userId,
+            'action' : message.action,
+            'sender_name' : message.senderName,
+          },
+        );
+      } on AppwriteException {
+        rethrow;
+      }
     } else {
       throw NetworkException();
     }
