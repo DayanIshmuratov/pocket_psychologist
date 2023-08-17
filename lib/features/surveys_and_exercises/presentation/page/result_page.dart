@@ -3,20 +3,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
-import 'package:pocket_psychologist/constants/app_colors/app_colors.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/survey_entity.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/lie_result_state/lie_result_cubit.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/question_with_answer_cubit.dart';
-
 import '../../../../common/animations/expanded_section.dart';
-import '../../domain/entities/answer_entity.dart';
 import '../../domain/entities/lie_results_entity.dart';
 import '../../domain/entities/question_with_answer_entity.dart';
 import '../../domain/entities/result_entity.dart';
 import '../state/bloc_states.dart';
 import '../state/result_state/result_cubit.dart';
-import '../state/survey_state/survey_cubit.dart';
-
 
 class ResultPage extends StatefulWidget {
   final SurveyEntity surveyEntity;
@@ -84,21 +79,13 @@ class _ResultPageState extends State<ResultPage> {
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).primaryColor,
                                       shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
+                                      boxShadow: const [
+                                         BoxShadow(
                                           color: Colors.black38,
-                                          // spreadRadius: 10,
                                           blurRadius: 10,
                                           offset: Offset(-5, 5),
                                         ),
                                       ],
-                                        // gradient: LinearGradient(colors: [
-                                        //   Theme.of(context).secondaryHeaderColor,
-                                        //   Theme.of(context).primaryColor,
-                                        // ],
-                                        //   begin: Alignment.bottomLeft,
-                                        //   end: Alignment.topRight,
-                                        // )
                                     ),
                                     child: IconButton(
                                         onPressed: () {
@@ -106,8 +93,6 @@ class _ResultPageState extends State<ResultPage> {
                                               context, widget.surveyEntity);
                                         },
                                         color: Colors.white,
-                                        // autofocus: true,
-                                        // focusNode: FocusNode(),
                                         icon: const Icon(Icons.sentiment_neutral),
                                         tooltip: 'Результат лжи'),
                                   ),
@@ -139,12 +124,10 @@ class _ResultPageState extends State<ResultPage> {
                           ),
                           ExpandedSection(
                             expand: _isExpanded,
-                            // resultEntities: state.entities,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 ListView.builder(
-                                  // physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: state.entities.length,
                                   itemBuilder: (context, index) {
@@ -206,7 +189,6 @@ class _ResultPageState extends State<ResultPage> {
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    // return SizedBox();
                   }
                   ),
             ],

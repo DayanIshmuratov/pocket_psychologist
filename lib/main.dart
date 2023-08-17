@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:page_transition/page_transition.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pocket_psychologist/constants/app_colors/app_colors.dart';
 import 'package:pocket_psychologist/constants/app_colors/app_theme.dart';
 import 'package:pocket_psychologist/core/bloc_observer/bloc_observer.dart';
 import 'package:pocket_psychologist/core/error_handler/error_handler.dart';
@@ -15,12 +13,9 @@ import 'package:pocket_psychologist/features/auth/presentation/page/sign_in_page
 import 'package:pocket_psychologist/features/chat/presentation/state/chat_cubit.dart';
 import 'package:pocket_psychologist/features/profile/page/edit_profile_page.dart';
 import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/page/exercises_image_page.dart';
-import 'package:pocket_psychologist/main_page/main_page.dart';
 import 'package:pocket_psychologist/service_locator/service_locator.dart' as di;
 import 'package:pocket_psychologist/service_locator/service_locator.dart';
 import 'common/greeting/greeting.dart';
-import 'core/server/appwrite.dart';
-import 'features/auth/domain/entity/userData.dart';
 import 'features/auth/presentation/state/auth_cubit.dart';
 import 'features/surveys_and_exercises/domain/entities/exercise_entity.dart';
 import 'features/surveys_and_exercises/domain/entities/survey_entity.dart';
@@ -29,7 +24,6 @@ import 'features/surveys_and_exercises/presentation/page/surveys_page.dart';
 import 'features/surveys_and_exercises/presentation/page/result_page.dart';
 import 'features/surveys_and_exercises/presentation/page/exercises_images_page.dart';
 import 'features/surveys_and_exercises/presentation/page/exercises_page.dart';
-import 'features/surveys_and_exercises/presentation/page/tests_page.dart';
 import 'features/surveys_and_exercises/presentation/state/answer_state/answer_cubit.dart';
 import 'features/surveys_and_exercises/presentation/state/exercise_state/exercises_cubit.dart';
 import 'features/surveys_and_exercises/presentation/state/image_state/image_cubit.dart';
@@ -38,20 +32,14 @@ import 'features/surveys_and_exercises/presentation/state/question_state/questio
 import 'features/surveys_and_exercises/presentation/state/question_with_answer_cubit.dart';
 import 'features/surveys_and_exercises/presentation/state/result_state/result_cubit.dart';
 import 'features/surveys_and_exercises/presentation/state/survey_state/survey_cubit.dart';
-import 'package:dcdg/dcdg.dart';
 
 void main() async {
   Bloc.observer = MainBlocObserver();
   await runZonedGuarded<Future<void>>(() async {
     initLogger();
     logger.info('Start main');
-    runApp(Wrapper());
+    runApp(const Wrapper());
     di.init();
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: AppColors.mainColor,
-    //   ),
-    // );
     ErrorHandler.init();
   }, ErrorHandler.recordError);
 }
@@ -79,6 +67,7 @@ class Wrapper extends StatelessWidget {
 }
 
 class MyApp extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
@@ -105,10 +94,10 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             onGenerateRoute: (RouteSettings settings) {
               switch (settings.name) {
-                case 'techniques_page':
+                case 'exercises_page':
                   return MaterialPageRoute(
                       builder: (context) => ExercisesPage());
-                case 'technique_images_page':
+                case 'exercise_images_page':
                   final ExercisesEntity entity =
                   settings.arguments as ExercisesEntity;
                   return MaterialPageRoute(
@@ -116,15 +105,11 @@ class MyApp extends StatelessWidget {
                           TechniqueImagesPage(
                             entity: entity,
                           ));
-                case 'checklists_page':
+                case 'surveys_page':
                   return MaterialPageRoute(
                     builder: (context) => SurveysPage(),
                   );
-                case 'tests_page':
-                  return MaterialPageRoute(
-                    builder: (context) => TestsPage(),
-                  );
-                case 'checklist_doing_page':
+                case 'survey_doing_page':
                   final SurveyEntity entity =
                   settings.arguments as SurveyEntity;
                   return MaterialPageRoute(

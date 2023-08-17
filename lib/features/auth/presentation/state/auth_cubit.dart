@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:equatable/equatable.dart';
@@ -7,9 +6,7 @@ import 'package:appwrite/models.dart' as models;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:pocket_psychologist/core/server/account.dart';
 import 'package:pocket_psychologist/features/auth/domain/entity/userData.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/presentation/state/bloc_states.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../core/exceptions/exceptions.dart';
 import '../../../../core/logger/logger.dart';
 import 'auth_utils.dart' as utils;
@@ -36,9 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
       try {
         final user = await account.get();
         final userData = UserData.fromMap(user);
-        // final userInfo = await _getUserPrefs();
         emit(AuthSigned(userData: userData));
-        //Check is there distinction between data in the localDB and remoteDB
         await utils.checkDistinction(userData);
       } catch (e, s) {
         logger.severe(e, s);
@@ -52,9 +47,7 @@ class AuthCubit extends Cubit<AuthState> {
 
 
   _initialisePrefs() async {
-    // SharedPreferences.setMockInitialValues({});
     _prefs ??= await SharedPreferences.getInstance();
-    // _prefs?.setString(key, 'purple');
   }
 
   _saveAuthState(bool isSigned) {
@@ -62,32 +55,23 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   googleAuth(BuildContext context) async {
-    if (await InternetConnectionChecker().hasConnection) {
-      try {
-        // emit(AuthLoading());
-        await account.createOAuth2Session(provider: 'google');
-        final models.Account user = await AccountProvider.get().account.get();
-        final userData = UserData.fromMap(user);
-        await utils.checkAnswers(userData, context);
-        await _setUserPrefs(userData);
-        _saveAuthState(true);
-        emit(AuthSigned(userData: userData));
-      } on AppwriteException {
-        rethrow;
-      }
-    } else {
-      throw NetworkException();
-    }
+    checkConnection(() async {
+      await account.createOAuth2Session(provider: 'google');
+      final models.Account user = await AccountProvider.get().account.get();
+      final userData = UserData.fromMap(user);
+      await utils.checkAnswers(userData, context);
+      await _setUserPrefs(userData);
+      _saveAuthState(true);
+      emit(AuthSigned(userData: userData));
+    });
   }
 
   vkAuth() {
-    // account.createOAuth2Session(provider: 'vk');
     logger.info("VK Auth");
   }
 
   signInWithEmail(BuildContext context, String email, String password) async {
-    if (await InternetConnectionChecker().hasConnection) {
-      try {
+    checkConnection(() async {
       await account.createEmailSession(
         email: email,
         password: password,
@@ -97,43 +81,29 @@ class AuthCubit extends Cubit<AuthState> {
       await utils.checkAnswers(userData, context);
       await _setUserPrefs(userData);
       _saveAuthState(true);
-      // final userData = await _getUserPrefs();
       emit(AuthSigned(userData: userData));
-      }
-      on AppwriteException {
-        rethrow;
-      }
-    } else {
-      throw NetworkException();
-    }
+    });
   }
 
   signUpWithEmail(BuildContext context, String name, String email, String password) async {
-    if (await InternetConnectionChecker().hasConnection) {
-      try {
-        final user = await account.create(
-          userId: ID.unique(),
-          name: name,
-          email: email,
-          password: password,
-        );
-        await account.createEmailSession(
-          email: email,
-          password: password,
-        );
-        await createEmailVerification();
-        final userData = UserData.fromMap(user);
-        await utils.checkAnswers(userData, context);
-        await _setUserPrefs(userData);
-        _saveAuthState(true);
-        emit(AuthSigned(userData: userData));
-      }
-      on AppwriteException {
-        rethrow;
-      }
-    } else {
-      throw NetworkException();
-    }
+    checkConnection(() async {
+      final user = await account.create(
+        userId: ID.unique(),
+        name: name,
+        email: email,
+        password: password,
+      );
+      await account.createEmailSession(
+        email: email,
+        password: password,
+      );
+      await createEmailVerification();
+      final userData = UserData.fromMap(user);
+      await utils.checkAnswers(userData, context);
+      await _setUserPrefs(userData);
+      _saveAuthState(true);
+      emit(AuthSigned(userData: userData));
+    });
   }
 
   refresh() async {
@@ -154,40 +124,34 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   updateName(String name) async {
+    checkConnection(() async {
+      await account.updateName(name: name);
+    });
+  }
+
+  updatePassword(String oldPassword, String newPassword) {
+    checkConnection(() async {
+      await account.updatePassword(password: newPassword, oldPassword: oldPassword);
+    });
+  }
+
+  checkConnection (Function request) async {
     if (await InternetConnectionChecker().hasConnection) {
       try {
-        await account.updateName(name: name);
+        request;
       } on AppwriteException {
         rethrow;
       }
     } else {
       throw NetworkException();
-    }
-  }
-
-  updatePassword(String oldPassword, String newPassword) async{
-    if (await InternetConnectionChecker().hasConnection) {
-    try {
-    await account.updatePassword(password: newPassword, oldPassword: oldPassword);
-    } on AppwriteException {
-    rethrow;
-    }
-    } else {
-    throw NetworkException();
     }
   }
 
   updateEmail(String email, String password) async{
-    if (await InternetConnectionChecker().hasConnection) {
-      try {
-        await account.updateEmail(email: email, password: password);
-        await createEmailVerification();
-      } on AppwriteException {
-        rethrow;
-      }
-    } else {
-      throw NetworkException();
-    }
+    checkConnection(() async {
+      await account.updateEmail(email: email, password: password);
+      await createEmailVerification();
+    });
   }
 
   createEmailVerification() async {

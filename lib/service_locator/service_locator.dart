@@ -48,7 +48,6 @@ void init() {
 
  // Repository
  sl.registerLazySingleton<SurveyRepository>(() => SurveyRepositoryImpl(surveyLocalDataSource: sl(), surveyRemoteDataSource: sl()));
- // sl.registerLazySingleton<SurveyLocalDataSource>(() => SurveyLocalDataSourceSecondImpl());
  sl.registerLazySingleton<SurveyLocalDataSource>(() => SurveyLocalDataSourceImpl(db: DBProvider.db));
  sl.registerLazySingleton<SurveyRemoteDataSource>(() => SurveyRemoteDataSourceImpl(client: AppWriteProvider().client));
 }

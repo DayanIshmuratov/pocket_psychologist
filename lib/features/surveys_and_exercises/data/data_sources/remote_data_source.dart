@@ -1,7 +1,4 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:pocket_psychologist/core/server/account.dart';
-import 'package:pocket_psychologist/features/surveys_and_exercises/domain/entities/question_entity.dart';
-
 import '../../../../core/logger/logger.dart';
 import '../data_models/question_model.dart';
 
@@ -33,11 +30,4 @@ class SurveyRemoteDataSourceImpl implements  SurveyRemoteDataSource{
       logger.info(e.message);
     }
   }
-  //
-  // Map<String, dynamic> addingId(QuestionModel model, String userId) {
-  //   final map = model.toMap();
-  //   map.addAll({'user_id' : userId});
-  //   return map;
-  // }
-
 }

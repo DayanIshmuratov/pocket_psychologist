@@ -1,10 +1,6 @@
-import 'package:appwrite/appwrite.dart';
-import 'package:dart_appwrite/models.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pocket_psychologist/core/server/appwrite.dart';
-import 'package:pocket_psychologist/core/server/user.dart';
-
 import '../../../../common/components/text.dart';
 import '../../../auth/domain/entity/userData.dart';
 import '../../domain/entity/message_entity.dart';
@@ -20,8 +16,6 @@ class MessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isMine = userData.id == message.userId;
     List<Widget> messageWidgets = [
-      // SizedBox(width: 40, child:
-      //   Image.asset('assets/images/no_image.jpg'),),
       Expanded(
         child: Align(
           alignment: isMine ? Alignment.topRight : Alignment.topLeft,
@@ -38,7 +32,7 @@ class MessageWidget extends StatelessWidget {
                    children: [
                      isPreceding ? const  SizedBox(width: 0, height: 0,) : Text(message.senderName),
                      Text(message.message,
-                       style:  TextStyle(
+                       style:  const TextStyle(
                        fontSize: 16,
                        fontWeight: FontWeight.w600,
                      ),
@@ -52,7 +46,7 @@ class MessageWidget extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(width: 40,)
+      const SizedBox(width: 40,)
     ];
     switch (message.action) {
       case 'message':
@@ -70,7 +64,6 @@ class MessageWidget extends StatelessWidget {
               else
               for (int i = 0; i < messageWidgets.length; i++)
                 messageWidgets[i]
-              // subtitle: Text(messages[i].date!.toIso8601String()),
             ],
           ),
         );

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pocket_psychologist/common/widgets/snackbars.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:appwrite/models.dart' as models;
-import 'package:pocket_psychologist/features/auth/presentation/state/auth_utils.dart';
 import '../../core/exceptions/exceptions.dart';
 import '../../features/auth/domain/entity/userData.dart';
 import '../../features/auth/presentation/state/auth_cubit.dart';

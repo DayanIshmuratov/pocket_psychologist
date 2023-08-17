@@ -14,7 +14,7 @@ class ExercisesCubit extends Cubit<BaseState> {
     try {
       final result = await getExercises(GetByIdParameters(id: id));
       emit(LoadedListState<ExercisesEntity>(entities: result));
-    } on CacheException catch (e, s) {
+    } on LocalException catch (e, s) {
       logger.severe(e, s);
       emit(ErrorState(text: e.message));
     }

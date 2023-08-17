@@ -31,7 +31,8 @@ class _SurveyDoingPageState extends State<SurveyDoingPage> {
     }
     super.initState();
   }
-  // int _questionIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     final questionCubit = context.read<QuestionCubit>();
     questionCubit.loadListData(widget.surveyEntity.id);
@@ -170,8 +171,6 @@ class _SurveyDoingPageState extends State<SurveyDoingPage> {
   }
 
   Widget doneWidget(BuildContext context) {
-    final checklistBloc = context.read<SurveyCubit>().loadListData(0);
-    // checkListBloc.;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(

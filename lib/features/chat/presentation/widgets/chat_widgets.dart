@@ -1,13 +1,10 @@
 import 'dart:async';
-
 import 'package:appwrite/appwrite.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/validators/validators.dart';
 import 'package:pocket_psychologist/common/widgets/snackbars.dart';
 import 'package:pocket_psychologist/features/chat/presentation/state/chat_cubit.dart';
-
 import '../../../../common/components/text.dart';
 import '../../../../core/exceptions/exceptions.dart';
 import '../../../../core/logger/logger.dart';
@@ -36,7 +33,6 @@ class _ChatWidgetsState extends State<ChatWidgets> {
 
   @override
   void initState()  {
-    // scrollDown();
     super.initState();
     subscription = widget.chatCubit.resultStream.listen((message) {
       logger.info("ПОЙМАНО $message");
@@ -55,18 +51,17 @@ class _ChatWidgetsState extends State<ChatWidgets> {
     });
 
   }
+
   void scrollDown(int plus) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (_scrollController.hasListeners) {
-        _scrollController.animateTo(_scrollController.position.maxScrollExtent + plus,
-            curve: Curves.linear, duration: Duration(milliseconds: 500));
+        _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent + plus,
+            curve: Curves.linear,
+            duration: const Duration(milliseconds: 500));
       }
     });
-
   }
-  // StreamSubscription<Message> subscription = stream.listen((event) {
-  //
-  // });
 
   void joinToChat() {
     widget.chatCubit.sendMessage(
@@ -161,10 +156,10 @@ class _ChatWidgetsState extends State<ChatWidgets> {
             return Center(child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AppTitle(value: 'Нет соединения'),
+                const AppTitle(value: 'Нет соединения'),
                 ElevatedButton(onPressed: () {
                   setState(() {});
-                }, child: AppSubtitle(value: 'Обновить',))
+                }, child: const AppSubtitle(value: 'Обновить',))
               ],
             ));
           }

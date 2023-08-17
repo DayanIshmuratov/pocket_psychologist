@@ -3,7 +3,6 @@ import 'package:appwrite/models.dart' as models;
 import 'package:flutter/cupertino.dart';
 import 'package:pocket_psychologist/common/widgets/dialogs.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../../../../core/db/database.dart';
 import '../../../../core/logger/logger.dart';
 import '../../../../core/server/appwrite_server.dart';
@@ -42,7 +41,6 @@ Future<models.DocumentList> loadFromRemoteDB(Databases remotedb, UserData user) 
   return remotedb.listDocuments(
     databaseId: constants.appwriteUsersAnswersDatabaseId,
     collectionId: user.id,
-    // queries: [Query.equal('user_id', [user.$id])]
   );
 }
 
@@ -111,9 +109,9 @@ String errorTypeToString(String type) {
 Future<void> isReady(Function callback) async {
   int i = 40;
   while (i > 0) {
-    await Future.delayed(const Duration(seconds: 2)).then((value)  async {
+    await Future.delayed(const Duration(seconds: 2)).then((value)   {
       try {
-        await callback;
+        callback;
       } on Exception catch (e) {
         logger.info(e.toString());
         logger.info(i);

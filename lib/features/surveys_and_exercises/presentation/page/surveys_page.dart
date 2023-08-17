@@ -14,14 +14,6 @@ class SurveysPage extends StatelessWidget {
     context.read<SurveyCubit>().loadListData(0);
     return Scaffold(
       appBar: AppBar(
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.traffic_outlined),
-        //     onPressed: () {
-        //       DBProvider.resetDB();
-        //     },
-        //   ),
-        // ],
         title: const AppSubtitle(value: 'Опросы'),
         centerTitle: true,
       ),
@@ -33,7 +25,7 @@ class SurveysPage extends StatelessWidget {
             return ListView.builder(
               itemCount: state.entities.length,
               itemBuilder: (context, index) {
-                return CheckListCard(entity: state.entities[index]);
+                return SurveyCard(entity: state.entities[index]);
               },
             );
           } else if (state is ErrorState) {

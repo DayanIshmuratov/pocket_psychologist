@@ -5,18 +5,18 @@ import 'package:pocket_psychologist/common/components/text.dart';
 import '../../domain/entities/survey_entity.dart';
 import '../state/survey_state/survey_cubit.dart';
 
-class CheckListCard extends StatefulWidget {
+class SurveyCard extends StatefulWidget {
   final SurveyEntity entity;
 
-  const CheckListCard({super.key, required this.entity});
+  const SurveyCard({super.key, required this.entity});
 
   @override
-  State<CheckListCard> createState() {
-    return _CheckListCardState();
+  State<SurveyCard> createState() {
+    return _SurveyCardState();
   }
 }
 
-class _CheckListCardState extends State<CheckListCard>
+class _SurveyCardState extends State<SurveyCard>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -39,11 +39,10 @@ class _CheckListCardState extends State<CheckListCard>
   }
 
   _toggleContainer() {
-    print(_animation.status);
     if (_animation.status != AnimationStatus.completed) {
       _controller.forward();
     } else {
-      _controller.animateBack(0, duration: Duration(seconds: 1));
+      _controller.animateBack(0, duration: const Duration(seconds: 1));
     }
   }
 
@@ -64,12 +63,12 @@ class _CheckListCardState extends State<CheckListCard>
               ),
               trailing: _isDone
                   ? IconButton(
-                      icon: Icon(Icons.done, color: Colors.green),
+                      icon: const Icon(Icons.done, color: Colors.green),
                       onPressed: () {},
                       tooltip: "Вы уже прошли данный чек лист",
                     )
                   : IconButton(
-                      icon: Icon(Icons.cancel, color: Colors.red),
+                      icon: const Icon(Icons.cancel, color: Colors.red),
                       onPressed: () {},
                       tooltip: "Вы еще не прошли данный чек лист",
                     ),
@@ -86,7 +85,7 @@ class _CheckListCardState extends State<CheckListCard>
                   subtitle: Text(widget.entity.description ?? "Нет описания"),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -99,13 +98,13 @@ class _CheckListCardState extends State<CheckListCard>
                                 arguments: widget.entity);
                           } else {
                             await Navigator.pushNamed(
-                                context, 'checklist_doing_page',
+                                context, 'survey_doing_page',
                                 arguments: widget.entity);
                             context.read<SurveyCubit>().loadListData(0);
                           }
                           setState(() {});
                         },
-                        child: _isDone ? Text('Результат') : Text('Выполнить'),
+                        child: _isDone ? const Text('Результат') : const Text('Выполнить'),
                       )
                     ],
                   ),

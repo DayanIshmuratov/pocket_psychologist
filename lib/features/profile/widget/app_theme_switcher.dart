@@ -31,7 +31,6 @@ class _AppThemeSwitcherState extends State<AppThemeSwitcher> {
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(40),
-            // shape: BoxShape.circle,
           ),
           child: Column(
             children: [

@@ -2,6 +2,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:pocket_psychologist/constants/appwrite_constants/appwrite_constants.dart' as appwriteConstants;
 
 class AppWriteProvider {
+
   static final AppWriteProvider instance = AppWriteProvider._internal();
   late final Client client;
 
@@ -14,4 +15,5 @@ class AppWriteProvider {
         .setEndpoint(appwriteConstants.appwriteEndpoint)
         .setProject(appwriteConstants.appwriteProjectId);
   }
+
 }

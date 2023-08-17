@@ -14,7 +14,7 @@ class QuestionWithAnswerCubit extends Cubit<BaseState> {
     try {
       final result = await getQuestion(GetByIdParameters(id: id));
       emit(LoadedListState<QuestionWithAnswerEntity>(entities: result));
-    } on CacheException catch (e, s) {
+    } on LocalException catch (e, s) {
       logger.severe(e, s);
       emit(ErrorState(text: e.message));
     }

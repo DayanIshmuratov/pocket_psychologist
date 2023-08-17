@@ -9,17 +9,9 @@ class ImagePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(),
-      body: Container(
-        child: PhotoView(imageProvider: AssetImage(path),
-        ),
+      body: PhotoView(imageProvider: AssetImage(path),
       ),
-      
-      // InteractiveViewer(
-      //   boundaryMargin: EdgeInsets.all(double.infinity),
-      //   minScale: 1,
-      //   maxScale: 2.5,
-      //   child: Image.asset(path),
-      // ),
+
     );
   }
 }

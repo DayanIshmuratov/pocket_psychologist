@@ -24,64 +24,6 @@ abstract class SurveyLocalDataSource<T> {
 }
 
 
-class SurveyLocalDataSourceSecondImpl implements SurveyLocalDataSource {
-  @override
-  Future<List<AnswerModel>> getAnswers(int questionId) {
-    // TODO: implement getAnswers
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<ExercisesModel>> getExercises(int surveyId) {
-    // TODO: implement getExercises
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<ImageModel>> getImages(int exerciseId) {
-    // TODO: implement getImages
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<LieResultModel>> getLieResults(int surveyId) {
-    // TODO: implement getLieResults
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<QuestionWithAnswerModel>> getQuestionWithAnswer(int surveyId) {
-    // TODO: implement getQuestionWithAnswer
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<QuestionModel>> getQuestions(int surveyId) {
-    // TODO: implement getQuestions
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<ResultModel>> getResults(int surveyId) {
-    // TODO: implement getResults
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<SurveyModel>> getSurveys(int surveyId) {
-    // TODO: implement getSurveys
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateQuestion(QuestionModel model) {
-    // TODO: implement updateQuestion
-    throw UnimplementedError();
-  }
-
-}
-
-
 class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
   final DBProvider db;
 
@@ -101,7 +43,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
         return result;
       }
       catch (e) {
-        throw CacheException();
+        throw LocalException();
       }
     } else {
       try {
@@ -114,7 +56,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
         return result;
       }
       catch (e) {
-        throw CacheException();
+        throw LocalException();
       }
     }
   }
@@ -129,7 +71,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
       return result;
     }
     catch (e) {
-      throw CacheException();
+      throw LocalException();
     }
   }
 
@@ -141,7 +83,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
           where: 'question_id = ?', whereArgs: [model.id]);
     }
     catch (e) {
-      throw CacheException();
+      throw LocalException();
     }
   }
 
@@ -154,7 +96,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
       var result = data.map((e) => AnswerModel.fromJson(e)).toList();
       return result;
     } catch (e) {
-      throw CacheException();
+      throw LocalException();
     }
   }
 
@@ -168,7 +110,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
       return result;
     }
     catch (e) {
-      throw CacheException();
+      throw LocalException();
     }
   }
 
@@ -183,7 +125,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
         return result;
       }
       catch (e) {
-        throw CacheException();
+        throw LocalException();
       }
     } else {
       try {
@@ -193,7 +135,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
         return result;
       }
       catch (e) {
-        throw CacheException();
+        throw LocalException();
       }
     }
   }
@@ -208,7 +150,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
       return result;
     }
     catch (e) {
-      throw CacheException();
+      throw LocalException();
     }
   }
 
@@ -222,7 +164,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
       return result;
     }
     catch (e) {
-      throw CacheException();
+      throw LocalException();
     }
   }
 
@@ -239,7 +181,7 @@ class SurveyLocalDataSourceImpl<T> implements SurveyLocalDataSource {
       return result;
     }
     catch (e) {
-      throw CacheException();
+      throw LocalException();
     }
   }
 }

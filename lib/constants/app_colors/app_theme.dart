@@ -14,20 +14,17 @@ class AppTheme extends Cubit<AppThemeState> {
   }
 
   _initialisePrefs() async {
-    // SharedPreferences.setMockInitialValues({});
     _prefs ??= await SharedPreferences.getInstance();
-    // _prefs?.setString(key, 'purple');
   }
 
   _loadPrefs() async {
     await _initialisePrefs();
     final themeName = _prefs?.getString(key);
-    Timer(Duration(milliseconds: 100), () {});
+    Timer(const Duration(milliseconds: 100), () {});
     emit(_fromThemeToAppThemeState(themeName ?? 'purple'));
   }
 
   _savePrefs(String themeName) {
-    // await _initialisePrefs();
     _prefs?.setString(key, themeName);
   }
 

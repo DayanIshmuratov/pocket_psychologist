@@ -13,9 +13,9 @@ class NetworkException implements Exception {
   String get message => msg;
 }
 
-class CacheException  implements Exception {
+class LocalException  implements Exception {
   final String msg;
-  CacheException([this.msg = 'Ошибка получения данных с локального хранилища.']);
+  LocalException([this.msg = 'Ошибка получения данных с локального хранилища.']);
   String get message => msg;
 // String message() {
 //   return msg;

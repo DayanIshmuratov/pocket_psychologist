@@ -31,7 +31,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title:  AppText(value: 'Редактирование профиля'),
+        title:  const AppText(value: 'Редактирование профиля'),
       ),
       body: Column(
         children: [
@@ -57,7 +57,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               await widget.authCubit.refresh();
               setState(() {});
             },
-              child: EditListTile(title: 'Смена пароля', subtitle: 'Нажмите, чтобы изменить пароль',)),
+              child: const EditListTile(title: 'Смена пароля', subtitle: 'Нажмите, чтобы изменить пароль',)),
           Divider(color: color),
         ],
       )

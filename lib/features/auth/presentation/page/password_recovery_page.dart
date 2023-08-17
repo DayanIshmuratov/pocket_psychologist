@@ -1,9 +1,7 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/common/widgets/snackbars.dart';
-
 import '../../../../common/validators/validators.dart';
 import '../../../../core/logger/logger.dart';
 import '../state/auth_cubit.dart';
@@ -18,7 +16,7 @@ class PasswordRecoveryPage extends StatelessWidget {
     TextEditingController emailController = TextEditingController(text: email);
     return Scaffold(
       appBar: AppBar(
-        title: AppTitle(value: 'Восстановление пароля'),
+        title: const AppTitle(value: 'Восстановление пароля'),
         centerTitle: true,
       ),
       body: Form(
@@ -27,14 +25,14 @@ class PasswordRecoveryPage extends StatelessWidget {
           children: [
             TextFormField(
               controller: emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Почта',
               ),
               validator: (value) {
                 return Validators.validateEmail(email: value as String);
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             ElevatedButton(
@@ -50,7 +48,7 @@ class PasswordRecoveryPage extends StatelessWidget {
                   }
                 }
               },
-              child: AppSubtitle(value: 'Восстановить'),
+              child: const AppSubtitle(value: 'Восстановить'),
             ),
           ],
         ),

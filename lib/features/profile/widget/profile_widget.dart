@@ -209,22 +209,6 @@ Future<void> _changingThemeDialog(BuildContext context) {
                           : const SizedBox.shrink(),
                     ),
                   ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     appTheme.changeToBlack();
-                  //   },
-                  //   child: Container(
-                  //     height: sizeOfCircle,
-                  //     width: sizeOfCircle,
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.black38,
-                  //       shape: BoxShape.circle,
-                  //     ),
-                  //     child: appTheme.state is BlackAppThemeState
-                  //         ? Icon(Icons.done, color: Colors.white)
-                  //         : SizedBox.shrink(),
-                  //   ),
-                  // ),
                 ],
               ),
             )

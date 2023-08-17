@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
-
 import '../../domain/entities/exercise_entity.dart';
 import '../../domain/entities/image_entity.dart';
 import '../state/bloc_states.dart';

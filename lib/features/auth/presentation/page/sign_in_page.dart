@@ -1,4 +1,3 @@
-// import 'package:dart_appwrite/dart_appwrite.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocket_psychologist/common/components/text.dart';
 import 'package:pocket_psychologist/common/validators/validators.dart';
 import 'package:pocket_psychologist/core/exceptions/exceptions.dart';
-import 'package:pocket_psychologist/core/server/account.dart';
-import 'package:pocket_psychologist/core/server/appwrite_server.dart';
 import 'package:pocket_psychologist/features/auth/presentation/state/auth_cubit.dart';
 import 'package:pocket_psychologist/features/auth/presentation/widgets/oauth_buttons.dart';
-
 import '../../../../common/widgets/snackbars.dart';
-import '../../../../core/logger/logger.dart';
 import '../state/auth_utils.dart' as utils;
 
 class SignInPage extends StatefulWidget {
@@ -52,7 +47,6 @@ class _SignInPageState extends State<SignInPage> {
               children: [
                 SingleChildScrollView(
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AppTitle(value: isSignUp ? 'Регистрация' : 'Вход'),
@@ -86,7 +80,7 @@ class _SignInPageState extends State<SignInPage> {
                       if (isSignUp)
                         TextFormField(
                           controller: _nameController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Имя',
                           ),
                           validator: (value) {
@@ -98,7 +92,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Почта',
                         ),
                         validator: (value) {
@@ -115,7 +109,7 @@ class _SignInPageState extends State<SignInPage> {
                           suffixIcon: IconButton(onPressed: () {
                             isHidden = !isHidden;
                             setState(() {});
-                          }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
+                          }, icon: isHidden ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off)),
                           hintText: 'Пароль',
                         ),
                         validator: (value) {
@@ -135,7 +129,7 @@ class _SignInPageState extends State<SignInPage> {
                             suffixIcon: IconButton(onPressed: () {
                               isHidden = !isHidden;
                               setState(() {});
-                            }, icon: isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
+                            }, icon: isHidden ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off)),
                             hintText: 'Пароль',
                           ),
                           validator: (value) {

@@ -17,7 +17,7 @@ class SurveyCubit extends Cubit<BaseState> {
     final result = await getSurveys(GetByIdParameters(id: id));
     emit(LoadedListState<SurveyEntity>(entities: result));
     }
-    on CacheException catch (e, s) {
+    on LocalException catch (e, s) {
       logger.severe(e, s);
       emit(ErrorState(text: e.message));
       // print('$s');

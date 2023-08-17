@@ -5,7 +5,6 @@ import '../../domain/entities/exercise_entity.dart';
 import '../state/bloc_states.dart';
 import '../state/exercise_state/exercises_cubit.dart';
 import '../widgets/exercise_card.dart';
-import '../widgets/survey_card.dart';
 
 class ExercisesPage extends StatelessWidget {
   @override

@@ -30,7 +30,7 @@ class QuestionCubit extends Cubit<BaseState> {
       final result = await getQuestion(GetByIdParameters(id: id ?? 0));
       emit(LoadedListState<QuestionEntity>(entities: result));
     }
-    on CacheException catch (e, s) {
+    on LocalException catch (e, s) {
       logger.severe(e, s);
       emit(ErrorState(text: e.message));
     }
@@ -40,7 +40,7 @@ class QuestionCubit extends Cubit<BaseState> {
     try {
       await updateQuestion(UpdateTableParameters(entity: entity));
     }
-    on CacheException catch (e, s) {
+    on LocalException catch (e, s) {
       logger.severe(e, s);
       emit(ErrorState(text: e.message));
     }

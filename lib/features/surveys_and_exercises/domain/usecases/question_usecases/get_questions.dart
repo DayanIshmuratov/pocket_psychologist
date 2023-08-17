@@ -7,6 +7,8 @@ import '../../entities/question_entity.dart';
 class GetQuestions extends UseCaseWithParameters<Future<List<QuestionEntity>>, GetByIdParameters>{
   final SurveyRepository repository;
   GetQuestions({required this.repository});
+
+  @override
   Future<List<QuestionEntity>> call(GetByIdParameters getByIdParameters) {
     return repository.getQuestions(getByIdParameters.id);
   }

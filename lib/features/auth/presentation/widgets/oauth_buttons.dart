@@ -10,45 +10,43 @@ class OauthButtons extends StatelessWidget {
   final AuthCubit authCubit;
   OauthButtons({required this.authCubit});
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          AppTitle(value: "ИЛИ"),
-          SizedBox(
-            height: 16,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              GestureDetector(
-                onTap: () async {
-                  try {
-                    await authCubit.googleAuth(context);
-                    if (authCubit.state is AuthSigned) {
-                      Navigator.pop(context);
-                      SnackBars.showSnackBar(
-                          context,
-                          'Вы успешно вошли в аккаунт',
-                          Theme.of(context).primaryColor);
-                    }
-                  } on NetworkException catch (e) {
-                    SnackBars.showSnackBar(context, e.message, Colors.red);
-                  } on AppwriteException catch (e) {
-                    SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка.'), Colors.red);
+    return Column(
+      children: [
+        const AppTitle(value: "ИЛИ"),
+        const SizedBox(
+          height: 16,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            GestureDetector(
+              onTap: () async {
+                try {
+                  await authCubit.googleAuth(context);
+                  if (authCubit.state is AuthSigned) {
+                    Navigator.pop(context);
+                    SnackBars.showSnackBar(
+                        context,
+                        'Вы успешно вошли в аккаунт',
+                        Theme.of(context).primaryColor);
                   }
-                },
-                child:
-                    oauthButton('assets/images/small_images/icons/google.png'),
-              ),
-              Tooltip(
-                triggerMode: TooltipTriggerMode.tap,
-                message: 'В разработке',
-                  child: oauthButton('assets/images/small_images/icons/vk.png')),
-            ],
-          ),
-        ],
-      ),
+                } on NetworkException catch (e) {
+                  SnackBars.showSnackBar(context, e.message, Colors.red);
+                } on AppwriteException catch (e) {
+                  SnackBars.showSnackBar(context, utils.errorTypeToString(e?.type ?? 'Неожиданная ошибка.'), Colors.red);
+                }
+              },
+              child:
+                  oauthButton('assets/images/small_images/icons/google.png'),
+            ),
+            Tooltip(
+              triggerMode: TooltipTriggerMode.tap,
+              message: 'В разработке',
+                child: oauthButton('assets/images/small_images/icons/vk.png')),
+          ],
+        ),
+      ],
     );
   }
 }

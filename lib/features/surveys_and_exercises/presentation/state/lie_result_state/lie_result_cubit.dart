@@ -14,7 +14,7 @@ class LieResultCubit extends Cubit<BaseState> {
     try {
       final result = await getResults(GetByIdParameters(id: id));
       emit(LoadedListState<LieResultEntity>(entities: result));
-    } on CacheException catch (e, s) {
+    } on LocalException catch (e, s) {
       logger.severe(e, s);
       emit(ErrorState(text: e.message));
     }

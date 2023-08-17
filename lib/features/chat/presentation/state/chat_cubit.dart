@@ -14,10 +14,8 @@ import 'package:pocket_psychologist/constants/appwrite_constants/appwrite_consta
 part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
-  StreamController<Message> _streamController = StreamController<Message>.broadcast();
+  final StreamController<Message> _streamController = StreamController<Message>.broadcast();
   Stream<Message> get resultStream => _streamController.stream.asBroadcastStream();
-  //  StreamController<dynamic> _streamController = StreamController<dynamic>.broadcast();
-  //   Stream<dynamic> get resultStream => _streamController.stream.asBroadcastStream();
   RealtimeSubscription? subscription;
   ChatCubit() : super(ChatLoading());
 
