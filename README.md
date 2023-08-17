@@ -1,16 +1,21 @@
-# pocket_psychologist
 
-A new Flutter project.
+# Chowa
 
-## Getting Started
+The application is designed to identify psychological problems and contains exercises to eliminate them.
 
-This project is a starting point for a Flutter application.
+## UI
+  <div align="center">  <img src="https://i.imgur.com/f6h90XB.png" width="1000" height="600"/> 
+ <img src="https://i.imgur.com/Jd1LP2W.png" width="1000" height="600"/>
+  <img src="https://i.imgur.com/nVJL0MO.png" width="1000" height="600"/>
+ </div>
+ 
+--- 
+### :hammer_and_wrench: Languages and Tools :
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ <div> 
+ <img src="https://github.com/devicons/devicon/blob/master/icons/flutter/flutter-original.svg" title="Flutter" alt="Flutter" width="40" height="40"/>&nbsp;
+ <img src=" https://github.com/devicons/devicon/blob/master/icons/appwrite/appwrite-original.svg" title="Appwrite" alt="Appwrite" width="40" height="40"/>&nbsp;  
+ <img src="https://github.com/devicons/devicon/blob/master/icons/sqlite/sqlite-original-wordmark.svg" title="SQLite" alt="SQLite" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original.svg" title="Git" alt="Git" width="40" height="40"/>&nbsp;    
+ <img src="https://github.com/devicons/devicon/blob/master/icons/figma/figma-original.svg" title="Figma" alt="Figma" width="40" height="40"/> 
+ </div>
